@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Machine Learning — Entities no api.ai</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Machine Learning — Entities no api.ai</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Depois da introdução à plataforma api.ai, está na hora de “mergulharmos” em alguns dos seus conceitos principais — comecemos pelas entities…
+</section>
+<section data-field="description" class="p-summary">
+Depois da introdução à plataforma api.ai no artigo anterior, está na hora de “mergulharmos” em alguns dos seus conceitos principais — vamos começar pelas entities.
+</section>
+<section data-field="body" class="e-content">
+<section name="8767" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="746e" id="746e" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*P9fogFeO3KumEO2CzGH9ow.png" data-width="800" data-height="240" src="https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png"></figure><h3 name="9b42" id="9b42" class="graf graf--h3 graf-after--figure graf--title">Machine Learning — Entities no api.ai</h3><p name="25b2" id="25b2" class="graf graf--p graf-after--h3">Depois da introdução à plataforma <a href="https://api.ai" data-href="https://api.ai" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">api.ai</a> no <a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--p-anchor" target="_blank">artigo anterior</a>, está na hora de “mergulharmos” em alguns dos seus conceitos principais — vamos começar pelas <em class="markup--em markup--p-em">entities</em>.</p><p name="14be" id="14be" class="graf graf--p graf-after--p">Acredito que o conceito de Entities não é novo pois foi introduzido no <a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--p-anchor" target="_blank">primeiro artigo da série</a>, onde criamos uma entity para ter sinónimos de doces no nosso agente. Se você não leu esse artigo, aí vai:</p><div name="f98e" id="f98e" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — Entrando no mundo dos assistentes virtuais</strong><br><em class="markup--em markup--mixtapeEmbed-em">Aprenda a criar o seu próprio assistente virtual em 4 passos simples.</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="14c57826f0d1f9441e393135d9c9ecf7" data-thumbnail-img-id="1*LOyHOG13p2sMwEfCZVDKPw.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*LOyHOG13p2sMwEfCZVDKPw.png);"></a></div></div></div></section><section name="6c55" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="0b6d" id="0b6d" class="graf graf--p graf--leading">Como foi dito no <a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--p-anchor" target="_blank">artigo anterior</a>, <strong class="markup--strong markup--p-strong">Entities</strong> são objectos que ajudam o agente a interpretar linguagem natural e não apenas frases pré-programadas.</p><p name="9cb3" id="9cb3" class="graf graf--p graf-after--p">As entities que são utilizadas em cada agente podem variar dependendo dos parametros que se espera retornar na interação com o agente. Isto significa que não é necessário criarmos entities para todas palavras do agente, criamos apenas para dados que iremos precisar.</p><p name="4d3b" id="4d3b" class="graf graf--p graf-after--p">Existem 3 tipos de entities: <strong class="markup--strong markup--p-strong"><em class="markup--em markup--p-em">System entities</em></strong> (entities pré-criados), <strong class="markup--strong markup--p-strong"><em class="markup--em markup--p-em">Developer Entities</em></strong> (entities definidas por nós, desenvolvedores) e <strong class="markup--strong markup--p-strong"><em class="markup--em markup--p-em">User Entities</em></strong> (uma entity definida para cada utilizador). Neste artigo veremos apenas os primeiros 2 tipos, o User Entity será abordado em um artigo futuro.</p><h3 name="1f3c" id="1f3c" class="graf graf--h3 graf-after--p">Tipos de entities</h3><h4 name="35c4" id="35c4" class="graf graf--h4 graf-after--h3">System Entities</h4><p name="99bb" id="99bb" class="graf graf--p graf-after--h4">São entities pré-criadas pela plataforma api.ai por serem os mais utilizados/populares. Todas as entities do sistema possuem o prefixo <em class="markup--em markup--p-em">sys</em>.</p><p name="9577" id="9577" class="graf graf--p graf-after--p">Alguns exemplos são o <em class="markup--em markup--p-em">sys.date</em> que facilita quando queremos colocar uma data e o <em class="markup--em markup--p-em">sys.phone-number</em> para colocar números de telefone. Infelizmente, estas entities ainda não têm tradução para português. O que significa que se criarmos um agente em português, ele não irá reconhecer “oito dois oito quatro” como um número. Você pode ver a <a href="https://docs.api.ai/docs/concept-entities#section-system-entities" data-href="https://docs.api.ai/docs/concept-entities#section-system-entities" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">lista de todas as System Entities na documentação</a>.</p><h4 name="f73a" id="f73a" class="graf graf--h4 graf-after--p">Developer Entities</h4><p name="1e79" id="1e79" class="graf graf--p graf-after--h4">Você pode criar as suas próprias entities para os seus agentes através do formulário na consola do api.ai ou fazendo upload deles no formato .csv ou .json. No artigo anterior aprendemos a criar entities na consola, por isso vamos ver como fazer upload e download de entities.</p><h3 name="0d6b" id="0d6b" class="graf graf--h3 graf-after--p">Download e Upload de JSON e CSV entities</h3><h4 name="5059" id="5059" class="graf graf--h4 graf-after--h3">Download de entities</h4><p name="03f9" id="03f9" class="graf graf--p graf-after--h4">Para baixar entities:</p><ol class="postList"><li name="2bc2" id="2bc2" class="graf graf--li graf-after--p">Clique na aba Entities;</li><li name="ff39" id="ff39" class="graf graf--li graf-after--li">Clique no ícone de uma nuvem que aparece no canto direito da entity que você pretende baixar;</li><li name="c345" id="c345" class="graf graf--li graf-after--li">Selecione o formato que pretende (JSON ou CSV).</li></ol><h4 name="9041" id="9041" class="graf graf--h4 graf-after--li">Upload de entities</h4><p name="9050" id="9050" class="graf graf--p graf-after--h4">Para enviar entities:</p><ol class="postList"><li name="617a" id="617a" class="graf graf--li graf-after--p">Clique na aba Entities;</li><li name="3574" id="3574" class="graf graf--li graf-after--li">Clique no ícone “mais” (três pontos verticais) que fica ao lado do botão de criar entity.</li><li name="8a1d" id="8a1d" class="graf graf--li graf-after--li">Clique em “Upload entity” e escolha o ficheiro que pretende enviar.</li></ol><h3 name="111b" id="111b" class="graf graf--h3 graf-after--li">Automated Expansion</h3><p name="10fd" id="10fd" class="graf graf--p graf-after--h3">Automated Expansion (expansão automática) é uma função do api.ai que permite que o utilizador adicione mais palavras à uma entity já existente. Você já deve ter visto esta função porque ela fica logo ao lado da função “define synonyms” quando criamos uma entity.</p><figure name="2897" id="2897" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*vYuRFmZzLp8HNEA_hYPDyQ.png" data-width="997" data-height="553" src="https://cdn-images-1.medium.com/max/800/1*vYuRFmZzLp8HNEA_hYPDyQ.png"></figure><p name="a168" id="a168" class="graf graf--p graf-after--figure">Ao activar esta função, os utilizadores poderão adicionar outros doces quando usarem o nosso Intent:</p><figure name="9900" id="9900" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*2EFNNOCWqxDSZIDYJhJElg.png" data-width="979" data-height="434" src="https://cdn-images-1.medium.com/max/800/1*2EFNNOCWqxDSZIDYJhJElg.png"></figure><p name="a4f1" id="a4f1" class="graf graf--p graf-after--figure">Por exemplo, se o utilizador disser algo como “Queria encomendar um pudim”, a palavra pudim será adicionada à lista de palavras da entity doce.</p><p name="945e" id="945e" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">Atenção</strong>: Se a opção Automated Expansion estiver activa em mais de uma entity, poderão surgir conflitos e palavras adicionadas em entities onde não deviam estar.</p><p name="8589" id="8589" class="graf graf--p graf-after--p">E por agora é tudo. No próximo artigo vemos como integrar o nosso agente com o Facebook Messenger:</p><div name="ccc3" id="ccc3" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae" data-href="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — api.ai + Facebook Messenger</strong><br><em class="markup--em markup--mixtapeEmbed-em">Algumas aplicações de chat como o Fb Messenger permitem a utilização de bots. Neste artigo, vamos integrar o nosso api…</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="f0bc7f152527fd307feed1dd10a7c703" data-thumbnail-img-id="1*-stpnq_Kav33zXZ6cfJJKA.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*-stpnq_Kav33zXZ6cfJJKA.png);"></a></div></div></div></section><section name="e032" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="9c1b" id="9c1b" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/18639ec6c3d1"><time class="dt-published" datetime="2017-02-23T18:32:00.898Z">February 23, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/ml-entities-18639ec6c3d1" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

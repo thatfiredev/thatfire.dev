@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Machine Learning — Intents no api.ai (parte 3 — Contexto)</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Machine Learning — Intents no api.ai (parte 3 — Contexto)</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Saiba como utilizar Contexts para definir o tópico da conversa com o bot do api.ai.
+</section>
+<section data-field="description" class="p-summary">
+Agora que já sabemos utilizar Acções e Parametros para definir como o bot deve responder à certas instruções dos utilizadores, vamos ver mais um conceito básico do api.ai: Context.
+</section>
+<section data-field="body" class="e-content">
+<section name="39a1" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="9fd6" id="9fd6" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*P9fogFeO3KumEO2CzGH9ow.png" data-width="800" data-height="240" src="https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png"></figure><h3 name="3d40" id="3d40" class="graf graf--h3 graf-after--figure graf--title">Machine Learning — Intents no api.ai (parte 3 — Contexto)</h3><p name="e02a" id="e02a" class="graf graf--p graf-after--h3">Já lá vão 6 artigos sobre Machine Learning e espero que você esteja a gostar de criar o seu próprio bot com o <a href="http://api.ai" data-href="http://api.ai" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">api.ai</a> :). Se você não viu nenhum destes artigos de que falo, comece a ler a série desde o príncipio:</p><div name="0775" id="0775" class="graf graf--mixtapeEmbed graf-after--p"><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — Entrando no mundo dos assistentes virtuais</strong><br><em class="markup--em markup--mixtapeEmbed-em">Aprenda a criar o seu próprio assistente virtual em 4 passos simples.</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="14c57826f0d1f9441e393135d9c9ecf7" data-thumbnail-img-id="1*LOyHOG13p2sMwEfCZVDKPw.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*LOyHOG13p2sMwEfCZVDKPw.png);"></a></div><p name="a8b3" id="a8b3" class="graf graf--p graf-after--mixtapeEmbed">Agora que já <a href="https://medium.com/android-dev-moz/ml-actions-6cdf32bea767" data-href="https://medium.com/android-dev-moz/ml-actions-6cdf32bea767" class="markup--anchor markup--p-anchor" target="_blank">sabemos utilizar Acções e Parametros</a> para definir como o bot deve responder à certas instruções dos utilizadores, vamos ver mais um dos conceitos básicos do api.ai: o Context.</p><p name="4ea4" id="4ea4" class="graf graf--p graf-after--p">Como o próprio nome diz, Context é uma <em class="markup--em markup--p-em">string</em> que define o contexto em que o Intent foi chamado. É como se estivessemos a definir o tópico da nossa conversa.</p><p name="18b8" id="18b8" class="graf graf--p graf-after--p">Por exemplo, se você estiver a desenvolver um bot capaz de interagir com alguns dos aparelhos electrónicos da sua casa, o utilizador pode dizer algo como: “Ligue o alarme” e depois dizer “Desligue”. O bot tem de reconhecer que o utilizador ainda está a referir-se ao alarme. E se mais tarde o utilizador disser “Ligue o televisor” seguido de “Desligue”, o bot tem de tomar uma acção diferente do alarme, porque o contexto é diferente.</p><p name="8f1f" id="8f1f" class="graf graf--p graf-after--p">Você deve ter notado, ao criar um Intent, que existem 2 tipos de Context:</p><figure name="f1da" id="f1da" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*m_IX2jj6RgO6DDQEb1vFXw.png" data-width="979" data-height="237" src="https://cdn-images-1.medium.com/max/800/1*m_IX2jj6RgO6DDQEb1vFXw.png"><figcaption class="imageCaption">Input e Output Context</figcaption></figure><h3 name="2b35" id="2b35" class="graf graf--h3 graf-after--figure">Output Context</h3><p name="bfb1" id="bfb1" class="graf graf--p graf-after--h3">Contextos são ligados à sessão do utilizador (um user ID que é partilhado entre a sua aplicação e o api.ai). Quando um intent é chamado, este intent pode definir o contexto a ser utilizado pela expressão que o utilizador usou. Mas você também pode definir esse contexto antes de enviar a requisição ao api.ai (veremos mais tarde).</p><p name="4469" id="4469" class="graf graf--p graf-after--p">No exemplo da casa, quando o utilizador diz “Ligue o alarme”, o Intent teria de ter um Output Context — como “<em class="markup--em markup--p-em">alarme</em>”, por exemplo. Podem existir vários Intents que respondem à “Desligue”, mas <strong class="markup--strong markup--p-strong">só</strong> o Intent que tiver “alarme” como Input Context é que será chamado e os outros não.</p><figure name="81f8" id="81f8" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*Vf_1j41vvNwqs1Fwq1kekw.png" data-width="718" data-height="563" src="https://cdn-images-1.medium.com/max/800/1*Vf_1j41vvNwqs1Fwq1kekw.png"><figcaption class="imageCaption">Exemplo do Output Context</figcaption></figure><figure name="8243" id="8243" class="graf graf--figure graf-after--figure"><img class="graf-image" data-image-id="1*AxNV2DdffgMonZLCvEY9ig.png" data-width="715" data-height="565" src="https://cdn-images-1.medium.com/max/800/1*AxNV2DdffgMonZLCvEY9ig.png"><figcaption class="imageCaption">Exemplo do Input Context</figcaption></figure><h4 name="24b5" id="24b5" class="graf graf--h4 graf-after--figure">Duração do context</h4><p name="43e4" id="43e4" class="graf graf--p graf-after--h4">Por padrão, contexts expiram depois de 5 requisições ou quando passam 10 minutos depois do Intent ser chamado. Mas você pode também alterar o número de requisições (chamado de<em class="markup--em markup--p-em"> lifespan</em>):</p><figure name="c0b2" id="c0b2" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*Lwa7FOlBZOJJkAPJwDITRw.png" data-width="708" data-height="172" src="https://cdn-images-1.medium.com/max/800/1*Lwa7FOlBZOJJkAPJwDITRw.png"><figcaption class="imageCaption">O contexto vai expirar depois de 3 requisições</figcaption></figure><p name="b142" id="b142" class="graf graf--p graf-after--figure">Ou então remover o contexto:</p><figure name="7981" id="7981" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*9P40sUPQSzFTQLYrOqosGA.png" data-width="721" data-height="164" src="https://cdn-images-1.medium.com/max/800/1*9P40sUPQSzFTQLYrOqosGA.png"><figcaption class="imageCaption">O contexto vai expirar imediatamente, depois deste Intent ser chamado</figcaption></figure><h3 name="0f9b" id="0f9b" class="graf graf--h3 graf-after--figure">Input Context</h3><p name="2bb9" id="2bb9" class="graf graf--p graf-after--h3">Como já foi explicado parcialmente acima, Input Contexts ajudam a especificar quando é que um Intent deve ser chamado.</p><p name="8e19" id="8e19" class="graf graf--p graf-after--p">Vamos olhar para mais um exemplo: Supondo que estamos a desenvolver um assistente capaz de reproduzir músicas. Pode acontecer o caso em que o utilizador está a escutar e a gostar de uma música e depois quer ouvir mais músicas do mesmo artista. Para ele escutar as outras músicas do mesmo artista, provavelmente diria “Quero ouvir mais deste artista”. <br>Para o nosso bot responder à este pedido, teríamos de definir um Output Context no Intent que começou a reproduzir a música e guardar um o artista como parâmetro.<br>Mas e se o utilizador disser isso depois de 10 minutos? O Intent já terá expirado e o nosso agente não saberá de que artista se trata.</p><p name="c0ac" id="c0ac" class="graf graf--p graf-after--p">Para o agente voltar a perguntar o nome do agente, criamos 2 Intents:</p><ul class="postList"><li name="7153" id="7153" class="graf graf--li graf-after--p">Sem Contexto</li></ul><figure name="1444" id="1444" class="graf graf--figure graf-after--li"><img class="graf-image" data-image-id="1*AWTxsFTBd3NxmkV7ktAY7Q.png" data-width="721" data-height="670" src="https://cdn-images-1.medium.com/max/800/1*AWTxsFTBd3NxmkV7ktAY7Q.png"><figcaption class="imageCaption">Neste Intent, é obrigatório que o utilizador defina o nome do artista porque não tem contexto.</figcaption></figure><ul class="postList"><li name="4b7c" id="4b7c" class="graf graf--li graf-after--figure">Com contexto</li></ul><figure name="fec1" id="fec1" class="graf graf--figure graf-after--li"><img class="graf-image" data-image-id="1*pItznpyCNY-W50RDZXqb7Q.png" data-width="720" data-height="671" src="https://cdn-images-1.medium.com/max/800/1*pItznpyCNY-W50RDZXqb7Q.png"><figcaption class="imageCaption">Neste Intent, o parametro artista provavelmente já existe porque foi definido no contexto do Intent anterior</figcaption></figure><p name="c0c0" id="c0c0" class="graf graf--p graf-after--figure">Repare que o nosso segundo Intent (com contexto) tem um Input Context. Isto significa que só será chamado após um Intent com o Output Context “reproduzir”. Vamos então criar este Intent:</p><figure name="7c0e" id="7c0e" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*5eLWN0Tde5qDaZ-svZ0BKQ.png" data-width="721" data-height="668" src="https://cdn-images-1.medium.com/max/800/1*5eLWN0Tde5qDaZ-svZ0BKQ.png"></figure><p name="4a2b" id="4a2b" class="graf graf--p graf-after--figure">E pronto. Criamos assim um pequeno diálogo entre o utilizador e o agente. Para o <a href="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894" data-href="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894" class="markup--anchor markup--p-anchor" target="_blank">próximo artigo</a> fica a promessa de mostrar-vos como usar o Context para criar diálogos maiores que variam de acordo com as respostas do utilizador. ;)</p><div name="7037" id="7037" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894" data-href="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — Mantendo diálogos</strong><br><em class="markup--em markup--mixtapeEmbed-em">Aprenda a criar diálogos que dependem da resposta do utilizador.</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="b9223dd7ddb3fd508e992beb49bcdbb7" data-thumbnail-img-id="1*P9fogFeO3KumEO2CzGH9ow.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*P9fogFeO3KumEO2CzGH9ow.png);"></a></div></div></div></section><section name="165a" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="e751" id="e751" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener noopener nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/fb96d2c77c22"><time class="dt-published" datetime="2017-03-30T19:11:54.813Z">March 30, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/ml-context-fb96d2c77c22" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>
