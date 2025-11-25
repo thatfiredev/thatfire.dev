@@ -5,10 +5,6 @@ pubDate: '2016-05-20T16:01:41.503Z'
 heroImage: 'https://cdn-images-1.medium.com/max/800/1*52ChfRyQa3nzE7zMOxbHtw.png'
 ---
 
-Um único vector drawable é mais leve do que múltiplos bitmaps.
-
-### #SmallerAPK — Vector Drawables
-
 Se você desenvolve aplicações android, provavelmente conhece o conceito de [drawables](https://developer.android.com/reference/android/graphics/drawable/Drawable.html). E se segue as boas práticas da plataforma, de certeza que já teve de redimensionar uma imagem para se adaptar à resoluções de dispositivos diferentes. Isto é, criar uma imagem com um certo tamanho para dispositivos _hdpi_, uma outra para _mdpi_ e outras para _xhdpi, xxhdpi_ e por aí em diante.
 
 Mas, e se fosse possível usar apenas um drawable capaz de se redimensionar de acordo com o tamanho da tela do dispositivo do usuário?
@@ -33,9 +29,11 @@ Um Vector Drawable é um ficheiro xml, onde definimos o _path_ (exactamente como
 
 O código acima irá criar um drawable com a figura de um ‘_mais_’ ( + ) na cor preta. Para usarmos este vector drawable em um dos nossos widgets, basta definí-lo normalmente como definimos os outros drawables:
 
+```xml
 ...
 `android:src="@drawable/ic_add"`
 ...
+```
 
 Fazendo uma comparação rápida, se usássemos um ficheiro png para cada dispositivo (mdpi, hdpi, xhdpi, xxhdpi e xxhdpi) estaríamos a colocar mais 551bytes na nossa app. Enquanto que o ficheiro xml aumenta apenas 325bytes. Uma diferença de 41%, que pode não parecer muito, mas é se você tiver uma app com muitos drawables.
 
