@@ -5,15 +5,15 @@ pubDate: '2016-07-11T15:08:11.254Z'
 heroImage: 'https://cdn-images-1.medium.com/max/800/1*P-m04vetyQwGwbiUWk5hGg.png'
 ---
 
-### Gestão de Memória no Android — Cache LRU
-
 Lá estava eu a testar a minha aplicação android, quando ela parou devido à excepção:
 
+```
 java.lang.OutofMemoryError: bitmap size exceeds VM budget.
+```
 
 E claro, quando uma excepção é lançada, há sempre 2 questões que procuramos obter respostas:  
-\* O que causou a excepção?  
-\* Como evitar que esta excepção seja lançada?
+- O que causou a excepção?  
+- Como evitar que esta excepção seja lançada?
 
 No meu caso, eu procurava saber qual é o processo que está a usar muita memória e como fazer para alocar correctamente esta memória.
 
@@ -38,19 +38,23 @@ Este algoritmo é chamado de **LRU (List Recently Used)**. É baseado na teoria 
 Como o objectivo é limitar o uso de memória, para inicializar a LRU Cache, temos de indicar o tamanho da cache. Mas tenha cuidado aqui: se definirmos um tamanho muito pequeno, as imagens provavelmente estarão sempre a ser recarregadas para a cache; se definirmos um tamanho muito grande, voltamos a ter o problema de estar a exigir que o android nos conceda muita memória. Então, qual é a melhor maneira de determinar o tamanho da cache?  
 Uma boa prática é calcular o tamanho baseando-se na quantidade de memória disponível para a nossa aplicação. Para obter esta quantidade, podemos usar o método [_getMemoryClass()_](https://developer.android.com/reference/android/app/ActivityManager.html#getMemoryClass%28%29). Para fazer isso, é so utilizar o código:
 
+```java
 ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY\_SERVICE);
 
 int memoriaDisponivel = am.getMemoryClass()\*1024\*1024;
+```
 
 Depois, podemos fazer alguns cálculos para ajustar este valor, como por exemplo dividir por 8.
 
+```java
 LruCache bitmapCache = new LruCache<String, Bitmap>(memoriaDisponivel/8);
+```
 
 Atenção que dividir por 8 é apenas uma sugestão, você pode ajustar este valor como preferir.  
 Outro ponto importante é fazer com que a cache saiba qual é o tamanho de cada objecto que ele contém, para que ela saiba quanto espaço está livre. Para fazer isso, basta extender a classe e sobrecarregar o método _sizeOf(String,_ [_Bitmap_](https://developer.android.com/reference/android/graphics/Bitmap.html)_):_
 
+```java
 public class ImageCache extends LruCache(String, Bitmap)
-
 {  
   @Override  
   protected int sizeOf(String key, Bitmap value)  
@@ -58,20 +62,20 @@ public class ImageCache extends LruCache(String, Bitmap)
     return value.getByteCount();//retornamos o tamanho em bytes  
   }  
 }
+```
 
 Agora, colocar e recuperar objectos na cache é bem simples. O único ponto a destacar é que se você tentar ler um objecto que já não está na cache, será retornado null. Então você precisa gerir manualmente estes casos. Aqui vai um exemplo:
 
+```java
 Bitmap img = bitmapCache.get(chave);//Recuperar da cache  
 if(img == null)  
 {
-
   img = converterParaBitmap(R.drawable.img);//Voltar a carregar este objecto  
   bitmapCache.put(chave, img);//Colocar ele na cache  
 }
+```
 
 E pronto. Gerir memória é tão simples quanto isto.
-
-Se você tem alguma dúvida ou sugestão, envie um email para rosariofernandes51@gmail.com
 
 No próximo post, irei explicar como usei a LruCache para resolver o problema das imagens no viewPager.
 
