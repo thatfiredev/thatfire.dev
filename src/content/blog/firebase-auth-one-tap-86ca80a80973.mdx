@@ -5,11 +5,6 @@ pubDate: '2020-04-29T23:56:23.569Z'
 heroImage: 'https://cdn-images-1.medium.com/max/800/1*EFU8DF1LUfr1jLhoU_178A.png'
 ---
 
-* * *
-
-
-### Firebase Auth + One Tap UI on Android
-
 #### Learn how to implement One Tap sign-in and sign-up on your existing Firebase Android app
 
 Google has recently introduced [One Tap sign-in and sign-up on Android](https://developers.google.com/identity/one-tap/android/overview). This service allows your app’s new users to create an account, securely with just a single tap on a beautiful dialog.  
@@ -133,3 +128,11 @@ And this should do it. Now in order to test this feature, you’ll need to enabl
 Once you login for the first time on the app, Autofill will prompt if you want to save your credentials. If you accept, the next time you login to the app, One Tap UI should display your saved credentials:
 
 ![](https://cdn-images-1.medium.com/max/800/1*g98h9zqiHJRtRS94YA9ShA.png)
+
+---
+
+Additionally, if you also have a website or a web app on the same Firebase project, you can also [enable automatic sign-in between apps and websites](https://developers.google.com/identity/smartlock-passwords/android/associate-apps-and-sites),
+which will allow your users to sign-in to your web app with the password they saved on the mobile app and vice-versa.
+
+And that’s all for today. I hope this helps you implement One Tap sign-in and sign-up in your Firebase Apps. You can find the sample app on Github:
+https://github.com/thatfiredev/FirebaseAuthOneTapUI
