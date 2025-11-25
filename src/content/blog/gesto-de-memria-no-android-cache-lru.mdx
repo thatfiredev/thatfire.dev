@@ -1,0 +1,80 @@
+---
+title: 'Gestão de Memória no Android — Cache LRU'
+description: ''
+pubDate: '2016-07-11T15:08:11.254Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*P-m04vetyQwGwbiUWk5hGg.png'
+---
+
+### Gestão de Memória no Android — Cache LRU
+
+Lá estava eu a testar a minha aplicação android, quando ela parou devido à excepção:
+
+java.lang.OutofMemoryError: bitmap size exceeds VM budget.
+
+E claro, quando uma excepção é lançada, há sempre 2 questões que procuramos obter respostas:  
+\* O que causou a excepção?  
+\* Como evitar que esta excepção seja lançada?
+
+No meu caso, eu procurava saber qual é o processo que está a usar muita memória e como fazer para alocar correctamente esta memória.
+
+Depois de algumas pesquisas no [StackOveflow,](http://www.stackoverflow.com) alguns desenvolvedores sugeriam que colocasse no [_AndroidManifest.xml_](https://developer.android.com/guide/topics/manifest/application-element.html) a linha: _android:largeHeap=”true”_ e o problema estaria resolvido_._ Este atributo indica que a nossa aplicação usa uma grande quantidade de memória durante a sua execução e obriga o sistema a preparar a memória necessária para executar esta aplicação. Bom, o meu intuito é de desenvolver uma aplicação simples, e não quero estar a utilizar muita memória, por isso, não pareceu-me apropriado utilizar o _largeHeap_.
+
+**Atenção:** _largeHeap_ pode ser uma solução rápida, mas é uma **péssima prática**. Use apenas em aplicações que realmente precisem de muita memória, como por exemplo um grande editor de imagens, ou um jogo com gráficos 3D.
+
+Decidi então procurar descobrir o que é que estava a causar a excepção. Na minha aplicação, tenho um [_viewPager_](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) que contém alguns [_fragments_](https://developer.android.com/reference/android/app/Fragment.html). Cada um desses fragments tem uma imagem de fundo diferente. Comecei por remover as imagens de fundo dos fragments para ver se continuava a ter a excepção. E eis que aparece a luz: a aplicação voltava a funcionar normalmente, sem nenhuma excepção. Isto significa que o processo de carregar as imagens estava a usar mais memória do que devia. E aí surge a questão:
+
+#### Como carregar imagens de modo eficiente?
+
+A solução mais simples para este problema seria armazenar as imagens na memória cache. Assim, ao invés de estarmos sempre a ler as imagens da memória principal, lemos apenas uma vez e guardamos na cache. No momento em que for necessário utilizá-las, a aplicação vai buscar a imagem directamente da cache.
+
+Mas existe outro problema: a memória cache tem um espaço muito pequeno e quando ela estiver cheia, provavelmente teremos de remover algumas imagens da cache para dar espaço à novas imagens. E então nos perguntamos: Qual das imagens devemos remover? Você provavelmente irá pensar: “As imagens que já não precisamos.” Mas é difícil prever qual imagem não voltará a ser re-utilizada.
+
+Por isso, foi desenvolvida a classe [_LRUCache_](https://developer.android.com/reference/android/util/LruCache.html)_,_ que é basicamente uma lista de objectos armazenados com uma chave correspondente.  
+Quando um objecto é usado na LRUCache, ele passa para o topo da lista. Assim, os objectos menos usados ficam no fim da lista e quando a cache estiver cheia, estes objectos serão removidos para dar espaço à novos objectos.  
+Este algoritmo é chamado de **LRU (List Recently Used)**. É baseado na teoria de que: Se um objecto é muito utilizado agora, provavelmente será muito utilizado no futuro. Então, é melhor deixar ele na cache.
+
+#### Utilizando a LRU Cache para armazenar imagens
+
+Como o objectivo é limitar o uso de memória, para inicializar a LRU Cache, temos de indicar o tamanho da cache. Mas tenha cuidado aqui: se definirmos um tamanho muito pequeno, as imagens provavelmente estarão sempre a ser recarregadas para a cache; se definirmos um tamanho muito grande, voltamos a ter o problema de estar a exigir que o android nos conceda muita memória. Então, qual é a melhor maneira de determinar o tamanho da cache?  
+Uma boa prática é calcular o tamanho baseando-se na quantidade de memória disponível para a nossa aplicação. Para obter esta quantidade, podemos usar o método [_getMemoryClass()_](https://developer.android.com/reference/android/app/ActivityManager.html#getMemoryClass%28%29). Para fazer isso, é so utilizar o código:
+
+ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY\_SERVICE);
+
+int memoriaDisponivel = am.getMemoryClass()\*1024\*1024;
+
+Depois, podemos fazer alguns cálculos para ajustar este valor, como por exemplo dividir por 8.
+
+LruCache bitmapCache = new LruCache<String, Bitmap>(memoriaDisponivel/8);
+
+Atenção que dividir por 8 é apenas uma sugestão, você pode ajustar este valor como preferir.  
+Outro ponto importante é fazer com que a cache saiba qual é o tamanho de cada objecto que ele contém, para que ela saiba quanto espaço está livre. Para fazer isso, basta extender a classe e sobrecarregar o método _sizeOf(String,_ [_Bitmap_](https://developer.android.com/reference/android/graphics/Bitmap.html)_):_
+
+public class ImageCache extends LruCache(String, Bitmap)
+
+{  
+  @Override  
+  protected int sizeOf(String key, Bitmap value)  
+  {  
+    return value.getByteCount();//retornamos o tamanho em bytes  
+  }  
+}
+
+Agora, colocar e recuperar objectos na cache é bem simples. O único ponto a destacar é que se você tentar ler um objecto que já não está na cache, será retornado null. Então você precisa gerir manualmente estes casos. Aqui vai um exemplo:
+
+Bitmap img = bitmapCache.get(chave);//Recuperar da cache  
+if(img == null)  
+{
+
+  img = converterParaBitmap(R.drawable.img);//Voltar a carregar este objecto  
+  bitmapCache.put(chave, img);//Colocar ele na cache  
+}
+
+E pronto. Gerir memória é tão simples quanto isto.
+
+Se você tem alguma dúvida ou sugestão, envie um email para rosariofernandes51@gmail.com
+
+No próximo post, irei explicar como usei a LruCache para resolver o problema das imagens no viewPager.
+
+Até a próxima!
+
+Rosário Pereira Fernandes

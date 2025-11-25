@@ -1,0 +1,181 @@
+---
+title: 'Como funcionam as regras de segurança do Firebase na Realtime Database?'
+description: ''
+pubDate: '2018-10-29T16:56:01.227Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*FiOk3gqNFoavQW8n4vO7Fw.png'
+---
+
+* * *
+
+
+### Como funcionam as regras de segurança do Firebase na Realtime Database?
+
+#### Parte 4 — Testes Unitários
+
+Na [parte 3](https://medium.com/@rosariopfernandes/fbs3-531abda78169) desta série de artigos mostrei como utilizar o Simulador de Regras da Realtime Database. O simulador é uma ferramenta muito útil e que ajuda bastante na hora de testar as nossas regras online.
+
+Mas hoje, durante o [Firebase Summit 2018](http://firebase.google.com/summit), foram lançadas 2 novas ferramentas que ajudam também na hora de testar regras: o [**Emulador da Realtime Database**](https://firebase.google.com/docs/database/security/test-rules-emulator) e o módulo **firebase-testing** da Firebase CLI. Neste artigo mostro como funcionam estas ferramentas e como elas facilitam-nos quando queremos verificar o comportamento das nossas regras de segurança.
+
+### Realtime Database Emulator
+
+O emulador da Realtime Database é uma ferramenta que permite simular uma instância de uma database na nossa máquina local. Todas as operações que executamos na nossa Realtime Database podem ser simuladas localmente no emulador. A única diferença é que o emulador não está interligado aos outros serviços do Firebase.
+
+#### Instalação
+
+Para instalar o emulador, temos de executar os seguintes comandos:
+
+```bash
+firebase --open-sesame emulators
+firebase setup:emulators:database
+```
+
+#### Iniciar
+
+Agora que temos o emulador instalado, podemos iniciá-lo usando o comando: ```bash
+firebase serve --only firestore
+```. Ao introduzir o comando, deverá aparecer uma mensagem dizendo “Listening on port 9000” no seu ecrã.
+
+Geralmente a Realtime Database pode ser acedida através da URL `https://<nome-da-database>.firebaseio.com/caminho/dos/dados.json`. Ao iniciar o emulador, a mesma database pode ser acedida também pela URL `http://localhost:9000/caminho/dos/dados.json?ns=<nome-da-database>`.
+
+Quando você inicia o emulador, a realtime database simulada é criada com as regras privadas (`.write` e `.read` em `false`).
+
+### Módulo node.js firebase-testing
+
+Este módulo permite-nos escrever testes unitários para a nossa database. Neste artigo, vamos criar um diretório chamado `teste`, e neste diretório vamos instalar o nosso módulo `firebase-testing`. Para isso, basta utilizarmos o comando:
+
+```bash
+npm install --save @firebase/testing
+```
+
+#### async/await
+
+Antes de começarmos a escrever os testes unitários, há 2 conceitos que podem ser novos para você: `**async**` e `**await**`.
+
+Você já deve saber que as funções de leitura e escrita do Firebase [funcionam de forma assíncrona](https://pt.stackoverflow.com/a/278696/39181). Mas como os nossos testes serão executados em sequência, não podemos fazê-los de forma assíncrona, pois a sequência se perderá.
+
+E para nos ajudar com isso, o JavaScript possui o `async` e o `await` que permitem-nos esperar pelo resultado de uma operação antes de ir para a próxima. Por exemplo, para ler um utilizador de forma assíncrona no JavaScript, você faria:
+
+```javascript
+function lerUtilizador(uid)
+{
+  rootRef.child("utilizadores").child(uid).once('value', function(snapshot){
+      var utilizador = snapshot.val();
+      //Mostrar o utilizador
+  });
+}
+```
+
+Para fazer a mesma leitura, de forma síncrona, você deve fazer:
+
+```javascript
+**async** function lerUtilizador(uid)
+{
+  var snapshot = **await** rootRef.child("utilizadores").child(uid).once('value');
+  var utilizador = snapshot.val();
+  //Mostrar o utilizador
+}
+```
+
+Há uma coisa a notar: o `async` serve para anotar funções e o `await` só pode ser utilizado em funções que foram declaradas com a anotação `async`.
+
+Você pode aprender mais sobre async e await [neste post](https://medium.com/@pedrodava/javascript-101-async-await-50a0428a0929) do [Jose Pedro Dava](https://medium.com/u/58a6ee125066).
+
+#### Escrever Testes Unitários
+
+Para escrever os nossos testes, o firebase-testing possui as funções:
+
+*   `**initializeTestApp**({ databaseName, auth })` — simula uma app que está a ser acedida por um utilizador autenticado, que é especificado no parâmetro `auth`.
+*   `**initializeAdminApp**({ databaseName })` — simula uma app que está ser acedida com privilégios de administrador (é como usar o Admin SDK ou a REST API para aceder à database).
+*   `**loadRules**({ databaseName , rulesPath })` — carrega as regras de segurança que iremos testar.
+*   `**apps**()` — retorna a lista de todos as apps que foram inicializadas para simulação.
+*   `**assertFails**(pr: Promise)` — verifica se uma escrita/leitura irá falhar.
+*   `**assertSucceeds**(pr: Promise)` — verifica se uma escrita/leitura irá ser executada com sucesso.
+
+Agora que conhecemos as funções, podemos então escrever testes unitários para as regras (veja [database.rules.json](https://gist.github.com/rosariopfernandes/1ec0d39cd0322a4b13edb6a5ace1decb)) da database que temos usado durante esta série de artigos (veja [MyDatabase.json](https://gist.github.com/rosariopfernandes/d9af6a5c5aca7caf0c5471bfef8771ea#file-mydatabase-json)).
+
+Por exemplo, uma regra que definimos foi: _“Utilizadores só podem enviar mensagens para grupos que fazem parte”_. A regra escrita foi:
+
+```json
+{
+  "rules": {
+    "mensagens": {
+      "$grupoId": {
+        ".read": "data.child('membros/' + auth.uid).val() == true",
+        ".write": "data.child('membros/' + auth.uid).val() == true",
+        "membros": {
+          ".read": "auth != null",
+          "$uid": {
+            ".write": "$uid == auth.uid"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+```javascript
+  rootRef.child("mensagens/g1").push().set("Olá Mundo!");
+```
+
+Então usamos este mesmo código simulando um utilizador autenticado. Podemos verificar se o utilizador de `uid=”uid1"` pode realmente escrever no grupo com a chave “g1” (que ele faz parte):
+
+```javascript
+let firebase = require("@firebase/testing");
+
+let app = firebase.initializeTestApp({ databaseName: "MinhaDB", auth: {uid:"uid1"} });
+
+await firebase.assertSucceeds(app.database().ref("mensagens/g1").push().set("Olá Mundo"));
+```
+
+E podemos nos certificar que ele não tem acesso ao grupo “g2”:
+
+```javascript
+await firebase.assertFails(app.database().ref("mensagens/g2").push().set("Olá Mundo"));
+```
+
+```javascript
+let firebase = require("@firebase/testing");
+
+describe("Testes de regras", () => {
+  let app;
+
+  beforeEach(() => {
+    app = firebase.initializeTestApp({ databaseName: "MinhaDB", auth: {uid:"uid1"} });
+  });
+
+  afterEach(() => {
+    firebase.apps().forEach(a => a.delete());
+  });
+
+  it("não pode ler/escrever sem autenticação", async () => {
+    const semAuth = firebase.initializeTestApp({ databaseName: "MinhaDB" });
+    await firebase.assertFails(semAuth.database().ref("mensagens/g1").once("value"));
+    await firebase.assertFails(semAuth.database().ref("mensagens/g1").push().set("Olá Mundo"));
+  });
+
+  it("pode ler/escrever no seu próprio grupo", async () => {
+    await firebase.assertSucceeds(app.database().ref("mensagens/g1").once("value"));
+    await firebase.assertSucceeds(app.database().ref("mensagens/g1").push().set("Olá Mundo"));
+  });
+
+  it("não pode ler/escrever em outros grupos", async () => {
+    await firebase.assertFails(app.database().ref("mensagens/g2").once("value"));
+    await firebase.assertFails(app.database().ref("mensagens/g2").push().set("Olá Mundo"));
+  });
+
+  it("pode gerenciar membros do seu próprio grupo", async () => {
+    await firebase.assertSucceeds(app.database().ref("mensagens/g1/membros/uid1").set(true));
+  });
+
+  it("não pode gerenciar membros de outros grupos", async () => {
+    await firebase.assertFails(app.database().ref("mensagens/g2/membros/uid2").set(true));
+  });
+});
+```
+
+Depois de escrever os testes, temos de executá-los. Para isso, voltamos à terminal e (no diretório parente do diretório teste) executamos o comando `npm test teste`. Você deverá ter um output semelhante à este:
+
+![](https://cdn-images-1.medium.com/max/800/1*AH1yajM6wSHkRjZqieahLw.png)
+
+E por hoje é tudo. Espero que você tenha compreendido e que comece também a escrever testes unitários para a sua database. ;)

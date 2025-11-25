@@ -1,0 +1,68 @@
+---
+title: 'Mais código em menos tempo — Android Studio Live Templates'
+description: ''
+pubDate: '2016-06-23T18:18:15.617Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*-QnSL_ysDFkWqPEU4eYhIQ.png'
+---
+
+* * *
+
+### Mais código em menos tempo — Android Studio Live Templates
+
+Muitas pessoas que desenvolvem para Android (tanto iniciantes como experientes) reclamam que algumas funcionalidades do Android requerem muito código, e esse código é difícil de recordar, por isso eles têm de voltar a abrir um projecto anterior, copiar o código, colar no novo projecto e fazer alterações necessárias para adaptar-se ao novo projecto.
+
+#### E se eu dissesse que é possível fazer isso sem ter de voltar à um projecto anterior?
+
+Sim, isso é possível graças aos Android Studio Live Templates. Se você já tem experiência com IntelliJ, provavelmente já conhece esta funcionalidade. Live Templates são “_shortcuts_” que permitem completar o código, deixando espaços para que você faça alterações adaptando o código ao contexto em que está a ser usado.
+
+Você provavelmente já se deparou com situações em que escreveu o código:
+
+```java
+Toast.makeText(MainActivity.this, "Isto não funciona", Toast.LENGTH_SHORT);
+```
+
+Pois, este erro é bastante comum, mas os Live Templates ajudam a evitar isto. Você pode simplesmente escrever _Toast_ e clicar _TAB:_
+
+![](https://cdn-images-1.medium.com/max/800/1*yIxcJ5wlckPM7hyof0ZBhQ.png)
+
+Como você pode ver, isto irá adicionar o código e depois você poderá alterar os parametros necessários, alternando entre eles com a tecla _TAB_.
+
+#### O que mais eu posso fazer?
+
+Bem, IntelliJ já inclui vários templates pré-configurados e o Android Studio adicionou ainda mais. Deixo aqui a lista de templates que eu uso mais:
+
+![](https://cdn-images-1.medium.com/max/800/1*aOuek32FCr5NlhbktgtUHA.png)
+
+Mas se o código que você mais usa não estiver aí, você pode criar o seu próprio template.
+
+#### Crie o seu próprio live template
+
+É muito simples criar um live template. Clique em **File > Settings > Editor > Live Templates**. Abra o grupo _Android,_ clique no botão “mais” (+) para adicionar um novo live template e preencha os campos:
+
+![](https://cdn-images-1.medium.com/max/800/1*MLbfXY8L_Ya3qaQNbD9T9w.png)
+
+**Abbreviation —** uma abreviação para o código que você irá escrever;
+
+**Description —** um texto curto para lhe ajudar a lembrar o que o template faz;
+
+**Template text** — o código que deverá ser escrito.
+
+Por exemplo, muitas pessoas reclamam que o código para editar _SharedPreferences_ é muito longo, então podemos criar um live template para colar este código:
+
+![](https://cdn-images-1.medium.com/max/800/1*YzRp0Jaq5B9cOUILDoQP4Q.png)
+
+Reparem que quando chamamos a classe _SharedPreferences_ temos de incluir também o nome do package (android.content.SharedPreferences). Note que os lugares onde o código que irá precisar de adaptações são cercados pelo símbolo $ para indicar que são variáveis.
+
+Na parte inferior da janela, você irá ver o erro: “_No applicable contexts yet_”. Isto porque ainda não especificamos onde o código irá ser usado. Clique em _Define_, abra o grupo _Java_ e escolha _Statement_.
+
+![](https://cdn-images-1.medium.com/max/800/1*dTShFMjS2Th635E5JyqASw.png)
+
+E pronto, já temos um live template criado. Para usá-lo, basta ir ao código, escrever a abreviatura que escolhemos (_spString_), clicar em _TAB_ e o nosso código será colado.
+
+![](https://cdn-images-1.medium.com/max/800/1*TzNMymflPM0vxqmo82Pu3w.png)
+
+Espero que esta dica o ajude a ser mais productivo.
+
+Até a próxima,
+
+Rosário Pereira Fernandes

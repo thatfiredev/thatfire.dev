@@ -1,0 +1,92 @@
+---
+title: 'Android Oreo — os poderes e as limitações do novo herói'
+description: ''
+pubDate: '2017-08-22T21:02:19.979Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*suXTjgnz3WLwO1ZTL2ckRg.png'
+---
+
+* * *
+
+### Android Oreo — os poderes e as limitações do novo herói
+
+Há exactamente um ano atrás, a Google começou a distribuir o [Android Nougat,](https://www.android.com/versions/nougat-7-0/) e ontem (21 de Agosto de 2017) a empresa do “grande G” anunciou o nome do seu novo sistema operativo: [Android Oreo 8.0 (API 26)](https://www.android.com/versions/oreo-8-0/). Vamos então olhar para algumas das novas funcionalidades da “bolachinha robótica”.
+
+Tal como no artigo do Nougat ([https://medium.com/android-dev-moz/android-nougat-desenvolver-apps-tendo-em-conta-as-novas-funcionalidades-7f85bb8b789](https://medium.com/android-dev-moz/android-nougat-desenvolver-apps-tendo-em-conta-as-novas-funcionalidades-7f85bb8b789)), não podia deixar de publicar os novos emojis.
+
+Apesar de trazer novos super-poderes, algo preocupou-me um pouco ao ver a lista de novas funcionalidades: novas [restrições e limitações de aplicações a serem executadas no background](https://developer.android.com/about/versions/o/background.html) (eis a razão do título do artigo). Então vamos olhar para esta parte primeiro.
+
+### Restrições de apps em segundo plano
+
+Bom, no assunto “background” 3 funcionalidades do Android foram afectadas: [Services](https://developer.android.com/guide/components/services.html), [Broadcasts](https://developer.android.com/guide/components/broadcasts.html) e [Location](https://developer.android.com/reference/android/location/Location.html).
+
+#### Services
+
+Para começar, no Oreo as aplicações foram proibidas de ter _Services_ a serem executados em segundo plano. A partir da API 26, as aplicações só podem ser executadas em primeiro plano, ou seja, a app deve ter uma _Activity_ visível ou um _ForegroundService_ (serviço em primeiro plano). Mas mesmo assim, depois de iniciar um _Service_ em primeiro plano, se o utilizador terminar a _app_, o _Service_ será parado depois de alguns segundos.
+
+> **Então, como iremos notificar os utilizadores sobre novidades na aplicação?**
+
+Existem 3 substitutos para os _Background Services_:
+
+1.  [**Jobs**](https://developer.android.com/topic/performance/scheduling.html) — Diferentemente dos Services, Jobs são como se fossem minions que têm uma vida muito simples: acordam quando são chamados, fazem um trabalho e voltam a dormir. Vamos tentar perceber melhor isto: Os Jobs não estão sempre no background. Eles são agendados, ou seja, quando chega uma altura definida por nós eles são activos, fazem o seu trabalho e terminam o seu ciclo de vida. Para agendar estes Jobs podemos utilizar o [FirebaseJobDispatcher](https://github.com/firebase/firebase-jobdispatcher-android) ou a classe [JobIntentService](https://developer.android.com/reference/android/support/v4/app/JobIntentService.html) (substituto do IntentService).
+2.  **Carta branca** — Em alguns momentos, a aplicação pode receber carta branca e estar livre para executar Services (por um pequeno período de tempo), como por exemplo: ao receber uma mensagem de alta prioridade do FCM, ao receber um broadcast de SMS/MMS, ou quando utilizador clicar numa notificação e um PendingIntent for invocado.
+3.  **Foreground Services** — Se a app não pode estar no background, deixemos ela no foreground mesmo. Foreground Services são executados com o conhecimento do utilizador. Mesmo que a aplicação não esteja aberta, haverá uma notificação no ecrã indicando o que está a acontecer. Como por exemplo, se houver um cronômetro a correr:
+
+![](https://cdn-images-1.medium.com/max/800/1*ElubrQdcHSd4SSx-JoNVuQ.png)
+
+Fonte: [https://www.youtube.com/watch?v=Pumf\_4yjTMc](https://www.youtube.com/watch?v=Pumf_4yjTMc)
+
+#### Broadcasts
+
+No novo Android, [Broadcasts estáticos](https://developer.android.com/guide/components/broadcasts.html#manifest-declared_receivers) (definidos no AndroidManifest.xml) deixarão de funcionar. Mas esta restrição possui algumas excepções que você pode ver [aqui na documentação](https://developer.android.com/guide/components/broadcast-exceptions.html).
+
+Para substituir os Broadcasts que não estão na lista de excepções, temos de recorrer mais uma vez ao grande vilão dos BackgroundServices: [Jobs](https://developer.android.com/topic/performance/scheduling.html). Jobs podem ser acordados(invocados) por evento externo (tal como os broadcasts), como por exemplo: quando existem alterações na conectividade do dispositivo, quando o carregador é ligado, quando um ContentProvider de outra aplicação é alterado, etc.
+
+Além dos Jobs, outra solução seria [activar os Broadcasts dinamicamente no código](https://developer.android.com/guide/components/broadcasts.html#context-registered_receivers).
+
+#### Location
+
+As actualizações de localização do dispositivo agora [acontecem com menos frequência](https://developer.android.com/about/versions/oreo/background-location-limits.html). Mas se você tiver uma aplicação que a actualização de localização é importante, você pode mais uma vez recorrer aos Foreground Services.
+
+### Melhorias na Experiência do Utilizador
+
+Apesar das novas limitações, temos também vários novos super-poderes que os utilizadores das nossas aplicações irão gostar. Vamos ver alguns dos mais interessantes:
+
+#### Notificações
+
+As novidades nas notificações têm se tornado frequentes ultimamente. Desde o Android Lollipop (5.0) temos visto alterações à cada versão do Android. E com o Oreo não podia ser diferente.
+
+*   [Notification Channels](https://developer.android.com/guide/topics/ui/notifiers/notifications.html#ManageChannels) — agora o utilizador pode decidir um grupo de notificações de uma aplicação ele quer receber. Então nós, desenvolvedores, temos de definir esse grupo, ou seja, definir os canais(categorias) de notificação que a nossa app suporta.
+*   [Notifications Dots](https://developer.android.com/guide/topics/ui/notifiers/notifications.html#Badges) — agora podemos mostrar ao utilizador que a nossa app tem notificações através de um ponto ou distintivo que fica por cima do ícone da aplicação. A vantagem de utilizar estes pontinhos é que eles continuarão lá para lembrar ao utilizador que a notificação existe, mesmo que ele tenha limpado a notificação da zona de notificações.
+
+![](https://cdn-images-1.medium.com/max/800/1*mJCqpypXmrGBm6DIXZcdHQ.png)
+
+Fonte: [https://developer.android.com/guide/topics/ui/notifiers/notifications.html](https://developer.android.com/guide/topics/ui/notifiers/notifications.html)
+
+*   Cores das notificações — a partir do Oreo, é possível definir uma cor de fundo diferente para cada notificação. Nota: esta cor não serve para diferenciar as cores de uma aplicação para outra, mas sim para indicar que uma notificação é de extrema importância, como por exemplo quando há uma vídeo-chamada em progresso.
+*   Limpar notificações — além de limpar as notificações, os utilizadores podem também suspender notificações para que elas voltem depois de um tempo determinado. Além disso, nós desenvolvedores, podemos detectar quando um utilizador limpa a notificação. Basta utilizar o método `[onNotificationRemoved()](https://developer.android.com/reference/android/service/notification/NotificationListenerService.html#onNotificationRemoved%28android.service.notification.StatusBarNotification%29)` da classe `[NotificationListenerService](https://developer.android.com/reference/android/service/notification/NotificationListenerService.html)` .
+
+#### Textos
+
+Além das notificações, os textos no Android também receberam algumas melhorias:
+
+*   O EditText agora conta com a funcionalidade de autofill (preenchimento automático). Isto não requer nenhuma programação adicionar (excepto em [casos como o autofill obrigatório ou numa CustomView](https://developer.android.com/guide/topics/text/autofill.html)), mas podemos definir quais EditTexts não necessitam de auto-fill (android:importantForAutofill=”no”) ou dar dicas sobre quais dados devem estar no EditText: (android:autofillHints=”postalAddress”).
+*   Creio que todos nós já estavamos a espera desta: O tamanho do texto em TextViews agora ajusta-se automaticamente de acordo com o tamanho da TextView. Para isso basta utilizarmos um atributo da supportLibrary no TextView: app:autoSizeTextType=”uniform”. Veja mais detalhes [aqui](https://developer.android.com/guide/topics/ui/look-and-feel/autosizing-textview.html).
+*   [Fontes agora podem ser definidas em ficheiros XML](https://developer.android.com/guide/topics/ui/look-and-feel/fonts-in-xml.html), o que significa que já não é necessário colocá-las no directório dos assets. Mas incluir fontes nas nossas apps gera um apk “gordinho”. Para “emagrecer” o nosso apk, foram introduzidas também as [**fontes descarregáveis**](https://developer.android.com/guide/topics/ui/look-and-feel/downloadable-fonts.html) — permite que as nossas aplicações utilizem fontes que já foram descarregadas e instaladas no dispositivo Android.
+
+#### Ecrã
+
+É possível reparar que à medida que os anos vão passando o tamanho do ecrã dos telemóveis tem aumentado também. O [Samsung Galaxy S8](http://www.samsung.com/global/galaxy/galaxy-s8/) por exemplo conta com 5.8 polegadas. E para ocupar todos estes 2960x1440 pixels, o Android Oreo estica as telas da aplicação para preencher o ecrã inteiro. Mas se, por algum motivo, você precisar manter um certo tamanho para uma activity, é possível definir no Manifest:
+
+```xml
+<activity
+  ...
+  android:resizeableActivity="false"
+  android:maxAspectRatio="1.86"
+/>
+```
+
+E depois de terem introduzido o [modo multi-janela no Android Nougat](https://medium.com/android-dev-moz/android-nougat-desenvolver-apps-tendo-em-conta-as-novas-funcionalidades-7f85bb8b789#2f0b) e Picture-in-picture para Android TV, a equipa do “robô verde” trouxe agora o Picture-in-picture para os telemóveis também:
+
+![](https://cdn-images-1.medium.com/max/800/1*c3VnZrLeg2Wm3KJ01lJzQw.png)
+
+Fonte: [https://www.youtube.com/watch?v=7kD0ZYzJbYo](https://www.youtube.com/watch?v=7kD0ZYzJbYo)
