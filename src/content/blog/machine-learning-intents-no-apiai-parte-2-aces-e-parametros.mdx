@@ -1,0 +1,82 @@
+---
+title: 'Machine Learning — Intents no api.ai (parte 2 — Acções e parametros)'
+description: ''
+pubDate: '2017-03-23T19:04:44.208Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png'
+---
+
+* * *
+
+### Machine Learning — Intents no api.ai (parte 2 — Acções e parametros)
+
+> Ok, eu criei uma aplicação capaz de conversar comigo no Android. Mas eu tenho amigos para isso. Eu preciso de um assistente capaz de fazer mais, como controlar o meu calendário por exemplo.
+
+Pois é, até agora só temos um assistente virtual no Android que conversa conosco (veja o [artigo anterior](https://medium.com/p/ml-android-94d77658f6c6)). Mas nós precisamos mais do que isso, certo? Então vamos ver como fazer o nosso aplicativo executar acções que requisitamos ao agente.
+
+Este é o 6º artigo da série Machine Learning. Se você não acompanhou a série desde o princípio, esta é a sua chance de parar de ler este artigo e começar do básico:
+
+[**Machine Learning — Entrando no mundo dos assistentes virtuais**  
+_Aprenda a criar o seu próprio assistente virtual em 4 passos simples._medium.com](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03 "https://medium.com/@rosariopfernandes/ml-b7eba66e0e03")[](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03)
+
+Para permitir que o aplicativo execute acções no dispositivo Android temos de conhecer mais 2 conceitos essenciais do [api.ai](http://api.ai):
+
+### Actions
+
+Uma acção corresponde ao passo que a nossa aplicação dará quando um Intent for chamado.
+
+Acções podem conter parametros para passar alguns detalhes extras à nossa aplicação, quando necessário. Estes parametros podem ser definidos no campo _Action_, quando estamos a criar um Intent na consola do api.ai:
+
+![](https://cdn-images-1.medium.com/max/800/1*evj8qIP_Jv0kFXp161hBsA.png)
+
+### Parameters
+
+Como já foi dito, parametros são argumentos que podem, opcionalmente, ser adicionados ao nosso Intent para que a nossa aplicação tenha mais detalhes sobre a acção que deve tomar. Estes parametros podem ser definidos automaticamente de acordo com os exemplos que você coloca automaticamente no campo “_User says_” ou você pode colocá-los na tabela de forma manual.
+
+#### Definição automática
+
+Quando você introduz um exemplo no campo _User says_ que contém uma entity (tanto _system_ como _developer entity_), ele automaticamente irá destacar essa entity e adicionar à tabela de parametros:
+
+![](https://cdn-images-1.medium.com/max/800/1*ii0pZY3Xw0pBMKI2LvGYkA.png)
+
+#### Definição de constantes
+
+Dependendo da aplicação que estamos a desenvolver, por vezes podemos querer que a nossa acção tenha parametros constantes.
+
+Por exemplo, se o utilizador quiser fazer a aplicação ficar muda, podemos definir o nível do volume nos parametros da acção:
+
+![](https://cdn-images-1.medium.com/max/800/1*jgYzp8vA6rZXGcA0H6LHSg.png)
+
+#### Definição de padrões
+
+Caso o nosso utilizador não especifique um certo parâmetro, as vezes o mais correcto é definirmos um valor padrão ao invés de voltar a perguntar.
+
+#### Parametros obrigatórios
+
+No api.ai é possível marcarmos parametros como _required_ (obrigatórios) quando a nossa acção não pode ser executada sem que o utilizador especifique este parametro. Consequentemente, isto irá gerar “Árvores de decisão” (_Decision trees_). Abordaremos esse assunto num outro artigo. **Actualização (06/04/2017)**: Esse artigo está [aqui](https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894).
+
+#### Fazer referência de parametros no Text Response
+
+Quando quisermos referenciar ao parametro utilizado na resposta do nosso bot, podemos chamá-lo colocando um _$_ antes do nome da variavél:
+
+![](https://cdn-images-1.medium.com/max/800/1*1RiIC4MC-i367t4IHWD6dg.png)
+
+### Acções na aplicação Android
+
+Agora que já sabemos como funcionam as acções do nosso agente, vamos fazer com que o nosso aplicativo mostre todos os eventos que temos marcados para hoje. Para isso, podemos utilizar o [Calendar Intent](https://developer.android.com/guide/components/intents-common.html#Calendar) que usa o ContentProvider do calendário do Android.
+
+Criamos o Intent “calendar.read” no api.ai:
+
+![](https://cdn-images-1.medium.com/max/800/1*VOyKsmbNuzd1uVg3dEZ7ag.png)
+
+O Intent “calendar.read” na consola do api.ai
+
+```java
+// Código para obter eventos do Content Provider e chamar no onResult
+```
+
+E pronto. Com apenas um botão e algumas palavras você pode pedir tudo ao seu aplicativo. O código desta aplicação está disponível no [GitHub](https://github.com/rosariopfernandes/meuassistentepessoal/tree/actionsParams).
+
+No [próximo artigo](https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22) analisaremos mais um dos conceitos básicos dos Intents: Contexto.
+
+[**Machine Learning — Intents no api.ai (parte 3 — Contexto)**  
+_Saiba como utilizar Contexts para definir o tópico da conversa com o bot do api.ai._medium.com](https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22 "https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22")[](https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22)

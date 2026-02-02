@@ -1,0 +1,178 @@
+---
+title: 'Diálogos — Qual, Quando e Como Usar?'
+description: ''
+pubDate: '2016-08-30T19:57:26.314Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*sIA1B0BTfRwPfGOaXXgrzQ.png'
+---
+
+* * *
+
+### Diálogos — Qual, Quando e Como Usar?
+
+Se você já desenvolve programas há algum tempo, independentemente da linguagem, você provavelmente já teve de mostrar uma simples mensagem ao usuário, ou questioná-lo se se pretende mesmo executar uma acção.
+
+Mas a plataforma Android dispõe de vários tipos de diálogos: Alert Dialogs, Toasts, Snackbars e BottomSheet Dialogs. Com tantas opções, você provavelmente fica sem saber qual escolher. Por isso, neste artigo vamos ver a diferença entre os 4 tipos e como escolher o mais apropriado.
+
+#### [Alert Dialogs](https://material.google.com/components/dialogs.html)
+
+Alert Dialogs mostram informações ao usuário em que ele tem de tomar uma decisão. São bastante pertubadores, por isso use apenas quando você pretende interromper o usuário. Se você tem uma mensagem urgente que requer uma resposta imediata do usuário, então AlertDialogs são a melhor escolha.
+
+Um AlertDialog apresenta uma pequena informação (geralmente 2 frases) e duas acções. Ele ocupa todo o ecrã, mantendo a aplicação desfocada, assumindo que o que irá acontecer posteriormente depende da decisão do usuário.
+
+![](https://cdn-images-1.medium.com/max/800/1*bwiIYs9-ECePt-lR0zBy-w.png)
+
+Você deve usar os Alert Dialogs com moderação, pois o usuário não pode fazer nada até responder a sua questão.
+
+```java
+AlertDialog.Builder alerta = new AlertDialog.Builder(contexto);
+alerta.setTitle("Sair?");
+alerta.setMessage("As suas alterações não foram salvas");
+alerta.setCancelable(false); //para não permitir que o usuário continue sem responder
+alerta.setPositiveButton("Sair",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Deixe o usuário sair
+            }
+        });
+alerta.setNegativeButton("Cancelar",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                //O usuário não quer sair
+            }
+        });
+alerta.show();
+```
+
+#### [Toasts](https://developer.android.com/guide/topics/ui/notifiers/toasts.html)
+
+Quando você pretende informar ao usuário sobre algo que aconteceu (com ou sem sucesso), um AlertDialog pode ser meio exagerado. Esta é uma boa situação onde podemos usar Toasts. O Toast mostra uma frase curta que aparece e desaparece automaticamente.
+
+![](https://cdn-images-1.medium.com/max/800/1*zIcYTfkjbodtmYqRUxJwTg.png)
+
+Criar um Toast é bastante simples: Basta passar o contexto, o texto que pretendemos mostrar e a duração do Toast no ecrã. O Android Studio já traz inclusive um [Live Template](https://medium.com/@rosariopfernandes/mais-código-em-menos-tempo-android-studio-live-templates-1f58e249b711) para isso: simplesmente escreva Toast e clique em Tab.
+
+![](https://cdn-images-1.medium.com/max/800/1*1K4f4j0QhJklOd2o4E7WAA.png)
+
+```java
+Toast.makeText(contexto, "Mensagem enviada!", Toast.LENGTH_SHORT).show();
+```
+
+#### [Snackbars](https://material.google.com/components/snackbars-toasts.html)
+
+Toasts podem ser bastante fáceis de usar, mas limitam-nos a mostrar apenas uma confirmação de um evento que aconteceu. Mas, e se o evento fôr negativo — como a eliminação de dados? Talvez o usuário não queria fazer aquilo e agora está a entrar em panico à procura do botão de desfazer por ter eliminado aquela música favorita. Por isso que existem as Snackbars.
+
+![](https://cdn-images-1.medium.com/max/800/1*Y9BMRbcIo67qjulhJ4bRNw.png)
+
+Snackbars são semelhantes aos Toasts, mas permitem uma interação do usuário — como clicar no botão de desfazer, por exemplo. Snackbars veêm deslizando pela parte de baixo do ecrã, onde o usuário pode deslizar o dedo para fazê-lo desaparecer. Se o usuário não fizer nada, ela desaparece automaticamente (como os Toasts).
+
+E tal como os Toasts, Snackbar são bastante fáceis de usar (graças ao [Chris Banes](https://medium.com/u/9303277cb6db), desenvolvedor da [Android Design Support Library](http://android-developers.blogspot.com/2015/05/android-design-support-library.html)) só que ao invés de passar o contexto, desta vez temos de passar a view. E para criar aquele botão, basta usarmos o método _setAction_.
+
+```java
+Snackbar.make(getCurrentFocus(), "Música eliminada", Snackbar.LENGTH_SHORT)
+        .setAction("Desfazer", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Devolva a música favorita do usuário!!!
+            }
+        })
+        .show();
+```
+
+#### [BottomSheet Dialogs](https://material.google.com/components/bottom-sheets.html?utm_campaign=android_launch_supportlibrary23.2_022216&utm_source=anddev&utm_medium=blog)
+
+Com a Android Support Library 23.2, Google anunciou suporte à **_BottomSheets._** _De acordo com Material Design,_ BottomSheets são mostrados apenas como resultado de uma ação iniciada pelo usuário. BottomSheets geralmente mostram conteúdo na parte inferior do ecrã, deslizando de baixo para cima.
+
+Além de BottomSheets, a Support Library também oferece **BottomSheetDialogs** que são basicamente AlertDialogs desenhados como uma BottomSheet. Como eu disse acima, use apenas para dar opções depois de o usuário iniciar uma acção (como por exemplo quando ele clicar e segurar numa imagem, procurando eliminá-la).
+
+![](https://cdn-images-1.medium.com/max/800/1*bTDROjM2ZF5yiLpIS-WBnA.png)
+
+Apesar de serem mais elegantes do que um AlertDialog, BottomSheetDialogs requerem um bocado mais de código, mas vale a pena!
+
+Primeiro, temos de desenhar a BottomSheet:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<!-- minha_bottom_sheet.xml -->
+<LinearLayout app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/bottomSheet_editar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="16dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_mode_edit_grey_24dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:text="Editar"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottomSheet_eliminar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="16dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_delete_grey_24dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:text="Eliminar"/>
+    </LinearLayout>
+</LinearLayout>
+```
+
+Depois, o código para criar o BottomSheetDialog é simples:
+
+```java
+BottomSheetDialog sheetDialog= new BottomSheetDialog(getActivity());
+
+View sheetView = getActivity().getLayoutInflater().inflate(R.layout.minha_bottom_sheet, null);
+
+LinearLayout editar = (LinearLayout) sheetView.findViewById(R.id.bottomSheet_editar);
+
+LinearLayout eliminar = (LinearLayout) sheetView.findViewById(R.id.bottomSheet_eliminar);
+
+editar.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        // Código para editar
+    }
+});
+
+eliminar.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        // Código para eliminar
+    }
+});
+
+sheetDialog.setContentView(sheetView);
+sheetDialog.show();
+```

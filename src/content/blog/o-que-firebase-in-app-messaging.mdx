@@ -1,0 +1,117 @@
+---
+title: 'O que é Firebase In-App Messaging?'
+description: ''
+pubDate: '2018-08-27T17:01:03.328Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*0PTX5441pLSBnsHULbU1qg.png'
+---
+
+* * *
+
+### O que é Firebase In-App Messaging?
+
+#### E para quê serve?
+
+Desde que a nova versão do [Firebase](https://medium.com/@doiliomatsinhe/firebase-overview-f8184c0c33a0) foi lançada em Maio de 2016, temos visto o surgimento de várias novas funcionalidades que vêm melhorando esta incrível plataforma para desenvolvimento de aplicações móveis.
+
+A funcionalidade mais recente (**beta** no momento em que escrevo este artigo) é a [In-App Messaging](https://firebase.google.com/docs/in-app-messaging/?hl=pt-br). Como você já deve imaginar, ela é baseada numa outra funcionalidade que já é bastante conhecida — [Cloud Messaging (FCM)](http://firebase.google.com/docs/cloud-messaging/). Atualmente está disponível apenas para Android e iOS.
+
+Tal como o FCM, In-App Messaging permite enviar mensagens para os utilizadores da nossa aplicação. A diferença é que no FCM as mensagens são mostradas em forma de notificação, enquanto que no In-App Messaging as mensagens são mostradas em forma de [diálogo](https://medium.com/android-dev-moz/di%C3%A1logos-qual-quando-e-como-usar-bab5913280a0).
+
+Importa mencionar também que esta ferramenta vem integrada com o Firebase Analytics e Predictions, permitindo que você envie as suas mensagens para grupos de utilizadores previamente criados nessas ferramentas.
+
+### Porquê usar In-App Messaging?
+
+Esta foi a primeira questão que apareceu-me quando descobri esta nova funcionalidade: Porquê mostrar as mensagens em forma de diálogo ao invés de notificação?
+
+Depois de ler a documentação e experimentar o novo serviço, achei interessante pois apercebi-me que por vezes as notificações podem chegar em momentos inoportunos. Por exemplo: Não adianta você receber uma notificação de uma loja online quando você está num supermercado; ou de um jogo quando você está concentrado a estudar. Para evitar situações destas, as mensagens só são entregues quando o utilizador tiver a aplicação aberta.
+
+Creio que esta funcionalidade será bastante utilizada para mostrar promoções nas aplicações. Mas para além de promoções, você pode utilizar também para: mostrar uma nova funcionalidade da app ao utilizador, dar dicas de como passar aquele nível difícil do jogo, etc.
+
+### Como começar?
+
+#### Adicionar o SDK para Android
+
+A configuração necessária do lado Android é uma das mais simples de todos os serviços do Firebase. Ela só requer 2 passos:
+
+1.  [Adicionar o Firebase ao seu projeto Android](https://firebase.google.com/docs/android/setup?hl?pt-br);
+2.  Adicionar a dependência ao `build.gradle` da app:
+
+```groovy
+dependencies {
+    // ... outras dependencias ...
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.1'
+}
+```
+
+#### Testar o envio de mensagens
+
+Diferentemente do Cloud Messaging, a nova ferramenta só carrega as mensagens que você enviou no Firebase uma vez por dia para poupar recursos como bateria e memória. E ninguém gostaria de testar novas funcionalidades uma vez à cada 24 horas. Por isso, a equipa do Firebase incluiu também a possibilidade de enviar mensagens imediatamente para o seu dispositivo de teste.
+
+Para tal, você precisa do `InstanceID` desse dispositivo, que é fácil de obter. Depois de adicionar a dependência à sua aplicação, execute-a e veja o logcat do Android Studio. Você deverá ver uma linha semelhante à esta:
+
+I/FIAM.Headless: Starting InAppMessaging runtime with Instance ID **_SEU\_INSTANCE\_ID\_ESTA\_AQUI_**
+
+Feche a aplicação e vamos então utilizar este `InstanceID` para enviar a nossa primeira mensagem:
+
+1.  Vá para a Consola do Firebase e no menu à esquerda, clique na aba “In-App Messaging”.
+2.  Clique em “Nova Campanha” e dê um título à mensagem.
+3.  Mais abaixo você verá a opção “Testar no seu dispositivo”. Clique nesse botão.
+4.  Introduza o seu `InstanceID` e clique no botão “Testar”.
+5.  Abra a aplicação, você receberá a mensagem na sua tela.
+
+### Enviando as Mensagens
+
+Atualmente, a única forma de enviar as mensagens é através da consola do Firebase. Basta ir à aba In-App Messaging e clicar em “Nova Campanha”.
+
+#### 1\. Estilo e Conteúdo
+
+Este é o primeiro passo para o envio da sua mensagem. Você pode personalizar a sua mensagem para se adequar ao estilo da sua aplicação, ou à promoção que você está fazendo.
+
+O layout da mensagem pode ser: _Modal_, _Somente Imagem_ ou _Banner Superior_. Ao escolher o seu layout, você verá uma prévia no lado direito da consola. De seguida, você tem alguns campos onde pode introduzir o conteúdo a ser mostrado na mensagem.
+
+#### 2\. Segmentação
+
+Esta área não será apresentada ao utilizador da aplicação. Mas é útil para você, o desenvolvedor. Nela é preciso especificar um nome de campanha. Esta campanha será depois mostrada em ferramentas como [Analytics](https://firebase.google.com/products/analytics/?hl=pt-br) e [Predictions](https://firebase.google.com/products/predictions/?hl=pt-br), onde você poderá analisar e fazer o uso dos resultados da sua campanha(promoção).
+
+#### 3\. Programação
+
+Você pode escolher quando a mensagem deve ser enviada ao utilizador. Você pode definir um intervalo de tempo (útil para promoções sazonais). Se preferir, é possível também não especificar o tempo limite da campanha. Assim, o utilizador continuará a receber mensagens desta campanha até você decidir terminá-la.
+
+O campo seguinte permite especificar eventos que farão com que a mensagem seja mostrada. Por padrão, a mensagem já contém o evento `**on_foreground**` que mostra a mensagem quando o aplicativo está aberto. Você pode adicionar outros eventos como:
+
+*   `**app_launch**` — a mensagem é mostrada quando a aplicação é iniciada.
+*   `**app_clear_data**` — quando o utilizador limpa os dados da aplicação.
+*   `**app_exception**` — quando a aplicação recupera depois de um erro fatal.
+*   `**first_open**` — quando a aplicação é aberta pela primeira vez.
+
+Note que sua mensagem será mostrada ao utilizador sempre que qualquer um desses eventos ocorrer.  
+E por fim, você pode especificar a frequência para a entrega das mensagens.
+
+### Cloud Messaging vs. In-App Messaging
+
+### Cloud Messaging vs. In-App Messaging
+
+| Comparação        | Firebase Cloud Messaging (FCM)                         | Firebase In-App Messaging (FIAM)                           |
+| :---------------- | :----------------------------------------------------- | :--------------------------------------------------------- |
+| **Caso de Uso**   | Notificações "fora do aplicativo"                      | Mensagens "dentro do aplicativo"                           |
+| **Alvo**          | Usuários que podem ou não estar usando o aplicativo    | Usuários ativos que estão usando o aplicativo              |
+| **Formato**       | Notificações push na barra de status                   | Cartões, banners, modais dentro do aplicativo              |
+| **Acionador**     | Acionado por servidor ou console Firebase              | Acionado por comportamento do usuário dentro do aplicativo |
+| **Entrega**       | Imediata                                               | Atrasada (para poupar recursos)                            |
+| **Integração**    | Console Firebase, APIs de servidor                     | Console Firebase, Firebase Analytics, Firebase Predictions |
+| **Personalização**| Conteúdo personalizável                                | Conteúdo e layout personalizáveis                          |
+| **Recursos**      | Permite enviar para usuários inativos para reengajamento | Ideal para incentivar ações imediatas no aplicativo       |
+
+Em geral, utilize:
+
+*   O [**Firebase Cloud Messaging**](https://medium.com/android-dev-moz/fcf-fcm-d5828e7eab94) para alertar os utilizadores sobre alguma alteração que aconteceu na base de dados e que pode lhes interessar. Você pode utilizar também nos casos em que o utilizador tem a aplicação instalada mas não usa há muito tempo. Notificações podem ser úteis para trazê-lo de volta à app.
+*   O **In-App Messaging** para chamar a atenção de um utilizador e persuadi-lo a tomar uma acção como, por exemplo: experimentar um novo nível do seu jogo, ultrapassar uma certa pontuação para ganhar um prémio, utilizar uma funcionalidade da app que nunca utilizou antes, aproveitar a promoção alusiva ao verão, etc.
+
+É importante lembrar também que, por vezes, [diálogos podem ser um incomodo](https://medium.com/android-dev-moz/di%C3%A1logos-qual-quando-e-como-usar-bab5913280a0) para os utilizadores. Então use-os com cautela.
+
+E é tudo sobre Firebase In-App Messaging. Espero que esta nova funcionalidade ajude-lhe a melhorar a sua aplicação. Deixo aqui alguns recursos que acredito que possam ser úteis:
+
+*   [Firebase In-App Messaging](https://firebase.google.com/products/in-app-messaging/)
+*   [Firebase In-App Messaging Introduction — Firebase Docs](https://firebase.google.com/docs/in-app-messaging/)
+*   [Introducing Firebase In-App Messaging — Firebase Blog](https://firebase.googleblog.com/2018/08/introducing-firebase-in-app-messaging.html)
+*   [Getting Started with In-App Messaging](https://firebase.google.com/docs/in-app-messaging/get-started?hl=pt-br)

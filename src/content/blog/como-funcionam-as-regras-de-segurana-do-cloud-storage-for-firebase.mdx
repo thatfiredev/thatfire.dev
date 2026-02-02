@@ -1,0 +1,157 @@
+---
+title: 'Como funcionam as regras de segurança do Cloud Storage for Firebase?'
+description: ''
+pubDate: '2018-03-29T19:59:20.044Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*j3emxEb3BNVYd10L2iDx0Q.png'
+---
+
+* * *
+
+Cloud Storage for Firebase Logo from firebase.google.com/products
+
+### Como funcionam as regras de segurança do Cloud Storage for Firebase?
+
+#### Saiba como garantir a segurança dos ficheiros no Firebase Storage
+
+Ao desenvolver uma aplicação capaz de armazenar ficheiros para disponibilizá-los à outros utilizadores, você provavelmente encontrou o [Cloud Storage for Firebase](https://firebase.google.com/products/storage/) (também chamado Firebase Storage) como uma das tecnologias que permitem fazer isso de forma simples, fácil e rápida. E se você escolheu o Firebase Storage dentre as outras opções, devo parabenizá-lo pela escolha. Mas além de armazenarmos os dados de forma simples, precisamos garantir que eles estejam seguros. E para fazer isso no Firebase Storage, utilizamos as regras de segurança — o assunto principal deste artigo.
+
+### Conhecendo as Security Rules
+
+Quem já viu/utilizou as Regras da Realtime Database, ao aceder à aba de [Regras do Storage](https://console.firebase.google.com/u/0/project/_/storage/rules) na Consola do Firebase notará que a estrutura das regras de segurança são diferentes. Isso porque as regras da Realtime Database ficam organizadas em uma árvore JSON, enquanto que as do Cloud Storage parecem um JSON sem aspas:
+
+```firebase
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+Esta organização é utilizada em alguns dos serviços da [Google Cloud Platform](https://cloud.google.com/) como o [Cloud Firestore](https://firebase.google.com/products/firestore/) (provavelmente falarei dele num dos próximos artigos).
+
+Tal como na [Realtime Database](https://firebase.google.com/products/realtime-database/), as regras de segurança do Cloud Storage permitem controlar operações de leitura e/ou escrita em ficheiros. Podemos também controlar como estes ficheiros são estruturados e quais meta-dados eles possuem.
+
+Para utilizarmos as regras de segurança do Cloud Storage, precisamos de conhecer 2 palavras reservadas: `allow` e `match`.
+
+### allow
+
+Tal como indica o nome, `allow` indica se uma operação (`read` ou `write`) é permitida ou não, de acordo com uma condição especificada (opcional). Por exemplo:
+
+```firebase
+// Se não for especificada uma condição, a regra torna-se true
+allow read;
+
+// Utilize a palavra if para especificar uma condição:
+allow read: if <condição>;
+
+// Você pode também utilizar uma única condição para leitura e escrita
+allow read, write: if <condição>;
+```
+
+#### Regras simples
+
+Lembra quando nós colocávamos ambas regras (`.write` e `.read`) da Realtime Database em `true` para testarmos, deixando a base de dados totalmente insegura? Pois é, o equivalente no Cloud Storage é:
+
+```firebase
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write;
+    }
+  }
+}
+```
+
+**Nota**: Isto irá deixar o Storage público, o que significa que qualquer pessoa (mesmo que não seja utilizador da sua aplicação) pode armazenar e obter ficheiros do seu Cloud Storage. Utilize estas regras apenas para testes.
+
+Se quiséssemos fazer o inverso do exemplo acima, na Realtime Database colocaríamos o `.write` e `.read` em `false`. Assim, ninguém (além dos administradores do projeto) teria acesso à base de dados. No Cloud Storage isto pode ser obtido com as seguintes regras:
+
+```firebase
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+E quando utilizavámos o `auth!=null` na Realtime Database? Permitíamos que a base de dados fosse acedida apenas por utilizadores registados no Firebase Auth. No Cloud Storage também é possível:
+
+```firebase
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+### match
+
+Como você já deve ter reparado, em todas as regras que escrevemos até agora, utilizamos a palavra match. Ela serve para especificarmos o caminho onde queremos aplicar cada regra. Este caminho pode ser especificado ao detalhe (caminho exato e estático) ou através de variáveis (caminho dinâmico).
+
+#### Caminho Exato
+
+Este é o match mais simples, utilizado quando já sabemos o caminho exato do ficheiro à que queremos aplicar as regras. Por exemplo, para aplicar regras aos ficheiros _fotoPerfil.png_ e _miniatura.png_ localizados no diretório _/imagens_ :
+
+```firebase
+match /imagens/fotoPerfil.png {
+  allow write: if <condição>;
+}
+match /imagens/miniatura.png {
+  allow write: if <condição>;
+}
+```
+
+Outra forma seria dividir o caminho, criando ramificações na árvore:
+
+```firebase
+match /imagens {
+    match /fotoPerfil.png {
+        allow write: if <condição>;
+    }
+    match /miniatura.png {
+        allow write: if <condição>;
+    }
+}
+```
+
+#### Caminho dinâmico (uso de variáveis)
+
+Por vezes, podemos não conhecer o nome de um ficheiro ou de um diretório. Nesses casos, utilizamos variáveis tal como fazíamos na Realtime Database (utilizando o cifrão `$`), mas aqui colocamos o nome da variável entre chavetas. Por exemplo:
+
+```firebase
+match /imagens {
+    //Todas imagens no directório imagens.
+    match /{nomeImagem} {
+      allow read: if <condição>;
+    }
+    
+    //Todas imagens no directório imagens, incluíndo subdirectórios
+    match /{todasImagens=**} {
+      allow read: if <outra_condição>;
+    }
+}
+```
+
+### Utilizando as regras para validação
+
+Para além de controlar permissões para armazenamento e leitura de ficheiros, podemos também validar os ficheiros que estão a ser armazenados no Cloud Storage. Vou deixar apenas um exemplo para demonstrar a validação, para não estender demais este artigo:
+
+```firebase
+match /{imageId} {
+  allow write: if request.resource.size < 2 * 1024 * 1024
+               && request.resource.contentType.matches('image/.*')
+}
+```
+
+Com a regra acima, garantimos que o ficheiro que está a ser armazenado:
+
+1.  Não excede 2 Megabytes;
+2.  É uma imagem, independentemente do formato (jpg, png, bmp, …).
+
+E esta foi uma introdução às Regras do Cloud Storage for Firebase. No próximo artigo irei mostrar algumas formas de utilizar os meta-dados dos ficheiros. (**_Spoiler Alert_**: vamos começar a desenvolver uma app semelhante ao Google Drive)

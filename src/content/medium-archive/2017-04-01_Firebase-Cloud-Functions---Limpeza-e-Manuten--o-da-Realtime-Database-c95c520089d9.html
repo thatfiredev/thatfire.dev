@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Aprenda a  utilizar o Firebase Cloud Functions para evitar palavrões na sua aplicação.
+</section>
+<section data-field="description" class="p-summary">
+Agora que já conhecemos o Firebase Cloud Functions e sabemos como utilizá-lo, vamos ver um outro uso dele: manter e limpar a base de dados.
+</section>
+<section data-field="body" class="e-content">
+<section name="ecad" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="79e3" id="79e3" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*lDJxCk5HD2OL7BGKJFhlcg.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*lDJxCk5HD2OL7BGKJFhlcg.png"></figure><h3 name="ed3c" id="ed3c" class="graf graf--h3 graf-after--figure graf--title">Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</h3><p name="a038" id="a038" class="graf graf--p graf-after--h3"><strong class="markup--strong markup--p-strong">Este artigo é parte da série Firebase Cloud Functions:</strong></p><ol class="postList"><li name="aebc" id="aebc" class="graf graf--li graf-after--p"><a href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" data-href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" class="markup--anchor markup--li-anchor" target="_blank">O que é Firebase Cloud Functions?</a></li><li name="192b" id="192b" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" data-href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Como começar?</a></li><li name="8f70" id="8f70" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/fcf-fcm-d5828e7eab94" data-href="https://medium.com/@rosariopfernandes/fcf-fcm-d5828e7eab94" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions + Cloud Messaging</a></li><li name="852d" id="852d" class="graf graf--li graf-after--li">Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</li><li name="bf00" id="bf00" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/48d503a6cd24" data-href="https://medium.com/@rosariopfernandes/48d503a6cd24" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Chame uma função na sua app</a></li><li name="e04b" id="e04b" class="graf graf--li graf-after--li graf--trailing"><a href="https://medium.com/android-dev-moz/fcf-search-7fd744b60dee" data-href="https://medium.com/android-dev-moz/fcf-search-7fd744b60dee" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Pesquisa de Texto na Base de Dados</a></li></ol></div></div></section><section name="5fc1" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><h3 name="b2c4" id="b2c4" class="graf graf--h3 graf--leading">Limpeza e Manutenção da Realtime Database</h3><p name="9e9a" id="9e9a" class="graf graf--p graf-after--h3">Agora que já <a href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" data-href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" class="markup--anchor markup--p-anchor" target="_blank">conhecemos o Firebase Cloud Functions</a> e sabemos <a href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" data-href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" class="markup--anchor markup--p-anchor" target="_blank">como utilizá-lo</a>, vamos ver um outro uso dele: manter e limpar a base de dados.</p><p name="7264" id="7264" class="graf graf--p graf-after--p">Por exemplo, numa aplicação de conversas, os utilizadores podem enviar palavras insultuosas ou obscenas (chamemos de palavrões daqui em diante). Com o Cloud Functions, podemos censurar estas palavras para manter um bom ambiente na nossa aplicação:</p><figure name="ffc2" id="ffc2" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*JFHksp2GUgIO5WV5tONiZQ.png" data-width="800" data-height="450" src="https://cdn-images-1.medium.com/max/800/1*JFHksp2GUgIO5WV5tONiZQ.png"><figcaption class="imageCaption">Quando surge uma nova mensagem, ela é passada ao Function para ser verificada e “limpa” se necessária e no fim reescrita na base de dados</figcaption></figure><p name="41cf" id="41cf" class="graf graf--p graf-after--figure">Para isso, vamos utilizar <a href="https://www.npmjs.com/package/bad-words" data-href="https://www.npmjs.com/package/bad-words" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">bad-words</a> e <a href="https://www.npmjs.com/package/badwords-list" data-href="https://www.npmjs.com/package/badwords-list" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">badwords-list</a>, que transformam palavrões (em inglês) em <em class="markup--em markup--p-em">*****</em>. Mas se você não quiser filtrar só os palavrões em inglês, também pode adicionar alguns palavrões em português que devem ser filtrados.</p><p name="e3d0" id="e3d0" class="graf graf--p graf-after--p">Supondo que as mensagens na nossa base de dados são guardadas apenas com o atributo “texto”, depois de uma mensagem ser enviada, ela passará a ter mais 2 atributos:</p><ul class="postList"><li name="5d7c" id="5d7c" class="graf graf--li graf-after--p">verificada — indica se a mensagem já foi verificada pelo Cloud Functions</li><li name="3e68" id="3e68" class="graf graf--li graf-after--li">censurada — indica se a mensagem teve de ser censurada depois da verificação.</li></ul><figure name="4692" id="4692" class="graf graf--figure graf--iframe graf-after--li"><script src="https://gist.github.com/rosariopfernandes/84eae8d01c9a06aa4d2283bed19fceb3.js"></script></figure><h4 name="d086" id="d086" class="graf graf--h4 graf-after--figure">Mão na massa!</h4><p name="b426" id="b426" class="graf graf--p graf-after--h4">Vamos então começar por adicionar as dependencias. Navegue para o directório <em class="markup--em markup--p-em">functions</em> do seu projecto e instale as dependencias utilizando o comando:</p><pre name="cf3f" id="cf3f" class="graf graf--pre graf-after--p"><strong class="markup--strong markup--pre-strong">npm install</strong> bad-words</pre><pre name="302a" id="302a" class="graf graf--pre graf-after--pre"><strong class="markup--strong markup--pre-strong">npm install</strong> badwords-list</pre><p name="c25d" id="c25d" class="graf graf--p graf-after--pre">Em seguida, adicione as dependências para o seu ficheiro <em class="markup--em markup--p-em">package.json</em> (do directório functions):</p><figure name="1e78" id="1e78" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/d53f3e9d3accc301b2329f5d648bc118.js"></script></figure><p name="d6de" id="d6de" class="graf graf--p graf-after--figure">Tendo as dependências prontas, podemos criar a nossa função:</p><figure name="1fec" id="1fec" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/90af14f2383e6d53701aded2058fd174.js"></script></figure><p name="bf2c" id="bf2c" class="graf graf--p graf-after--figure">E agora é só fazer um <code class="markup--code markup--p-code">firebase deploy</code> e testar. ;) Envie uma mensagem obscena para a base de dados be ela será automaticamente verificada e censurada.</p><p name="95b1" id="95b1" class="graf graf--p graf-after--p">Outros casos em que você pode querer utilizar esta técnica:</p><ul class="postList"><li name="b804" id="b804" class="graf graf--li graf-after--p"><a href="https://github.com/firebase/functions-samples/tree/master/user-data-cleanup" data-href="https://github.com/firebase/functions-samples/tree/master/user-data-cleanup" class="markup--anchor markup--li-anchor" rel="noopener" target="_blank">Eliminar dados de um ex-utilizador Realtime Database</a></li><li name="e4f4" id="e4f4" class="graf graf--li graf-after--li"><a href="https://github.com/firebase/functions-samples/tree/master/limit-children" data-href="https://github.com/firebase/functions-samples/tree/master/limit-children" class="markup--anchor markup--li-anchor" rel="noopener" target="_blank">Limitar o número de subnós na Firebase database</a></li><li name="ff10" id="ff10" class="graf graf--li graf-after--li"><a href="https://github.com/firebase/functions-samples/tree/master/bigquery-import" data-href="https://github.com/firebase/functions-samples/tree/master/bigquery-import" class="markup--anchor markup--li-anchor" rel="noopener" target="_blank">Copiar dados da Realtime Database para o Google Cloud BigQuery</a></li><li name="eea7" id="eea7" class="graf graf--li graf-after--li">Converter texto para emoji</li></ul><p name="b230" id="b230" class="graf graf--p graf-after--li">No artigo seguinte vemos como criar uma função que pode ser chamada diretamente da nossa aplicação Android:</p><p name="a440" id="a440" class="graf graf--p graf-after--p graf--trailing"><a href="https://medium.com/p/48d503a6cd24" data-href="https://medium.com/p/48d503a6cd24" class="markup--anchor markup--p-anchor" rel="nofollow" target="_blank">https://medium.com/@rosariopfernandes/48d503a6cd24</a></p></div></div></section><section name="6237" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="041f" id="041f" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/c95c520089d9"><time class="dt-published" datetime="2017-04-01T06:02:00.835Z">April 1, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/fcf-mantain-c95c520089d9" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

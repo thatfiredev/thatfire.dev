@@ -1,0 +1,134 @@
+---
+title: 'Android Nougat — desenvolver apps tendo em conta as novas funcionalidades'
+description: ''
+pubDate: '2016-08-23T20:27:25.785Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*10XD2YQX0Ce5By0ZCDeK1A.png'
+---
+
+Recentemente (22 de Agosto de 2016), a Google finalmente começou com a distribuição do seu mais recente sistema operativo para dispositivos móveis: O Android Nougat 7.0 (API 24).
+
+Este sistema veio com [várias novas funcionalidades](http://android.googleblog.com/2016/08/android-70-nougat-more-powerful-os-made.html) (que pudemos testar desde Março de 2016, quando lançaram o Android N Developer Preview): novos emojis, modo multi-janela, quick-switch, direct reply, entre outras.
+
+![Os novos emojis do Android Nougat](https://cdn-images-1.medium.com/max/800/1*8UKtefOIbZVYy7XFPW8P8A.jpeg)
+
+Mas algumas dessas novas funcionalidades causam uma certa preocupação para desenvolvedores: Como preparar a minha aplicação para as novas funcionalidades?
+
+Por isso, neste artigo, procuro explicar como se adaptar à algumas destas funcionalidades.
+
+---
+
+#### Modo Multi-janela (Multi-window Mode)
+
+Isto não é novidade para muitos, pois vários fabricantes já tinham esta funcionalidade nas suas versões do Android. O modo multi-janela permite executar 2 aplicações em simultaneo, lado a lado e o tamanho das janelas é ajustável. Isto significa que o usuário poderá mudar o tamanho da nossa aplicação, então temos de ter uma UI (User Interface) responsiva. Para mais detalhes em como desenhar uma UI responsiva, veja este [artigo (em inglês](https://medium.com/google-developers/building-a-responsive-ui-in-android-7dc7e4efcbb3#.wznmwr23g)).
+
+Quando estiver a desenvolver aplicações, tenha em conta estes 2 tamanhos de janelas:
+
+![img](https://cdn-images-1.medium.com/max/800/1*2G-yiBT94SqDHL80ikg9sw.png)
+
+- Nos telemóveis, a janela tem um *aspect ratio* 16:9, por isso, tenha em conta que a altura será bastante reduzida, então certifique-se que o usuário terá algo visível e funcional na tela.
+- Nos tablets, a janela ocupa 34.15% da tela. Tenha em conta que o cumprimento será bastante amplo.
+
+Por padrão, o modo multi-janela está activado para todas as activities da sua aplicação. O menor tamanho que a tela terá é 220x220dp, então certifique-se de que a sua aplicação irá mostrar algo quando estiver nessa resolução.
+
+Tenha em mente que sempre que o usuário colocar a nossa aplicação em modo multi-janela, a Activity actual será destruída e recriada. Por isso:
+
+- Evite colocar muito código no método onResume();
+- Guarde o estado da activity usando o método onSaveInstanceState();
+- [Use loaders para manter dados](https://dariomungoi.wordpress.com/2015/09/02/desenvolvendo-para-android-utilizando-loaders/).
+
+Caso você esteja a desenvolver um jogo ou qualquer aplicação que deva funcionar apenas em tela-cheia (*fullscreen*), você pode desactivar o modo multi-janela colocando um dos atributos no seu AndroidManifest.xml:
+
+```
+android:orientation
+android:immersive
+```
+
+Ou se a sua aplicação usa minSdkVersion=24, você pode usar o atributo:
+
+```xml
+android:resizeableActivity=”false”
+```
+
+---
+
+#### Notificações com direct-reply (resposta imediata)
+
+Com o direct-reply, você pode responder à mensagens directamente da notificação, sem ter de abrir a aplicação.
+
+![img](https://cdn-images-1.medium.com/max/800/1*I1LF_bdjBz0ovhLFf7_bwQ.png)
+
+Para colocar esta funcionalidade na sua aplicação, você só tem de usar a classe RemoteInput:
+
+```java
+private static final String KEY_DIRECT_REPLY = “key_direct_reply”;
+RemoteInput remoteInput = new RemoteInput.Builder(KEY_DIRECT_REPLY)
+    .setLabel(“Responder”)
+    .build();
+```
+
+```java
+NotificationCompat.Action action =
+    new NotificationCompat.Action.Builder(R.drawable.reply, “Responder”, pendingIntent)
+        .addRemoteInput(remoteInput)
+        .build();
+```
+
+```java
+//aqui tem algum codigo para criar a notificacao
+notification.addAction(action);
+```
+
+Para receber a mensagem introduzida no RemoteInput, podemos utilizar o método:
+
+```java
+private String getMensagem(Intent i)
+{
+    Bundle remoteInput = RemoteInput.getResultsFromIntent(i);
+    if(remoteInput!=null)
+        return remoteInput.getCharSequence(KEY_DIRECT_REPLY);
+    return null;
+}
+```
+
+---
+
+#### Direct Boot
+
+O modo direct boot faz com que as aplicações sejam executadas, mesmo que o dispositivo ainda esteja bloqueado depois de uma reinicialização (reboot).
+
+**Atenção**: Antes de implementar o Direct Boot, pense se a sua aplicação precisa realmente desta funcionalidade. Os casos mais comuns são aplicações de alarmes, mensagens ou acessibilidade.
+
+Para activar o Direct Boot, você deve pensar em quais componentes da aplicação irão ser executados enquanto o ecrã estiver bloqueado. Apenas os componentes que tiverem o atributo *directBootAware=”true” (no AndroidManifest.xml) *é que serão executados. Como por exemplo:
+
+```xml
+<service android:name=”.alarms.AlarmIntentService” android:directBootAware=”true”>
+```
+
+Ao usar o Direct Boot, tenha em conta que os dados têm de ser gravados em uma área de memória especial: ***Device Protected***.
+
+Normalmente, os dados da aplicação são guardados no espaço ***Credential Protected***. É nesta área onde são guardados dados quando você utilizada métodos como o *getFilesDir()*.
+
+Para ter acesso à área *Device Protected*, você tem de criar o contexto:
+
+```java
+Context dpContext = context.createDeviceProtectedStorageContext();
+//Depois chame getFilesDir() apartir desse contexto
+dpContext.getFilesDir();
+```
+
+Se uma versão da sua aplicação tiver dados na *Credential Protected*, você pode migrá-los para a *Device Protected* usando os métodos:
+
+```java
+Context.moveSharedPreferencesFrom() //para migrar SharedPreferences
+Context.moveDatabaseFrom() //para migrar base de dados
+```
+
+**Atenção:** Só use a área Device Protected para guardar dados necessários durante a execução do Direct Boot. Todos os outros dados devem ser guardados na Credential Protected.
+
+---
+
+Espero ter deixado uma noção básica de como se preparar para o Android Nougat. Mas a melhor forma de preparar a sua aplicação é testando. Mesmo se você não tiver um Nexus, pode utilizar o Android Nougat no emulador do Android Studio.
+
+Até a próxima,
+
+Rosário Pereira Fernandes

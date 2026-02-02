@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Gestão de Memória no Android — Cache LRU</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Gestão de Memória no Android — Cache LRU</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Lá estava eu a testar a minha aplicação android, quando ela parou devido à excepção:
+</section>
+<section data-field="body" class="e-content">
+<section name="11d8" class="section section--body section--first section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="0159" id="0159" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*P-m04vetyQwGwbiUWk5hGg.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*P-m04vetyQwGwbiUWk5hGg.png"></figure><h3 name="3965" id="3965" class="graf graf--h3 graf-after--figure graf--title">Gestão de Memória no Android — Cache LRU</h3><p name="1582" id="1582" class="graf graf--p graf-after--h3">Lá estava eu a testar a minha aplicação android, quando ela parou devido à excepção:</p><pre name="fc33" id="fc33" class="graf graf--pre graf-after--p">java.lang.OutofMemoryError: bitmap size exceeds VM budget.</pre><p name="8063" id="8063" class="graf graf--p graf-after--pre">E claro, quando uma excepção é lançada, há sempre 2 questões que procuramos obter respostas:<br>* O que causou a excepção?<br>* Como evitar que esta excepção seja lançada?</p><p name="8b6b" id="8b6b" class="graf graf--p graf-after--p">No meu caso, eu procurava saber qual é o processo que está a usar muita memória e como fazer para alocar correctamente esta memória.</p><p name="8c4f" id="8c4f" class="graf graf--p graf-after--p">Depois de algumas pesquisas no <a href="http://www.stackoverflow.com" data-href="http://www.stackoverflow.com" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">StackOveflow,</a> alguns desenvolvedores sugeriam que colocasse no <a href="https://developer.android.com/guide/topics/manifest/application-element.html" data-href="https://developer.android.com/guide/topics/manifest/application-element.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">AndroidManifest.xml</em></a> a linha: <em class="markup--em markup--p-em">android:largeHeap=”true”</em> e o problema estaria resolvido<em class="markup--em markup--p-em">. </em>Este atributo indica que a nossa aplicação usa uma grande quantidade de memória durante a sua execução e obriga o sistema a preparar a memória necessária para executar esta aplicação. Bom, o meu intuito é de desenvolver uma aplicação simples, e não quero estar a utilizar muita memória, por isso, não pareceu-me apropriado utilizar o <em class="markup--em markup--p-em">largeHeap</em>.</p><p name="e694" id="e694" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">Atenção: </strong><em class="markup--em markup--p-em">largeHeap</em> pode ser uma solução rápida, mas é uma <strong class="markup--strong markup--p-strong">péssima prática</strong>. Use apenas em aplicações que realmente precisem de muita memória, como por exemplo um grande editor de imagens, ou um jogo com gráficos 3D.</p><p name="2c96" id="2c96" class="graf graf--p graf-after--p">Decidi então procurar descobrir o que é que estava a causar a excepção. Na minha aplicação, tenho um <a href="https://developer.android.com/reference/android/support/v4/view/ViewPager.html" data-href="https://developer.android.com/reference/android/support/v4/view/ViewPager.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">viewPager</em></a> que contém alguns <a href="https://developer.android.com/reference/android/app/Fragment.html" data-href="https://developer.android.com/reference/android/app/Fragment.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">fragments</em></a>. Cada um desses fragments tem uma imagem de fundo diferente. Comecei por remover as imagens de fundo dos fragments para ver se continuava a ter a excepção. E eis que aparece a luz: a aplicação voltava a funcionar normalmente, sem nenhuma excepção. Isto significa que o processo de carregar as imagens estava a usar mais memória do que devia. E aí surge a questão:</p><h4 name="8f21" id="8f21" class="graf graf--h4 graf-after--p">Como carregar imagens de modo eficiente?</h4><p name="6111" id="6111" class="graf graf--p graf-after--h4">A solução mais simples para este problema seria armazenar as imagens na memória cache. Assim, ao invés de estarmos sempre a ler as imagens da memória principal, lemos apenas uma vez e guardamos na cache. No momento em que for necessário utilizá-las, a aplicação vai buscar a imagem directamente da cache.</p><p name="cef4" id="cef4" class="graf graf--p graf-after--p">Mas existe outro problema: a memória cache tem um espaço muito pequeno e quando ela estiver cheia, provavelmente teremos de remover algumas imagens da cache para dar espaço à novas imagens. E então nos perguntamos: Qual das imagens devemos remover? Você provavelmente irá pensar: “As imagens que já não precisamos.” Mas é difícil prever qual imagem não voltará a ser re-utilizada.</p><p name="20ca" id="20ca" class="graf graf--p graf-after--p">Por isso, foi desenvolvida a classe <a href="https://developer.android.com/reference/android/util/LruCache.html" data-href="https://developer.android.com/reference/android/util/LruCache.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">LRUCache</em></a><em class="markup--em markup--p-em">, </em>que é basicamente uma lista de objectos armazenados com uma chave correspondente.<br>Quando um objecto é usado na LRUCache, ele passa para o topo da lista. Assim, os objectos menos usados ficam no fim da lista e quando a cache estiver cheia, estes objectos serão removidos para dar espaço à novos objectos.<br>Este algoritmo é chamado de <strong class="markup--strong markup--p-strong">LRU (List Recently Used)</strong>. É baseado na teoria de que: Se um objecto é muito utilizado agora, provavelmente será muito utilizado no futuro. Então, é melhor deixar ele na cache.</p><h4 name="a15e" id="a15e" class="graf graf--h4 graf-after--p">Utilizando a LRU Cache para armazenar imagens</h4><p name="0ea7" id="0ea7" class="graf graf--p graf-after--h4">Como o objectivo é limitar o uso de memória, para inicializar a LRU Cache, temos de indicar o tamanho da cache. Mas tenha cuidado aqui: se definirmos um tamanho muito pequeno, as imagens provavelmente estarão sempre a ser recarregadas para a cache; se definirmos um tamanho muito grande, voltamos a ter o problema de estar a exigir que o android nos conceda muita memória. Então, qual é a melhor maneira de determinar o tamanho da cache?<br>Uma boa prática é calcular o tamanho baseando-se na quantidade de memória disponível para a nossa aplicação. Para obter esta quantidade, podemos usar o método <a href="https://developer.android.com/reference/android/app/ActivityManager.html#getMemoryClass%28%29" data-href="https://developer.android.com/reference/android/app/ActivityManager.html#getMemoryClass()" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">getMemoryClass()</em></a>. Para fazer isso, é so utilizar o código:</p><pre name="a00a" id="a00a" class="graf graf--pre graf-after--p">ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);</pre><pre name="86e5" id="86e5" class="graf graf--pre graf-after--pre">int memoriaDisponivel = am.getMemoryClass()*1024*1024;</pre><p name="2153" id="2153" class="graf graf--p graf-after--pre">Depois, podemos fazer alguns cálculos para ajustar este valor, como por exemplo dividir por 8.</p><pre name="2d9b" id="2d9b" class="graf graf--pre graf-after--p">LruCache bitmapCache = new LruCache&lt;String, Bitmap&gt;(memoriaDisponivel/8);</pre><p name="f2b5" id="f2b5" class="graf graf--p graf-after--pre">Atenção que dividir por 8 é apenas uma sugestão, você pode ajustar este valor como preferir.<br>Outro ponto importante é fazer com que a cache saiba qual é o tamanho de cada objecto que ele contém, para que ela saiba quanto espaço está livre. Para fazer isso, basta extender a classe e sobrecarregar o método <em class="markup--em markup--p-em">sizeOf(String, </em><a href="https://developer.android.com/reference/android/graphics/Bitmap.html" data-href="https://developer.android.com/reference/android/graphics/Bitmap.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><em class="markup--em markup--p-em">Bitmap</em></a><em class="markup--em markup--p-em">):</em></p><pre name="0979" id="0979" class="graf graf--pre graf-after--p">public class ImageCache extends LruCache(String, Bitmap)</pre><pre name="26c5" id="26c5" class="graf graf--pre graf-after--pre">{<br>  @Override<br>  protected int sizeOf(String key, Bitmap value)<br>  {<br>    return value.getByteCount();//retornamos o tamanho em bytes<br>  }<br>}</pre><p name="a591" id="a591" class="graf graf--p graf-after--pre">Agora, colocar e recuperar objectos na cache é bem simples. O único ponto a destacar é que se você tentar ler um objecto que já não está na cache, será retornado null. Então você precisa gerir manualmente estes casos. Aqui vai um exemplo:</p><pre name="39c7" id="39c7" class="graf graf--pre graf-after--p">Bitmap img = bitmapCache.get(chave);//Recuperar da cache<br>if(img == null)<br>{</pre><pre name="ce17" id="ce17" class="graf graf--pre graf-after--pre">  img = converterParaBitmap(R.drawable.img);//Voltar a carregar este objecto<br>  bitmapCache.put(chave, img);//Colocar ele na cache<br>}</pre><p name="277b" id="277b" class="graf graf--p graf-after--pre">E pronto. Gerir memória é tão simples quanto isto.</p><p name="25bd" id="25bd" class="graf graf--p graf-after--p">Se você tem alguma dúvida ou sugestão, envie um email para rosariofernandes51@gmail.com</p><p name="921b" id="921b" class="graf graf--p graf-after--p">No próximo post, irei explicar como usei a LruCache para resolver o problema das imagens no viewPager.</p><p name="d106" id="d106" class="graf graf--p graf-after--p">Até a próxima!</p><p name="4bd4" id="4bd4" class="graf graf--p graf-after--p graf--trailing">Rosário Pereira Fernandes</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/a8f8cd449f71"><time class="dt-published" datetime="2016-07-11T15:08:11.254Z">July 11, 2016</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/gest%C3%A3o-de-mem%C3%B3ria-no-android-cache-lru-a8f8cd449f71" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

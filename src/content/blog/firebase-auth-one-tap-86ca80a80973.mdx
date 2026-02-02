@@ -1,0 +1,138 @@
+---
+title: 'Firebase Auth + One Tap UI on Android'
+description: ''
+pubDate: '2020-04-29T23:56:23.569Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*EFU8DF1LUfr1jLhoU_178A.png'
+---
+
+#### Learn how to implement One Tap sign-in and sign-up on your existing Firebase Android app
+
+Google has recently introduced [One Tap sign-in and sign-up on Android](https://developers.google.com/identity/one-tap/android/overview). This service allows your app’s new users to create an account, securely with just a single tap on a beautiful dialog.  
+Users who already have an account can also have the same experience, so they don’t need to remember the username or password they had previously used when they created an account in that app.  
+You can read more about One Tap in [this other post](https://medium.com/androiddevelopers/one-tap-sign-in-for-android-apps-2259ce15bc2c).
+
+Here’s what that beautiful dialog looks like:
+
+![](https://cdn-images-1.medium.com/max/800/1*ExyWmpskey_jr471HiLKAw.png)
+
+In this post, I’ll show you how to connect the One Tap UI with Firebase Authentication.
+
+### Firebase Auth with Google Sign-In
+
+I’ll assume that you’ve already implemented Google Sign-in using Firebase Auth on your Android app, so I’ll not go over the steps on how to do that. But if you haven’t, you can still do so by following [this guide on the documentation](https://firebase.google.com/docs/auth/android/google-signin#kotlin). Also, I’ll be using some of the methods created on this same documentation, so in case you see a method/property that you don’t recognize, please be sure to look for it on that page or on the [sample app](https://github.com/rosariopfernandes/FirebaseAuthOneTapUI) I’ve created.
+
+Google’s One Tap UI comes bundled in ```groovy
+com.google.android.gms:play-services-auth
+``` , which you might already be using, since this library is needed when you’re implementing Google Sign-In. Just check the dependencies on your `build.gradle(app)` file to make sure you’re using version `18.0.0` or higher.
+
+Now the next thing we need to do is declare some variables and initialize them on the Activity’s `onCreate()` or (in my case) the fragment’s `onViewCreated()`:
+
+Notice that on our `BeginSignInRequest` we’re setting `filterByAuthorizedAccounts` to `**true**`. This means the OneTap UI will only display accounts that have previously logged in to this app. If you’re displaying the Google Sign -In option on a **Sign up** screen, you should set `filterByAuthorizedAccounts` to `**false**` instead, so that the UI displays all user accounts available on that Android device.
+
+Those variables that we just declared will be used to initiate the One Tap sign-in flow on our `updateUI()` method (the one called from `onStart()`):
+
+```kotlin
+private fun updateUI(currentUser: FirebaseUser?) {
+    if (currentUser == null && showOneTapUI) {
+        oneTapClient.beginSignIn(signUpRequest)
+            .addOnSuccessListener(requireActivity()) { result ->
+                try {
+                    startIntentSenderForResult(
+                        result.pendingIntent.intentSender, REQ_ONE_TAP,
+                        null, 0, 0, 0, null
+                    )
+                } catch (e: IntentSender.SendIntentException) {
+                    Log.e(TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
+                }
+            }
+            .addOnFailureListener(requireActivity()) { e ->
+                // No saved credentials found. Launch the normal sign-in flow
+                // ...
+            }
+    }
+}
+```
+
+If the `OnFailureListener` gets executed, it means the user has never logged in to this app before or another error occurred. One other error that might happen is the 24-hour cooldown period, which the OneTap UI uses as a way to limit the prompts that it shows. If you face this error during development, the [documentation](https://developers.google.com/identity/one-tap/android/get-saved-credentials#disable-one-tap) recommends:
+
+If the `OnFailureListener` gets executed, it means the user has never logged in to this app before or another error occurred. One other error that might happen is the 24-hour cooldown period, which the OneTap UI uses as a way to limit the prompts that it shows. If you face this error during development, the [documentation](https://developers.google.com/identity/one-tap/android/get-saved-credentials#disable-one-tap) recommends:
+
+> “… reset the cooldown by clearing Google Play services’ app storage.”
+
+But otherwise, if the SuccessListener gets executed instead, `startIntentSenderForResult()` will display the One Tap UI for users to select the account they wish to use in order to continue. So we need to update our `onActivityResult` code in order to receive and handle the result coming from One Tap:
+
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    when (requestCode) {
+        REQ_ONE_TAP -> {
+            try {
+                val credential = oneTapClient.getSignInCredentialFromIntent(data)
+                val googleIdToken = credential.googleIdToken
+                val password = credential.password
+                when {
+                    googleIdToken != null -> {
+                        // Google One Tap
+                        val firebaseCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
+                        firebaseAuthWithGoogle(firebaseCredential)
+                    }
+                    password != null -> {
+                        // Email/Password
+                        firebaseAuthWithEmail(password)
+                    }
+                    else -> {
+                        // No password or Google ID token.
+                        Log.d(TAG, "No ID token or password!")
+                    }
+                }
+            } catch (e: ApiException) {
+                when (e.statusCode) {
+                    CommonStatusCodes.CANCELED -> {
+                        showOneTapUI = false
+                        Log.d(TAG, "One-tap dialog was closed by the user.")
+                    }
+                    CommonStatusCodes.NETWORK_ERROR -> {
+                        Log.e(TAG, "One-tap encountered a network error.")
+                    }
+                    else -> {
+                        Log.e(TAG, "Couldn't get credential from result: ${e.localizedMessage}")
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+Note that if the user closes the One Tap UI, `getSignInCredentialFromIntent()` returns an `ApiException` with the status code `CommonStatusCodes._CANCELED_`. In that case, we set our variable back to `false` and we don’t prompt the user again. Although using this variable may work fine, you can also use `[SharedPreferences](https://developer.android.com/training/data-storage/shared-preferences)` instead, if you prefer.
+
+And that’s it! You can now run your app and test the One Tap UI. This is what the One Tap UI with Google Sign-In should look like:
+
+![](https://cdn-images-1.medium.com/max/800/1*FuwCdQ0PckQcE_Bg4KfkoQ.png)
+
+### Firebase Auth with Email/Password
+
+If your app also provides Email/Password authentication, One Tap UI can also help your users signing in to your app using that method. You’ll need to update the `BeginSignInRequest` we created earlier and handle the result in the `onActivityResult()` function:
+
+This password request feature is backed by the [Autofill](https://developer.android.com/guide/topics/text/autofill) framework which was introduced in Android 8.0 (API level 26), so you’ll need to [optimize your app for Autofill](https://developer.android.com/guide/topics/text/autofill-optimize#kotlin). This means you should add `android:autofillHints` to your `EditText`’s XML as shown below:
+
+```xml
+<EditText
+  android:importantForAutofill="yes"
+  android:autofillHints="password" />
+```
+
+And this should do it. Now in order to test this feature, you’ll need to enable Autofill on your testing device, if you’re not already using it. To do that, make sure your device is running Android 8.0 (or above) and navigate to **Settings > System > Language and Input > Autofill** and select an Autofill framework.
+
+Once you login for the first time on the app, Autofill will prompt if you want to save your credentials. If you accept, the next time you login to the app, One Tap UI should display your saved credentials:
+
+![](https://cdn-images-1.medium.com/max/800/1*g98h9zqiHJRtRS94YA9ShA.png)
+
+---
+
+Additionally, if you also have a website or a web app on the same Firebase project, you can also [enable automatic sign-in between apps and websites](https://developers.google.com/identity/smartlock-passwords/android/associate-apps-and-sites),
+which will allow your users to sign-in to your web app with the password they saved on the mobile app and vice-versa.
+
+And that’s all for today. I hope this helps you implement One Tap sign-in and sign-up in your Firebase Apps. You can find the sample app on Github:
+https://github.com/thatfiredev/FirebaseAuthOneTapUI
