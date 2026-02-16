@@ -15,7 +15,8 @@ Portuguese blog posts must be placed in `src/content/blog/pt/`.
 
 1. **Locate the Source**: Find the English blog post in `src/content/blog/en/`.
 2. **Read Content**: Read the entire content of the English post, including the frontmatter.
-3. **Determine the File Path**: The output path should be `src/content/blog/pt/[filename]`. The filename usually stays the same, but you can localize it if the slug should be different (the project handles localized slugs via the directory structure).
+3. **Determine the File Path**: The output path should be `src/content/blog/pt/[filename]`.
+    The filename should be translated to have a Portugese slug for SEO (the project handles localized slugs via the directory structure).
 4. **Translate Frontmatter**:
     - `title`: Translate to Portuguese.
     - `description`: Translate to Portuguese.
@@ -31,7 +32,7 @@ Portuguese blog posts must be placed in `src/content/blog/pt/`.
 
 ## Example
 
-### English (`en/my-post.md`)
+### English (`en/my-first-post.md`)
 ```markdown
 ---
 title: "Welcome to my blog"
@@ -40,7 +41,7 @@ translationKey: "welcome-post"
 Hello everyone!
 ```
 
-### Portuguese (`pt/my-post.md`)
+### Portuguese (`pt/meu-primeiro-post.md`)
 ```markdown
 ---
 title: "Bem-vindo ao meu blog"
