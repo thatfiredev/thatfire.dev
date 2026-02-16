@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Java 8 + Android: Expressões Lambda e Referências de Métodos</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Java 8 + Android: Expressões Lambda e Referências de Métodos</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Junto com o Android N Developer Preview, o Android SDK trouxe algumas novidades na sua forma de compilar código. Agora, você pode o usar no…
+</section>
+<section data-field="body" class="e-content">
+<section name="9eaf" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="93eb" id="93eb" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*87mOAhfKWCwdVddSXun4tA.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*87mOAhfKWCwdVddSXun4tA.png"></figure><h3 name="87aa" id="87aa" class="graf graf--h3 graf-after--figure graf--title">Java 8 + Android: Expressões Lambda e Referências de Métodos</h3><p name="550f" id="550f" class="graf graf--p graf-after--h3">Junto com o Android N Developer Preview, o Android SDK trouxe algumas novidades na sua forma de compilar código. Agora, você pode o usar no novo <a href="https://source.android.com/source/jack.html?hl=pt-br" data-href="https://source.android.com/source/jack.html?hl=pt-br" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong"><em class="markup--em markup--p-em">Jack Compiler</em></strong></a>. Com o Jack, é possível utilizar algumas das novas funcionalidade do Java 8: Lambda Expressions, Method References, Default and static references, Repeatable Annotations e Stream APIs.</p><p name="86c9" id="86c9" class="graf graf--p graf-after--p">Neste artigo, vamos olhar às funcionalidades que são compatíveis apartir da API9: Lambda Expressions e Method References. As outras funcionalidades só estão disponíveis apartir da API24.</p><h4 name="b978" id="b978" class="graf graf--h4 graf-after--p">Como usar o Jack Compiler</h4><p name="f8d0" id="f8d0" class="graf graf--p graf-after--h4">Para usar o Jack Compiler, você precisa de estar a usar o <a href="https://developer.android.com/studio/index.html" data-href="https://developer.android.com/studio/index.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong">Android Studio 2.1 (ou superior)</strong></a> e ter o Android Nougat 7.0 SDK.</p><p name="7170" id="7170" class="graf graf--p graf-after--p">No seu ficheiro <em class="markup--em markup--p-em">build.gradle</em>, coloque as seguintes linhas:</p><pre name="7bae" id="7bae" class="graf graf--pre graf-after--p">android {<br>  ...<br>  defaultConfig {<br>    ...<br>    jackOptions {<br>      enabled true<br>    }<br>  }<br>  compileOptions {<br>    sourceCompatibility JavaVersion.VERSION_1_8<br>    targetCompatibility JavaVersion.VERSION_1_8<br>  }<br>}</pre><blockquote name="8b2e" id="8b2e" class="graf graf--pullquote graf-after--pre"><strong class="markup--strong markup--pullquote-strong">Actualização 25.10.2017:</strong></blockquote><blockquote name="5ebb" id="5ebb" class="graf graf--pullquote graf-after--pullquote">A partir do Android Studio 3.0, o compilador jack foi deprecado. Agora só precisamos de colocar as compileOptions, desde que estejamos a utilizar o Gradle 3.0.0 ou superior.</blockquote><p name="f865" id="f865" class="graf graf--p graf-after--pullquote">E pronto. Você já pode usar as funcionalidades do Java 8. Vamos algumas delas em detalhes:</p><h4 name="b2f0" id="b2f0" class="graf graf--h4 graf-after--p"><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html" data-href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html" class="markup--anchor markup--h4-anchor" rel="noopener" target="_blank">Lambda Expressions</a></h4><p name="57a6" id="57a6" class="graf graf--p graf-after--h4">Lambda Expressions são uma forma simples de usar interfaces que contêm apenas 1 método. Com Lambda Expressions, podemos alterar o nosso clássico onClickListener:</p><pre name="b46b" id="b46b" class="graf graf--pre graf-after--p">btnEntrar.setOnClickListener(new View.OnClickListener() {<br>    @Override<br>    public void onClick(View view) {<br>        fazerAlgo();<br>    }<br>});</pre><p name="5551" id="5551" class="graf graf--p graf-after--pre">para algo como:</p><pre name="5681" id="5681" class="graf graf--pre graf-after--p">btnEntrar.setOnClickListener(view -&gt; {<br>        fazerAlgo();<br>});</pre><p name="44d2" id="44d2" class="graf graf--p graf-after--pre">Note que o tipo de dado do parametro é opcional. Aqui estamos a utilizar chavetas, mas se o método só tiver uma expressão, podemos retirá-las:</p><pre name="85f5" id="85f5" class="graf graf--pre graf-after--p">btnEntrar.setOnClickListener(view -&gt; fazerAlgo());</pre><p name="aa4a" id="aa4a" class="graf graf--p graf-after--pre">Muito cool, right?</p><h4 name="3961" id="3961" class="graf graf--h4 graf-after--p"><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html" data-href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html" class="markup--anchor markup--h4-anchor" rel="noopener" target="_blank">Method References</a></h4><p name="5972" id="5972" class="graf graf--p graf-after--h4">Method References são “primas” das lambda expressions. Ajudam a diminuir o código na hora de chamar métodos. Assim, o nosso onClickListener pode ficar ainda menor:</p><pre name="789f" id="789f" class="graf graf--pre graf-after--p">btnEntrar.setOnClickListener(this::fazerAlgo);</pre><p name="72a4" id="72a4" class="graf graf--p graf-after--pre">Existem 3 formas de utilizar as referências de métodos:</p><pre name="29c4" id="29c4" class="graf graf--pre graf-after--p">NomeDaClasse::nomeDoMetodoEstatico //para chamar um método estático</pre><pre name="4fc5" id="4fc5" class="graf graf--pre graf-after--pre">nomeDoObjecto::nomeDoMetodo//para chamar o método de um objecto instanciado</pre><pre name="1f4e" id="1f4e" class="graf graf--pre graf-after--pre graf--trailing">NomeDaClasse::new //para chamar o construtor dessa classe</pre></div></div></section><section name="5137" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="9833" id="9833" class="graf graf--p graf--leading">Como você pode ver, o Java 8 oferece várias novas funcionalidades para os desenvolvedores Android escreverem código de forma mais productiva.</p><p name="db0a" id="db0a" class="graf graf--p graf-after--p">Tenha em mente que o Jack Compiler ainda não tem suporte para funcionalidades como <a href="https://developer.android.com/studio/run/index.html#instant-run" data-href="https://developer.android.com/studio/run/index.html#instant-run" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong">Instant Run</strong></a> ou <a href="https://dariomungoi.wordpress.com/2015/10/15/databinding-library-part-1/" data-href="https://dariomungoi.wordpress.com/2015/10/15/databinding-library-part-1/" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong">Data Binding</strong></a>.</p><p name="2ae1" id="2ae1" class="graf graf--p graf-after--p">Se tiver alguma dúvida ou sugestão, deixe um comentário ou mande um email para <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a>.</p><p name="dd73" id="dd73" class="graf graf--p graf-after--p">Até a próxima!</p><p name="8856" id="8856" class="graf graf--p graf-after--p graf--trailing">Rosário Pereira Fernandes</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/44c63c845ec5"><time class="dt-published" datetime="2016-08-28T10:51:11.975Z">August 28, 2016</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/java-8-android-express%C3%B5es-lambda-e-refer%C3%AAncias-de-m%C3%A9todos-44c63c845ec5" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

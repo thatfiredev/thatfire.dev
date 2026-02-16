@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Firebase Database para Desenvolvedores SQL — Consistência de dados</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Firebase Database para Desenvolvedores SQL — Consistência de dados</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Uma série para desenvolvedores SQL poderem começar a utilizar o Firebase.
+</section>
+<section data-field="description" class="p-summary">
+No artigo anterior, aprendemos sobre denormalização, que apesar de ser uma óptima solução para facilitar a leitura de dados, pode trazer um problema: incosistencia de dados. Então, como resolver isto?
+</section>
+<section data-field="body" class="e-content">
+<section name="ec95" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="6602" id="6602" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*ysyjlZUlXSWzkIaEh1IKKw.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*ysyjlZUlXSWzkIaEh1IKKw.png"></figure><h3 name="1b8b" id="1b8b" class="graf graf--h3 graf-after--figure graf--title">Firebase Database para Desenvolvedores SQL — Consistência de dados</h3><p name="62db" id="62db" class="graf graf--p graf-after--h3 graf--trailing"><strong class="markup--strong markup--p-strong">ATENÇÃO! O FIREBASE TEM AGORA O </strong><a href="https://medium.com/android-dev-moz/firestore-8d225062ffe8" data-href="https://medium.com/android-dev-moz/firestore-8d225062ffe8" class="markup--anchor markup--p-anchor" target="_blank"><strong class="markup--strong markup--p-strong">CLOUD FIRESTORE</strong></a><strong class="markup--strong markup--p-strong"> QUE É UM SERVIÇO DE BASE DE DADOS MAIS SIMPLES DE ESTRUTURAR. SE VOCÊ ESTIVER A COMEÇAR UM PROJECTO, RECOMENDO QUE UTILIZE O </strong><a href="https://medium.com/android-dev-moz/firestore-8d225062ffe8" data-href="https://medium.com/android-dev-moz/firestore-8d225062ffe8" class="markup--anchor markup--p-anchor" target="_blank"><strong class="markup--strong markup--p-strong">FIRESTORE</strong></a><strong class="markup--strong markup--p-strong"> AO INVÉS DA REALTIME DATABASE.</strong></p></div></div></section><section name="da34" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="877c" id="877c" class="graf graf--p graf--leading">No <a href="https://medium.com/p/39c882550f11" data-href="https://medium.com/p/39c882550f11" class="markup--anchor markup--p-anchor" target="_blank">artigo anterior</a>, aprendemos sobre <strong class="markup--strong markup--p-strong">denormalização</strong> — uma técnica que consiste em duplicar dados para simplificar e reduzir queries. A denormalização pode ser uma óptima solução para facilitar leituras, mas pode trazer um problema: falta de consistência de dados.</p><p name="a585" id="a585" class="graf graf--p graf-after--p">Quando temos dados duplicados, temos de garantir que ao alterar um dado a sua “<em class="markup--em markup--p-em">cópia</em>” também seja alterada. Você deve estar a pensar que isso é simples e basta utilizar 2 <em class="markup--em markup--p-em">setValues</em>:</p><pre name="be2d" id="be2d" class="graf graf--pre graf-after--p"><strong class="markup--strong markup--pre-strong">DatabaseReference</strong> ref1 = raiz.<em class="markup--em markup--pre-em">child</em>(&quot;usuarios/1/nome&quot;);<br><strong class="markup--strong markup--pre-strong">DatabaseReference</strong> ref2 = raiz.<em class="markup--em markup--pre-em">child</em>(&quot;estudantes/am/1/nome&quot;);</pre><pre name="69f6" id="69f6" class="graf graf--pre graf-after--pre">ref1.<em class="markup--em markup--pre-em">setValue</em>(&quot;Rosa&quot;);<br>ref2.<em class="markup--em markup--pre-em">setValue</em>(&quot;Rosa&quot;);</pre><p name="6077" id="6077" class="graf graf--p graf-after--pre">Embora isto funcione neste caso simples, como vamos fazer o mesmo se o Rosário estiver a participar em outros grupos de estudo? Como vamos saber quais são os grupos em que o Rosário participa?</p><h4 name="bef5" id="bef5" class="graf graf--h4 graf-after--p">Lookups</h4><p name="555e" id="555e" class="graf graf--p graf-after--h4">Lookups consistem em criar um nó (usuario_grupos) na base de dados onde armazenamos o id do usuário e os ids dos grupos em que ele participa:</p><figure name="8942" id="8942" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*DhrSx9hnFDHIS7q2JLWuVg.png" data-width="244" data-height="165" src="https://cdn-images-1.medium.com/max/800/1*DhrSx9hnFDHIS7q2JLWuVg.png"></figure><pre name="beb0" id="beb0" class="graf graf--pre graf-after--figure"><strong class="markup--strong markup--pre-strong">DatabaseReference</strong> gruposRosario = raiz.<em class="markup--em markup--pre-em">child</em>(&quot;usuarios_grupos/1&quot;);<br><strong class="markup--strong markup--pre-strong">DatabaseReference</strong> estudantes = raiz.<em class="markup--em markup--pre-em">child</em>(&quot;estudantes&quot;);<br>gruposRosario.<em class="markup--em markup--pre-em">addListenerForSingleValueEvent</em>(new <strong class="markup--strong markup--pre-strong">ValueEventListener</strong>() {<br>    @Override<br>    public void <em class="markup--em markup--pre-em">onDataChange</em>(<strong class="markup--strong markup--pre-strong">DataSnapshot</strong> dataSnapshot) {<br>        <strong class="markup--strong markup--pre-strong">Iterator</strong> i = dataSnapshot.<em class="markup--em markup--pre-em">getChildren</em>().<em class="markup--em markup--pre-em">iterator</em>();<br>        while(i.<em class="markup--em markup--pre-em">hasNext</em>()) {<br>            <strong class="markup--strong markup--pre-strong">DataSnapshot</strong> snap = (<strong class="markup--strong markup--pre-strong">DataSnapshot</strong>) i.next();</pre><pre name="c83d" id="c83d" class="graf graf--pre graf-after--pre">estudantes.<em class="markup--em markup--pre-em">child</em>(snap.<em class="markup--em markup--pre-em">getKey</em>()).<em class="markup--em markup--pre-em">child</em>(dataSnapshot.<em class="markup--em markup--pre-em">getKey</em>()+&quot;/nome&quot;).<em class="markup--em markup--pre-em">setValue</em>(&quot;Rosa&quot;);<br>        }<br>    }<br>    @Override<br>    public void <em class="markup--em markup--pre-em">onCancelled</em>(<strong class="markup--strong markup--pre-strong">DatabaseError</strong> databaseError) {}<br>});</pre><p name="24fc" id="24fc" class="graf graf--p graf-after--pre">Esta técnica funciona perfeitamente se o Rosário estiver a participar em apenas 5 grupos. Mas se ele estiver em 50 ou 100 grupos, este processo pode levar bastante tempo. Tempo suficiente para o nosso usuário fechar a aplicação ou o dispositivo ficar sem carga. E continuamos a não ter dados consistentes. E para resolver isso, existe uma outra técnica que vamos ver a seguir.</p><h4 name="c29a" id="c29a" class="graf graf--h4 graf-after--p">Multi-path updates</h4><p name="8755" id="8755" class="graf graf--p graf-after--h4">Multi-path updates são operações tudo ou nada. Você começa uma série de operações e se uma das operações não for concluída com sucesso, todas as operações anteriores serão desfeitas. Isso significa que nenhuma operação pode ser deixada incompleta.</p><p name="a021" id="a021" class="graf graf--p graf-after--p">Para utilizar os multi-path updates, basta especificar todos os caminhos que devem ser actualizados e qual o novo valor utilizando um HashMap da seguinte forma:</p><pre name="1678" id="1678" class="graf graf--pre graf-after--p"><strong class="markup--strong markup--pre-strong">Map</strong> updates = new <strong class="markup--strong markup--pre-strong">HashMap</strong>();<br>updates.<em class="markup--em markup--pre-em">put</em>(&quot;usuarios/1/nome&quot;, &quot;Rosa&quot;);<br>updates.<em class="markup--em markup--pre-em">put</em>(&quot;estudantes/pa/1/nome&quot;, &quot;Rosa&quot;);<br>updates.<em class="markup--em markup--pre-em">put</em>(&quot;estudantes/am/1/nome&quot;, &quot;Rosa&quot;);<br>updates.<em class="markup--em markup--pre-em">put</em>(&quot;estudantes/md/1/nome&quot;, &quot;Rosa&quot;);</pre><pre name="b231" id="b231" class="graf graf--pre graf-after--pre">//depois basta fazer o update:<br>raiz.updateChildren(updates);</pre><p name="a72f" id="a72f" class="graf graf--p graf-after--pre">Como o método <code class="markup--code markup--p-code">updateChildren()</code> é do tipo <a href="https://developers.google.com/android/reference/com/google/android/gms/tasks/Task" data-href="https://developers.google.com/android/reference/com/google/android/gms/tasks/Task" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">Task</a>, podemos adicionar um <a href="https://developers.google.com/android/reference/com/google/android/gms/tasks/OnSuccessListener" data-href="https://developers.google.com/android/reference/com/google/android/gms/tasks/OnSuccessListener" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">OnSuccessListener</a> ou <a href="https://developers.google.com/android/reference/com/google/android/gms/tasks/OnFailureListener" data-href="https://developers.google.com/android/reference/com/google/android/gms/tasks/OnFailureListener" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">OnFailureListener</a> para sabermos se a operação foi concluída com sucesso ou não.</p><p name="82ac" id="82ac" class="graf graf--p graf-after--p">Mas os <strong class="markup--strong markup--p-strong">multi-path updates possuem riscos!</strong></p><p name="7047" id="7047" class="graf graf--p graf-after--p">O primeiro risco é a destruição de dados. Vários desenvolvedores, tanto experientes como iniciantes, cometem este erro várias vezes. Como isso pode acontecer?</p><p name="96c8" id="96c8" class="graf graf--p graf-after--p graf--trailing">Vamos supor que ao invés de utilizar <code class="markup--code markup--p-code u-paddingRight0 u-marginRight0">updates.<em class="markup--em markup--p-em">put</em>(“estudantes/am/1/nome”, “Rosa”) </code>, utilizassemos <code class="markup--code markup--p-code u-paddingRight0 u-marginRight0">updates.<em class="markup--em markup--p-em">put</em>(“estudantes/am/1”, “Rosa”)</code>. Isto faria com que todo o objecto de id 1 seja eliminado e fique apenas a String “Rosa”. Então, tenha a certeza de que o caminho especificado está correcto, senão você pode eliminar toda a base de dados.</p></div></div></section><section name="ee05" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="6294" id="6294" class="graf graf--p graf--leading graf--trailing">Espero que a série tenha sido de bom agrado, fácil de compreender e aprender. Porque este é o último artigo da série <a href="https://medium.com/p/4ee3d26a3d15/" data-href="https://medium.com/p/4ee3d26a3d15/" class="markup--anchor markup--p-anchor" target="_blank">Firebase para Desenvolvedores SQL</a>. :)</p></div></div></section><section name="6ddf" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="71dc" id="71dc" class="graf graf--p graf--leading graf--trailing">Caso tenha alguma dúvida ou sugestão, deixe abaixo nos comentários. Se você estiver tentando usar a Realtime Database e teve um problema, <a href="https://pt.stackoverflow.com/questions/ask?tags=firebase" data-href="https://pt.stackoverflow.com/questions/ask?tags=firebase" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">coloque ele no StackOverflow</a>, explicando o que você fez e qual foi o erro que teve. De certeza que você obterá ajuda de mim ou de alguém da comunidade. 🙂</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/59aa4a865279"><time class="dt-published" datetime="2017-01-01T16:02:00.616Z">January 1, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/firebasesql-59aa4a865279" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

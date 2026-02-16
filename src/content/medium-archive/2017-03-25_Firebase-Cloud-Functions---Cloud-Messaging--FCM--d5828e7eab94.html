@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Firebase Cloud Functions + Cloud Messaging (FCM)</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Firebase Cloud Functions + Cloud Messaging (FCM)</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Saiba como usar o Firebase Cloud Functions em conjunto com o FCM para notificar os utilizadores sobre algo que aconteceu na base de dados.
+</section>
+<section data-field="description" class="p-summary">
+Você provavelmente já se deparou com o caso de estar a utilizar o Firebase e precisar de notificar os seus utilizadores quando acontece algo que irá lhes interessar na base de dados.
+</section>
+<section data-field="body" class="e-content">
+<section name="7fe7" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="3fff" id="3fff" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*lDJxCk5HD2OL7BGKJFhlcg.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*lDJxCk5HD2OL7BGKJFhlcg.png"></figure><h3 name="a910" id="a910" class="graf graf--h3 graf-after--figure graf--title">Firebase Cloud Functions + Cloud Messaging (FCM)</h3><p name="a772" id="a772" class="graf graf--p graf-after--h3"><strong class="markup--strong markup--p-strong">Este artigo é parte da série Firebase Cloud Functions:</strong></p><ol class="postList"><li name="aebc" id="aebc" class="graf graf--li graf-after--p"><a href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" data-href="https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d" class="markup--anchor markup--li-anchor" target="_blank">O que é Firebase Cloud Functions?</a></li><li name="192b" id="192b" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" data-href="https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Como começar?</a></li><li name="8f70" id="8f70" class="graf graf--li graf-after--li">Firebase Cloud Functions + Cloud Messaging</li><li name="852d" id="852d" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" data-href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</a></li><li name="bf00" id="bf00" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/48d503a6cd24" data-href="https://medium.com/@rosariopfernandes/48d503a6cd24" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Chame uma função na sua app</a></li><li name="a502" id="a502" class="graf graf--li graf-after--li graf--trailing"><a href="https://medium.com/android-dev-moz/fcf-search-7fd744b60dee" data-href="https://medium.com/android-dev-moz/fcf-search-7fd744b60dee" class="markup--anchor markup--li-anchor" target="_blank">Firebase Cloud Functions — Pesquisa de Texto na Base de Dados</a></li></ol></div></div></section><section name="ffb7" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><h3 name="4d7a" id="4d7a" class="graf graf--h3 graf--leading">Firebase Cloud Messaging (FCM)</h3><p name="c8a2" id="c8a2" class="graf graf--p graf-after--h3">O Cloud Messaging é um serviço do Firebase que permite enviar mensagens/notificações aos nossos utilizadores de forma simples.</p><p name="d878" id="d878" class="graf graf--p graf-after--p">Para utilizar a plataforma, precisamos de escrever o código em 2 partes: Uma no servidor para enviar as mensagens e uma no lado do cliente para poder receber as mensagens.</p><h4 name="34d9" id="34d9" class="graf graf--h4 graf-after--p">Mas porque estamos a falar sobre o FCM?</h4><p name="7af5" id="7af5" class="graf graf--p graf-after--h4">Você provavelmente já se deparou com o caso de estar a utilizar o Firebase e precisar de notificar os seus utilizadores quando acontece algo que irá lhes interessar na base de dados, como por exemplo quando há uma nova mensagem ou quando eles têm um novo seguidor.</p><p name="4109" id="4109" class="graf graf--p graf-after--p">Sim, o Cloud Messaging permite que enviemos as notificações para os utilizadores, mas ele não tem como saber sobre as alterações que ocorrem na base de dados. Por isso, fazemos a junção do FCM com o novo membro da famíla Firebase — Cloud Functions.</p><h3 name="bae2" id="bae2" class="graf graf--h3 graf-after--p">Vamos à prática</h3><p name="5f2b" id="5f2b" class="graf graf--p graf-after--h3">Vamos então criar uma função simples que notifica o utilizador sempre que há uma nova mensagem na sua caixa de entrada. Para isso, temos de ter a nossa base de dados com uma estructura semelhante a esta:</p><figure name="0cce" id="0cce" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/67f677756fc887b467441568daf0e28a.js"></script></figure><p name="7b27" id="7b27" class="graf graf--p graf-after--figure">Note que temos o atributo “Firebase Token”. Este atributo guarda o Token que o FCM utiliza para o envio de mensagens. Esse Token é obtido na aplicação Android onde o utilizador irá receber notificações. Vamos começar então por obter este id, integrando o Firebase Cloud Functions na nossa aplicação Android.</p><h4 name="d0c2" id="d0c2" class="graf graf--h4 graf-after--p">Adicionar o Firebase Cloud Messaging ao Android</h4><p name="423f" id="423f" class="graf graf--p graf-after--h4">Como todas as funcionalidades do Firebase, temos de adicionar a sua dependencia ao gradle:</p><pre name="7554" id="7554" class="graf graf--pre graf-after--p">dependencies {<br>     compile &#39;com.google.firebase:firebase-messaging:10.2.1&#39;<br>}</pre><p name="c541" id="c541" class="graf graf--p graf-after--pre">Em seguida, temos de criar 2 serviços e adicioná-los ao Manifest:</p><ul class="postList"><li name="9ad5" id="9ad5" class="graf graf--li graf-after--p">O primeiro serviço tem de herdar do <strong class="markup--strong markup--li-strong"><em class="markup--em markup--li-em">FirebaseMessagingService</em></strong>. Este serviço irá permitir receber mensagens, mesmo que a aplicação esteja no background.</li><li name="ff4d" id="ff4d" class="graf graf--li graf-after--li">O segundo serviço herdará do <strong class="markup--strong markup--li-strong"><em class="markup--em markup--li-em">FirebaseInstanceIdService </em></strong>para manter o nosso Token sempre actualizado.</li></ul><figure name="9597" id="9597" class="graf graf--figure graf--iframe graf-after--li"><script src="https://gist.github.com/rosariopfernandes/685b6ab61dbe43191c2acc7426b7b55e.js"></script><figcaption class="imageCaption">Os nossos services no AndroidManifest.xml</figcaption></figure><p name="6cb1" id="6cb1" class="graf graf--p graf-after--figure">Vamos começar por criar o <em class="markup--em markup--p-em">MeuFirebaseInstanceIDService</em> pois ele será responsável por manter o nosso Token actualizado na Realtime Database. Para fazer isso, basta sobrecarregarmos o método <em class="markup--em markup--p-em">onTokenRefresh():</em></p><figure name="0337" id="0337" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/3eba12c81833b11dda694851450b39e9.js"></script></figure><p name="bf85" id="bf85" class="graf graf--p graf-after--figure">E assim temos o lado do cliente funcional. Vamos ao lado do servidor.</p><h4 name="a91a" id="a91a" class="graf graf--h4 graf-after--p">Criar a nossa função</h4><p name="190c" id="190c" class="graf graf--p graf-after--h4">Então criamos a função que irá obter o Firebase Token do nosso destinatário, encontrar esse utilizador no Firebase Authentication e por fim enviar a nossa notificação:</p><figure name="d6ec" id="d6ec" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/aabb773d96538bdecc0d98cd13774d7b.js"></script></figure><p name="6552" id="6552" class="graf graf--p graf-after--figure">E pronto. Da próxima vez que o seu utilizador receber uma mensagem, o Cloud Functions será responsável por notificá-lo. :)</p><p name="8a81" id="8a81" class="graf graf--p graf-after--p">No <a href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" data-href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" class="markup--anchor markup--p-anchor" target="_blank">4º artigo desta série</a>, vemos como utilizar o Firebase Cloud Functions para limpeza e manutenção da nossa base de dados:</p><div name="6ef1" id="6ef1" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" data-href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9"><strong class="markup--strong markup--mixtapeEmbed-strong">Firebase Cloud Functions — Limpeza e Manutenção da Realtime Database</strong><br><em class="markup--em markup--mixtapeEmbed-em">Aprenda a utilizar o Firebase Cloud Functions para evitar palavrões na sua aplicação.</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/fcf-mantain-c95c520089d9" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="65f85eaa1d9ed9b4d8861fd057638c94" data-thumbnail-img-id="1*lDJxCk5HD2OL7BGKJFhlcg.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*lDJxCk5HD2OL7BGKJFhlcg.png);"></a></div></div></div></section><section name="a409" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="6035" id="6035" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener nofollow noopener nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/d5828e7eab94"><time class="dt-published" datetime="2017-03-25T06:02:00.311Z">March 25, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/fcf-fcm-d5828e7eab94" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

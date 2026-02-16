@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Machine Learning — Mantendo diálogos</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Machine Learning — Mantendo diálogos</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Aprenda a criar diálogos que dependem da resposta do utilizador.
+</section>
+<section data-field="description" class="p-summary">
+Para quem acompanhou o último artigo da série Machine Learning, trago este artigo que vai cumprir a promessa que fiz: Mostrar como criar diálogos que variam de acordo com as escolhas do utilizador…
+</section>
+<section data-field="body" class="e-content">
+<section name="1f62" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="65a6" id="65a6" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*P9fogFeO3KumEO2CzGH9ow.png" data-width="800" data-height="240" src="https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png"></figure><h3 name="2217" id="2217" class="graf graf--h3 graf-after--figure graf--title">Machine Learning — Mantendo diálogos</h3><p name="0baf" id="0baf" class="graf graf--p graf-after--h3">Para quem acompanhou o <a href="https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22" data-href="https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22" class="markup--anchor markup--p-anchor" target="_blank">último artigo</a> da <a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--p-anchor" target="_blank">série Machine Learning,</a> trago este artigo que vai cumprir a promessa que fiz: Mostrar como criar diálogos que variam de acordo com as escolhas do utilizador.</p><p name="e4f5" id="e4f5" class="graf graf--p graf-after--p">Vamos começar por falar de diálogos. Quando se trata de interações por voz, existem 2 tipos de diálogos:</p><h3 name="e110" id="e110" class="graf graf--h3 graf-after--p">1. Diálogo Linear</h3><p name="54b4" id="54b4" class="graf graf--p graf-after--h3">O bot usa o diálogo linear para obter informações necessárias para concluir uma acção. Para criar um diálogo linear, utilizamos um conceito já conhecido: <a href="https://medium.com/android-dev-moz/ml-actions-6cdf32bea767#56ab" data-href="https://medium.com/android-dev-moz/ml-actions-6cdf32bea767#56ab" class="markup--anchor markup--p-anchor" target="_blank">Parâmetros obrigatórios</a>.</p><p name="06b0" id="06b0" class="graf graf--p graf-after--p">Por exemplo, vamos supor que temos um agente de uma loja que vende salgados por encomenda. Para fazer uma encomenda, o nosso utilizador pode falar de várias formas:</p><blockquote name="77e6" id="77e6" class="graf graf--blockquote graf--startsWithDoubleQuote graf-after--p">“Preciso de rissois”</blockquote><blockquote name="2178" id="2178" class="graf graf--blockquote graf--startsWithDoubleQuote graf-after--blockquote">“Quero rissois com piri-piri”</blockquote><blockquote name="8fb7" id="8fb7" class="graf graf--blockquote graf--startsWithDoubleQuote graf-after--blockquote">“Encomenda 1 dúzia de chamussas sem piri piri para amanhã”</blockquote><p name="5dab" id="5dab" class="graf graf--p graf-after--blockquote">E para fazer a encomenda, precisamos de 3 parametros obrigatórios:</p><ul class="postList"><li name="f50e" id="f50e" class="graf graf--li graf-after--p">Nome do salgado</li><li name="f03a" id="f03a" class="graf graf--li graf-after--li">Quantidade</li><li name="49fc" id="49fc" class="graf graf--li graf-after--li">Com ou sem piri piri</li></ul><figure name="8bad" id="8bad" class="graf graf--figure graf-after--li"><img class="graf-image" data-image-id="1*TRYFKZ7cZZETFv29iLjuZA.png" data-width="720" data-height="669" src="https://cdn-images-1.medium.com/max/800/1*TRYFKZ7cZZETFv29iLjuZA.png"><figcaption class="imageCaption">Salgado, number e piri-piri são obrigatórios</figcaption></figure><p name="9e23" id="9e23" class="graf graf--p graf-after--figure">Quando definimos parâmetros como obrigatórios, temos a possibilidade de adicionar “perguntas” (<em class="markup--em markup--p-em">prompts</em>). O bot utiliza estas perguntas como forma de obter os parametros que o utilizador não especificou na requisição:</p><figure name="f048" id="f048" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*nAHCOiIm4FBIDwPMGIo1vQ.png" data-width="710" data-height="601" src="https://cdn-images-1.medium.com/max/800/1*nAHCOiIm4FBIDwPMGIo1vQ.png"><figcaption class="imageCaption">Prompts do parametro number</figcaption></figure><p name="8610" id="8610" class="graf graf--p graf-after--figure">O agente fará estas perguntas até preencher todos os paramêtros obrigatórios. Por exemplo:</p><blockquote name="7e80" id="7e80" class="graf graf--blockquote graf-after--p">Utilizador — Quero rissois</blockquote><blockquote name="833f" id="833f" class="graf graf--blockquote graf-after--blockquote">Bot — Quantas dúzias quer?</blockquote><blockquote name="c126" id="c126" class="graf graf--blockquote graf-after--blockquote">Utilizador — Duas</blockquote><blockquote name="ac63" id="ac63" class="graf graf--blockquote graf-after--blockquote">Bot — Com ou sem piri piri?</blockquote><blockquote name="d513" id="d513" class="graf graf--blockquote graf-after--blockquote">Utilizador — Sem Piri Piri</blockquote><blockquote name="c141" id="c141" class="graf graf--blockquote graf-after--blockquote">Bot — Encomenda registada.</blockquote><h3 name="a7c5" id="a7c5" class="graf graf--h3 graf-after--blockquote">2. Diálogo Não Linear</h3><p name="da4b" id="da4b" class="graf graf--p graf-after--h3">O diálogo não linear é aquele mencionado no começo do artigo: os diálogos que dependem da resposta dos utilizadores.</p><p name="9c9e" id="9c9e" class="graf graf--p graf-after--p">Vamos supor que temos um inquérito para avaliar a satisfação dos participantes de um evento. E este inquérito começa com 2 questões:</p><ul class="postList"><li name="3e91" id="3e91" class="graf graf--li graf-after--p">Como avalia o programa do evento?</li><li name="3f87" id="3f87" class="graf graf--li graf-after--li">Como avalia o local de realização do evento?</li></ul><p name="eced" id="eced" class="graf graf--p graf-after--li">E para cada uma destas questões temos 3 opções:</p><ul class="postList"><li name="0fbc" id="0fbc" class="graf graf--li graf-after--p">Mau</li><li name="632e" id="632e" class="graf graf--li graf-after--li">Razoável</li><li name="0004" id="0004" class="graf graf--li graf-after--li">Bom</li></ul><p name="7700" id="7700" class="graf graf--p graf-after--li">Para construir este tipo de diálogo, utilizamos outro conceito já conhecido: <a href="https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22" data-href="https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22" class="markup--anchor markup--p-anchor" target="_blank">Contexts</a>. Começamos por criar um Intent que dá início à conversa. Este Intent terá “avaliar-evento” como Output Context e os Intents seguintes terão isto como Input Context.</p><figure name="d891" id="d891" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*Se3KFqs1QbAutMMKAHTRYg.png" data-width="726" data-height="417" src="https://cdn-images-1.medium.com/max/800/1*Se3KFqs1QbAutMMKAHTRYg.png"></figure><p name="e886" id="e886" class="graf graf--p graf-after--figure">Sem seguida criamos para cada uma das possibilidades com o Input Context “avaliar-evento”:</p><figure name="c5b3" id="c5b3" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*jk3erGafLVObvx_X-5mXUQ.png" data-width="723" data-height="421" src="https://cdn-images-1.medium.com/max/800/1*jk3erGafLVObvx_X-5mXUQ.png"></figure><figure name="0c6c" id="0c6c" class="graf graf--figure graf-after--figure"><img class="graf-image" data-image-id="1*UjGDzRhjODIYywZ6mNeL1A.png" data-width="733" data-height="305" src="https://cdn-images-1.medium.com/max/800/1*UjGDzRhjODIYywZ6mNeL1A.png"></figure><p name="55a1" id="55a1" class="graf graf--p graf-after--figure">Note que <strong class="markup--strong markup--p-strong">todos</strong> estes Intents devem conter: o parametro com o seu valor, a segunda questão como Response e o novo Context (context da segunda questão).</p><figure name="18e5" id="18e5" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*3Fur-yCQqwRMeMihBHVYXQ.png" data-width="714" data-height="667" src="https://cdn-images-1.medium.com/max/800/1*3Fur-yCQqwRMeMihBHVYXQ.png"></figure><p name="e1ea" id="e1ea" class="graf graf--p graf-after--figure">E então criamos mais 3 Intents para as respostas da segunda questão, com o novo Context como Input Context.</p><figure name="1fd2" id="1fd2" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*LyA-iI99dRL6t3lvUbBIlw.png" data-width="736" data-height="415" src="https://cdn-images-1.medium.com/max/800/1*LyA-iI99dRL6t3lvUbBIlw.png"></figure><p name="bb2b" id="bb2b" class="graf graf--p graf-after--figure">E pronto. Se você quiser continuar a criar mais questões, basta colocar um 3º Context e criar os Intents que vão continuar o diálogo.</p><p name="d677" id="d677" class="graf graf--p graf-after--p graf--trailing">No próximo artigo teremos mais um (talvez o último da série) conceito básico do Intent: Eventos.</p></div></div></section><section name="020d" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="809d" id="809d" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener noopener nofollow noopener nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/be37972ed894"><time class="dt-published" datetime="2017-04-06T20:45:22.242Z">April 6, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/ml-dialogs-be37972ed894" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>
