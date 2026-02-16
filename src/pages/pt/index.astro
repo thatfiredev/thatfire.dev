@@ -1,0 +1,87 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import CookieConsent from "../../components/CookieConsent.astro";
+import {
+    PORTFOLIO_TITLE_PT,
+    SITE_AUTHOR,
+    SITE_DESCRIPTION_PT,
+} from "../../consts";
+
+const translations = {
+    en: "/",
+    pt: "/pt/",
+};
+---
+
+<!doctype html>
+<html lang="pt">
+    <head>
+        <BaseHead
+            title={PORTFOLIO_TITLE_PT}
+            description={SITE_DESCRIPTION_PT}
+            translations={translations}
+        />
+    </head>
+    <body>
+        <Header />
+        <main>
+            <h3>👋 Olá!</h3>
+            <p>
+                Sou o {SITE_AUTHOR}. Trabalho na Google, na equipa do <a
+                    href="https://firebase.google.com"
+                    target="_blank">Firebase</a
+                >, onde ajudo criadores de apps móveis a integrar com Firebase e
+                IA Generativa.<br /> Nasci em Maputo 🇲🇿 e agora vivo em Londres 🇬🇧.
+            </p>
+            <h4>Projetos Atuais</h4>
+            <p>
+                Trabalho no
+                <a
+                    href="http://firebase.google.com/products/firebase-ai-logic"
+                    target="_blank">Firebase AI Logic</a
+                > e no
+                <a
+                    href="http://firebase.google.com/products/phone-number-verification"
+                    target="_blank">Firebase Phone Number Verification</a
+                >, garantindo que ambos proporcionam uma excelente experiência
+                para quem cria apps móveis.
+            </p>
+            <h4>Blog</h4>
+            <p>
+                Voltei a escrever <a href="/pt/blog">blog posts</a>!
+            </p>
+            <p>Antes deste site, eu escrevia nas seguintes plataformas:</p>
+            <ul>
+                <li>
+                    <a href="https://medium.com/@thatfire.dev" target="_blank"
+                        >Medium (2016-2020)</a
+                    >
+                </li>
+                <li>
+                    <a href="https://dev.to/rosariopfernandes/" target="_blank"
+                        >dev.to (2019-2020)</a
+                    >
+                </li>
+            </ul>
+            <h4>Vídeos</h4>
+            <p>
+                Todos os meus vídeos estão disponíveis no <a
+                    href="http://www.youtube.com/@thatfiredev"
+                    target="_blank">meu canal do YouTube</a
+                >.
+            </p>
+            <h4>Open Source</h4>
+            <p>
+                Alguns dos projetos em que trabalho são Open Source. Sabe mais
+                sobre eles no <a
+                    href="https://github.com/thatfiredev"
+                    target="_blank">meu perfil do GitHub</a
+                >.
+            </p>
+        </main>
+        <Footer translations={translations} />
+        <CookieConsent />
+    </body>
+</html>

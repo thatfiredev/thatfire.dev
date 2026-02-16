@@ -1,20 +1,26 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
-import Analytics from './Analytics.astro'
+import "../styles/global.css";
+import Analytics from "./Analytics.astro";
 
 interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	translations?: { [key: string]: string };
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const {
+	title,
+	description,
+	image = "/blog-placeholder-1.jpg",
+	translations,
+} = Astro.props;
 
-const isAnalyticsEnabled = import.meta.env.MODE === 'production';
+const isAnalyticsEnabled = import.meta.env.MODE === "production";
 ---
 
 <!-- Global Metadata -->
@@ -24,14 +30,47 @@ const isAnalyticsEnabled = import.meta.env.MODE === 'production';
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link
+	rel="preload"
+	href="/fonts/atkinson-regular.woff"
+	as="font"
+	type="font/woff"
+	crossorigin
+/>
+<link
+	rel="preload"
+	href="/fonts/atkinson-bold.woff"
+	as="font"
+	type="font/woff"
+	crossorigin
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
+<!-- i18n / Hreflang Tags -->
+{
+	translations &&
+		Object.entries(translations).map(([lang, url]) => (
+			<link
+				rel="alternate"
+				hreflang={lang}
+				href={new URL(url, Astro.site)}
+			/>
+		))
+}
+{
+	translations && translations["en"] && (
+		<link
+			rel="alternate"
+			hreflang="x-default"
+			href={new URL(translations["en"], Astro.site)}
+		/>
+	)
+}
+
 <!-- Analytics -->
-{isAnalyticsEnabled && <Analytics/>}
+{isAnalyticsEnabled && <Analytics />}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

@@ -1,12 +1,12 @@
 ---
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import { BLOG_TITLE, SITE_DESCRIPTION } from "../../consts";
+import BaseHead from "../../../components/BaseHead.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import { BLOG_TITLE, SITE_DESCRIPTION } from "../../../consts";
 import { getCollection } from "astro:content";
-import FormattedDate from "../../components/FormattedDate.astro";
+import FormattedDate from "../../../components/FormattedDate.astro";
 
-const locale = Astro.currentLocale || "en";
+const locale = "pt";
 const posts = (
 	await getCollection("blog", ({ id }) => {
 		return id.startsWith(`${locale}/`);
@@ -106,7 +106,7 @@ const translations = {
 						posts.map((post) => (
 							<li>
 								<a
-									href={`/${locale === "en" ? "" : locale + "/"}blog/${post.slug.split("/").pop()}/`}
+									href={`/pt/blog/${post.slug.split("/").pop()}/`}
 								>
 									<img
 										width={720}
