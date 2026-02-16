@@ -4,12 +4,20 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import CookieConsent from "../components/CookieConsent.astro";
 import { PORTFOLIO_TITLE, SITE_AUTHOR, SITE_DESCRIPTION } from "../consts";
+const translations = {
+	en: "/",
+	pt: "/pt/",
+};
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={PORTFOLIO_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead
+			title={PORTFOLIO_TITLE}
+			description={SITE_DESCRIPTION}
+			translations={translations}
+		/>
 	</head>
 	<body>
 		<Header />
