@@ -1,4 +1,8 @@
 ---
+interface Props {
+	translations?: { [key: string]: string };
+}
+const { translations } = Astro.props;
 const today = new Date();
 const lang = Astro.currentLocale;
 const rightsText =
@@ -17,6 +21,18 @@ const twitterText =
 
 <footer>
 	&copy; {today.getFullYear()} Rosário P. Fernandes. {rightsText}
+	<div class="language-switcher">
+		[
+		<a href={translations?.en || "/"} class={lang === "en" ? "active" : ""}
+			>🇬🇧 EN</a
+		>
+		|
+		<a
+			href={translations?.pt || "/pt/"}
+			class={lang === "pt" ? "active" : ""}>🇲🇿 PT</a
+		>
+		]
+	</div>
 	<div class="social-links">
 		<a href="https://github.com/thatfiredev" target="_blank">
 			<span class="sr-only">{githubText}</span>
@@ -90,5 +106,22 @@ const twitterText =
 	}
 	.social-links a:hover {
 		color: rgb(var(--gray-dark));
+	}
+	.language-switcher {
+		margin-top: 1rem;
+		font-family: inherit;
+		color: rgb(var(--gray));
+	}
+	.language-switcher a {
+		text-decoration: none;
+		color: rgb(var(--gray));
+		margin: 0 0.25rem;
+	}
+	.language-switcher a.active {
+		font-weight: bold;
+		color: rgb(var(--black));
+	}
+	.language-switcher a:hover {
+		color: rgb(var(--accent));
 	}
 </style>
