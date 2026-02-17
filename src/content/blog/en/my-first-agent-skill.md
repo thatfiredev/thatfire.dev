@@ -76,7 +76,7 @@ However, you can also have these optional fields in the frontmatter: `license`, 
 
 ### 4\. Defining the instructions
 
-Now in the body of the skill.md, I defined the logic. Since I had already done some manual work, I knew what some of the steps and common pitfalls were, so I listed those as bullet points. And at the end, I told it to verify its work by trying to compile the project with \`./gradlew assembleDebug\`:
+Now in the body of the SKILL.md file, I defined the logic. Since I had already done some manual work, I knew what some of the steps and common pitfalls were, so I listed those as bullet points. And at the end, I told it to verify its work by trying to compile the project with \`./gradlew assembleDebug\`:
 
 ```
 ---
