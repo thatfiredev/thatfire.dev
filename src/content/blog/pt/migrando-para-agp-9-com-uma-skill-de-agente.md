@@ -1,6 +1,6 @@
 ---
 title: 'Utilizando Agent Skills para migrar para AGP 9.0.0'
-description: 'Quando o Android Gradle Plugin (AGP) 9.0.0 foi lançado em Janeiro de 2026, eu me vi diante de uma lista de projetos Android que precisavam ser migrados.'
+description: 'Contando a minha experiência escrevendo um Agent Skill para migrar projetos para o AGP 9.0'
 pubDate: 'Feb 16 2026'
 heroImage: '/covers/my-first-agent-skill.webp'
 translationKey: 'my-first-agent-skill'
