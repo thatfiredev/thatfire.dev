@@ -142,13 +142,50 @@ const acceptText = lang === "pt" ? "Aceitar Todos" : "Accept All";
 </style>
 
 <script is:inline>
+    const CONSENT_REQUIRED_COUNTRIES = [
+        "AT",
+        "BE",
+        "BG",
+        "HR",
+        "CY",
+        "CZ",
+        "DK",
+        "EE",
+        "FI",
+        "FR",
+        "DE",
+        "GR",
+        "HU",
+        "IE",
+        "IT",
+        "LV",
+        "LT",
+        "LU",
+        "MT",
+        "NL",
+        "PL",
+        "PT",
+        "RO",
+        "SK",
+        "SI",
+        "ES",
+        "SE",
+        "IS",
+        "LI",
+        "NO",
+        "GB",
+        "BR",
+        "CA",
+        "TH",
+        "US",
+    ];
+
     const banner = document.getElementById("cookie-banner");
     const acceptBtn = document.getElementById("accept-cookies");
     const declineBtn = document.getElementById("decline-cookies");
 
     function setConsent(status) {
         localStorage.setItem("cookie-consent", status);
-
         if (typeof gtag === "function") {
             gtag("consent", "update", {
                 ad_storage: status,
@@ -157,15 +194,36 @@ const acceptText = lang === "pt" ? "Aceitar Todos" : "Accept All";
                 analytics_storage: status,
             });
         }
-
         banner.classList.add("hidden");
     }
 
-    if (!localStorage.getItem("cookie-consent")) {
-        setTimeout(() => {
+    async function checkGeolocation() {
+        if (localStorage.getItem("cookie-consent")) return;
+
+        try {
+            const response = await fetch("https://ipapi.co/json/");
+            const data = await response.json();
+            const country = data.country_code;
+
+            if (CONSENT_REQUIRED_COUNTRIES.includes(country)) {
+                banner.classList.remove("hidden");
+            } else {
+                // Auto-grant for non-restricted countries
+                setConsent("granted");
+            }
+
+            // Dispatch event for Analytics.astro
+            window.dispatchEvent(
+                new CustomEvent("geolocation-detected", { detail: country }),
+            );
+        } catch (error) {
+            console.error("Geolocation check failed:", error);
+            // On failure, show banner to be safe
             banner.classList.remove("hidden");
-        }, 1000);
+        }
     }
+
+    setTimeout(checkGeolocation, 1000);
 
     acceptBtn.addEventListener("click", () => setConsent("granted"));
     declineBtn.addEventListener("click", () => setConsent("denied"));

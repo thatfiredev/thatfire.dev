@@ -1,21 +1,80 @@
 ---
+
 ---
-<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-9240JDGZ27"></script>
+
+<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-9240JDGZ27"
+></script>
 <script is:inline>
 	window.dataLayer = window.dataLayer || [];
-	function gtag(){ dataLayer.push(arguments); }
-	gtag('js', new Date());
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag("js", new Date());
 
 	// Check for stored consent
-	const storedConsent = localStorage.getItem('cookie-consent');
-	const initialConsent = storedConsent === 'granted' ? 'granted' : 'denied';
+	const storedConsent = localStorage.getItem("cookie-consent");
+	const initialConsent = storedConsent === "granted" ? "granted" : "denied";
 
 	gtag("consent", "default", {
 		ad_storage: initialConsent,
 		ad_user_data: initialConsent,
-	  	ad_personalization: initialConsent,
+		ad_personalization: initialConsent,
 		analytics_storage: initialConsent,
 	});
 
-	gtag('config', 'G-9240JDGZ27');
+	gtag("config", "G-9240JDGZ27");
+
+	// Listen for client-side geolocation detection
+	window.addEventListener("geolocation-detected", (event) => {
+		const country = event.detail;
+		const CONSENT_REQUIRED_COUNTRIES = [
+			"AT",
+			"BE",
+			"BG",
+			"HR",
+			"CY",
+			"CZ",
+			"DK",
+			"EE",
+			"FI",
+			"FR",
+			"DE",
+			"GR",
+			"HU",
+			"IE",
+			"IT",
+			"LV",
+			"LT",
+			"LU",
+			"MT",
+			"NL",
+			"PL",
+			"PT",
+			"RO",
+			"SK",
+			"SI",
+			"ES",
+			"SE",
+			"IS",
+			"LI",
+			"NO",
+			"GB",
+			"BR",
+			"CA",
+			"TH",
+			"US",
+		];
+
+		if (
+			!localStorage.getItem("cookie-consent") &&
+			!CONSENT_REQUIRED_COUNTRIES.includes(country)
+		) {
+			gtag("consent", "update", {
+				ad_storage: "granted",
+				ad_user_data: "granted",
+				ad_personalization: "granted",
+				analytics_storage: "granted",
+			});
+		}
+	});
 </script>
