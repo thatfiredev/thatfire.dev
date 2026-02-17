@@ -1,6 +1,8 @@
-# 👨🏻‍💻 Rosário's Portfolio website
+# 👨🏻‍💻 thatfire.dev - Rosário's Portfolio
 
-This is the source code for the portfolio at http://thatfire.dev
+Welcome to the source code of my personal portfolio and blog: [thatfire.dev](http://thatfire.dev).
+
+This website is built with **Astro 5** and features a fully internationalized blog (English and Portuguese).
 
 ## 🧞 Commands
 
@@ -15,17 +17,26 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## 🌍 Internationalization (i18n)
+
+This project uses Astro's built-in i18n support. 
+- **English (Default)**: `/`
+- **Portuguese**: `/pt/`
+
+Blog posts are managed in `src/content/blog/` and linked via a `translationKey` in the frontmatter to enable the language switcher and SEO hreflang tags.
+
 ## 🚀 Project Structure
 
 Inside of the Astro project, you'll see the following folders and files:
 
 ```text
-├── public/
+├── .agent/              # Antigravity Skills & Workflows
+├── public/              # Static assets (images, fonts)
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
+│   ├── components/      # Localized Astro components
+│   ├── content/         # Markdown/MDX Blog posts (en/pt)
+│   ├── layouts/         # Shared page layouts
+│   └── pages/           # Routing and page logic
 ├── astro.config.mjs
 ├── README.md
 ├── package.json
