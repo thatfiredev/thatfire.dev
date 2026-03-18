@@ -106,10 +106,9 @@ const translations = {
 						posts.map((post) => (
 							<li>
 								<a
-									href={`/${locale === "en" ? "" : locale + "/"}blog/${post.id
-										.split("/")
-										.pop()
-										.replace(/\.(md|mdx)$/, "")}/`}
+									href={`/${locale === "en" ? "" : locale + "/"}blog/${(
+										post.id.split("/").pop() || ""
+									).replace(/\.(md|mdx)$/, "")}/`}
 								>
 									<img
 										width={720}
