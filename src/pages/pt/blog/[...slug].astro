@@ -1,5 +1,5 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import BlogPost from "../../../layouts/BlogPost.astro";
 
 export async function getStaticPaths() {
@@ -27,7 +27,7 @@ const translations = allPosts
 		return acc;
 	}, {});
 
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
 <BlogPost {...post.data} translations={translations}>
