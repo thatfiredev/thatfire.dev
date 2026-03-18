@@ -47,18 +47,19 @@ Como eu disse antes, estou usando o Antigravity para isso, e ele [suporta](https
 
 As skills globais no Antigravity ficam guardadas em `~/.gemini/antigravity/skills/`, e foi lá que criei um novo diretório e colei a referência agp-9-0–0-release-notes.md que baixei anteriormente. E assim ficou a estrutura:
 
-```
+```bash ins="SKILL.md" ins="agp-9-0–0-release-notes.md"
 agp9-skill/
-├── SKILL.md
+├── SKILL.md # Vazio por enquanto
 └── references/
-      └── agp-9-0–0-release-notes.md
+      └── agp-9-0–0-release-notes.md # O arquivo que eu baixei
 ```
 
 ### 3\. Escrevendo o SKILL.md
 
 Comecei com o _"frontmatter"_ para definir o propósito da skill:
 
-```
+```md
+<!-- agp9-skill/SKILL.md -->
 ---
 name: upgrade-to-agp-9.0.0
 description: Use esta skill quando o usuário pedir para atualizar um projeto Android para o Android Gradle Plugin 9.0.0.
@@ -76,7 +77,8 @@ No entanto, você também pode ter estes campos opcionais no frontmatter: `licen
 
 Agora, no corpo do ficheiro `SKILL.md`, defini a lógica. Como já tinha feito algum trabalho manual, sabia quais eram alguns dos passos e armadilhas comuns, então os listei como marcadores. E no final, disse para ele verificar seu trabalho tentando compilar o projeto com `./gradlew assembleDebug`:
 
-```
+```md
+<!-- agp9-skill/SKILL.md -->
 ---
 name: upgrade-to-agp-9.0.0
 description: Use esta skill quando o usuário pedir para atualizar um projeto Android para o Android Gradle Plugin 9.0.0.
