@@ -41,26 +41,27 @@ So I started by:
 1. Heading over to the [release notes](https://developer.android.com/build/releases/agp-9-0-0-release-notes) in the official documentation.  
 2. On that page, I clicked on “View as Markdown” (right next to the page title)  
    <img src="/images/agp-9-release-notes.png" alt="AGP 9.0.0 release notes page in the documentation">
-3. I saved that file to my local machine as \`agp-9-0-0-release-notes.md\`.
+3. I saved that file to my local machine as `agp-9-0-0-release-notes.md`.
 
 ### 2\. Creating the resource folder
 
 As I said earlier, I’m using Antigravity for this, and it [supports](https://antigravity.google/docs/skills) two types of skills: workspace-specific or global. Since I need to use this skill across multiple projects, I went with global, as workspace-specific would tie it to a project.
 
-Global skills in Antigravity are stored in \`\~/.gemini/antigravity/skills/\`, and that’s where I created a new directory and pasted the agp-9-0–0-release-notes.md reference that I downloaded earlier. Here’s what the structure looked like:
+Global skills in Antigravity are stored in `~/.gemini/antigravity/skills/`, and that’s where I created a new directory and pasted the agp-9-0–0-release-notes.md reference that I downloaded earlier. Here’s what the structure looked like:
 
-```
+```bash ins="SKILL.md" ins="agp-9-0–0-release-notes.md"
 agp9-skill/
-├── SKILL.md                          # Blank for now
+├── SKILL.md # Blank for now
 └── references/
-      └── agp-9-0–0-release-notes.md  # The file downloaded earlier
+      └── agp-9-0–0-release-notes.md # The file downloaded earlier
 ```
 
 ### 3\. Writing the SKILL.md
 
 I started with the frontmatter to define the skill’s purpose:
 
-```
+```md
+<!-- agp9-skill/SKILL.md -->
 ---
 name: upgrade-to-agp-9.0.0
 description: Use this skill when the user asks to upgrade an Android project to Android Gradle Plugin 9.0.0.
@@ -76,9 +77,10 @@ However, you can also have these optional fields in the frontmatter: `license`, 
 
 ### 4\. Defining the instructions
 
-Now in the body of the SKILL.md file, I defined the logic. Since I had already done some manual work, I knew what some of the steps and common pitfalls were, so I listed those as bullet points. And at the end, I told it to verify its work by trying to compile the project with \`./gradlew assembleDebug\`:
+Now in the body of the SKILL.md file, I defined the logic. Since I had already done some manual work, I knew what some of the steps and common pitfalls were, so I listed those as bullet points. And at the end, I told it to verify its work by trying to compile the project with `./gradlew assembleDebug`:
 
-```
+```md
+<!-- agp9-skill/SKILL.md -->
 ---
 name: upgrade-to-agp-9.0.0
 description: Use this skill when the user asks to upgrade an Android project to Android Gradle Plugin 9.0.0.
@@ -103,7 +105,7 @@ By the end of it, make sure the project still compiles by running `./gradlew ass
 
 I opened my first project in Antigravity and gave the command to the Agent: *"Please migrate this project to AGP 9.0.0."*
 
-It worked perfectly. Antigravity indicated that it was reading my Skill.md file and the agent started working on the updates. It made all of the changes, showed me the diff for me to review and asked for approval to run \`./gradlew assembleDebug\`.
+It worked perfectly. Antigravity indicated that it was reading my Skill.md file and the agent started working on the updates. It made all of the changes, showed me the diff for me to review and asked for approval to run `./gradlew assembleDebug`.
 
 Given the success of this experiment, I opened [the first PR](https://github.com/firebase/snippets-android/pull/674) and moved on to run the same Skill on 3 other projects ([quickstart-android](https://github.com/firebase/quickstart-android/pull/2753), [friendlyeats-android](https://github.com/firebase/friendlyeats-android/pull/290), [codelab-friendlychat-android](https://github.com/firebase/codelab-friendlychat-android/pull/363)). For 2 out of the 4 projects, `assembleDebug` completed successfully.
 
