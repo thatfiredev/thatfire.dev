@@ -1,0 +1,165 @@
+---
+title: 'Drive API for Android — criar um ficheiro no Drive'
+description: ''
+pubDate: '2016-05-01T05:01:01.396Z'
+---
+
+Hoje em dia, muitas pessoas usam serviços de armazenamento em nuvem para vários fins: professional, académico e até pessoal. Através destes serviços é possível compartilhar ficheiros com bastante facilidade. A Google também tem o seu sistema de armazenamento em nuvem: O [Google Drive](http://www.google.com/intl/pt-BR/drive/).
+
+Como a maior parte dos serviços da Google, o Drive também tem uma API para usarmos quando desenvolvemos aplicações para várias plataformas, a [Drive API](https://developers.google.com/drive/). A Drive API permite que a nossa aplicação possa aceder ao Drive de um usuário (desde que este permita, claro) e manipule os seus ficheiros e pastas.
+
+Recentemente, foi lançada a [Drive Android API](https://developers.google.com/drive/android/) (você pode ver o [vídeo de lançamento aqui](https://www.youtube.com/watch?v=quQyZdhPjxc)), que traz algumas funcionalidades da Drive API para o seu uso nativo no Android.
+
+### O que me levou a usar a Drive API?
+
+Bom, recorri à Drive API porque precisava de armazenar um ficheiro de texto (.txt) em algum lugar seguro, de forma que fosse partilhado apenas entre a aplicação e o usuário (permitindo que este manipule à vontade o ficheiro). O ficheiro é gerado pela minha aplicação [Roll a Pass](http://rpfsoftwares.site90.net/rap/), e contém palavras-passe do usuário da aplicação que são armazenadas localmente na base de dados local da aplicação.
+
+Uma grande vantagem que encontrei na Drive API foi o facto de não haver necessidade de obter a permissão para aceder à Internet. Isto garante que os usuários tenham mais confiança ao armazenar os seus dados na aplicação, sabendo que não correrão o risco de ter as suas palavras-passe _vazadas_ na Internet.
+
+Neste post, vou mostrar-vos como foi implementada a Drive API na aplicação e como ela é usada para criar ficheiros na _pasta raíz_ do Drive do usuário.
+
+**1.** **Fazer o download do Google Play Services SDK**
+
+Primeiramente, tenha certeza que você possui o [Google Play Services SDK](https://developers.google.com/android/guides/overview), que inclui a Google Drive Android API. Para obter este SDK, basta entrar no [Gerenciador de SDK do Android](http://developer.android.com/tools/help/sdk-manager.html) e descarregar a última versão (8.4.0 na data de publicação deste post).
+
+**2.** **Registar a sua aplicação na Consola de Desenvolvedores Google e obter um certificado de autorização**
+
+Se você ainda não registou a sua aplicação na Google Developers Console, [clique aqui para criar um projecto na Consola de Desenvolvedores](https://console.developers.google.com//start/api?id=drive&credential=client_key). Basta preencher os campos com o nome da aplicação (App Name) e o nome do pacote da aplicação (conforme está no AndroidManifest.xml da sua aplicação).
+
+Depois de criar o projecto na Consola e activar a Drive API, você precisa obter o certificado de autorização. Para fazer isto, você tem de usar a ferramenta [Keytool](http://docs.oracle.com/javase/6/docs/technotes/tools/windows/keytool.html) para poder obter o certificado SHA1 que é gerado pela chave utilizada para certificar a aplicação (keystore).
+
+Se a aplicação ainda está em fase de testes, a keystore encontra-se na pasta _.android_ com o nome _android-debug.keystore_ (palavra-passe: android )e caso esteja para fazer o _release_ da aplicação, ou actualizar uma cujo o release já foi efectuado, utilize o ficheiro _\*.keystore_ que só você sabe onde se encontra e qual a palavra-passe. Para obter o certificado SHA1, use o comando: _keytool –list –v –keystore keysore.jks_ onde “_keystore.jks_” é o caminho para o seu ficheiro keystore. Copie o certificado SHA1 (20 pares de 2 caracteres hexadecimais separados por “:”) para criar as credencias na consola.
+
+Vá para a [página de credenciais](https://console.developers.google.com/apis/credentials?project=) da sua aplicação e clique em _Adicionar Credenciais > OAuth 2.0 client ID_ e escolha _Android_. No campo _Package Name_, introduza o nome do Pacote conforme está no _AndroidManifest.xml_ da sua aplicação e cole o certificado SHA1 quando for requisitado.
+
+**3.** **Adicionar a dependência do Google Play Services**
+
+Se você ainda não colocou a dependência do Google Play Services no seu projecto, pode fazê-lo adicionando-o ao ficheiro _build.gradle (Module:app)_. Para usar o Google Play Services, geralmente, coloca-se a linha: _compile ‘com.google.android.gms:play-services:8.4.0’_; mas desde a versão 6 deste SDK, é possível especificar qual o serviço que pretendemos utilizar, para não importar todos os serviços Play (que são muitos). Assim, na minha aplicação usei apenas: _compile ‘com.google.android.gms:play-services-drive:8.4.0’_ porque só vou usar a Drive API.
+
+**4.** **Conectar e Autorizar a Google Drive Android API**
+
+A autorização para o Google Drive Android API é garantida pela classe [GoogleApiClient](https://developers.google.com/android/reference/com/google/android/gms/common/api/GoogleApiClient). Esta é geralmente criada no método _onCreate()_ de uma Activity que implementa as interfaces _ConnectionCallbacks_ e _OnConnectionFailedListener_.
+
+```java
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstance);
+
+    mGoogleApiClient = new GoogleApiClient.Builder(this)
+        .addApi(Drive.API)
+        .addScope(Drive.SCOPE_FILE)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .build();
+}
+```
+Depois de criar o cliente, é necessário chamar o método _connect()_ para ocorrer a autorização. _mGoogleApiClient.connect();_
+
+Se o usuário não autorizou a aplicação, o CallBack _onConnectionFailed()_ será invocado. Será pedido ao usuário para autorizar a aplicação à acessar o Drive.
+
+```java
+@Override
+public void onConnectionFailed(ConnectionResult connectionResult) {
+    if (connectionResult.hasResolution()) {
+        try {
+            connectionResult.startResolutionForResult(this, _RESOLVE_CONNECTION_REQUEST_CODE_);
+        } catch (IntentSender.SendIntentException e) {
+            // Não é possível obter a autorização
+        }
+    } else {
+        GoogleApiAvailability._getInstance_().getErrorDialog(this, connectionResult.getErrorCode(), 0).show();
+    }
+}
+```
+
+Depois do usuário completar a autorização, será chamado o método _onActivityResult()_ da aplicação. Se o resultado for _RESULT\_OK_, você deve voltar a chamar o método _connect()_ para restabelecer a ligação.
+
+```java
+@Override
+protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    switch (requestCode) {
+        case RESOLVE_CONNECTION_REQUEST_CODE:
+            if (resultCode == RESULT_OK) {
+                mGoogleApiClient.connect();
+            }
+            break;
+    }
+}
+```
+
+**5.** **Criar um ficheiro na pasta raíz do Drive**
+
+Existem 2 formas de criar ficheiros com a Drive Android API: usando a classe _CreateFileActivityBuilder_ ou usando o método _createFile()_ da interface _DriveFolder_.
+
+**Qual a diferença entre os dois?**
+
+O resultado é o mesmo. A diferença está no local onde o usuário irá introduzir o nome do ficheiro. A classe _CreateFileActivityBuilder_ simplifica o processo, oferecendo-nos uma interface pré-criada enquanto que o método _createFile()_ permite que o usuário adicione mais meta-dados.
+
+Utilizei o método _createFile()_ na minha aplicação, mas você pode ver a implementação da classe _CreateFileActivityBuilder_ [aqui](https://developers.google.com/drive/android/create-file#creating_files_programmatically).
+
+Aqui vai o código que usei para gerar o ficheiro na minha aplicação:
+
+```java
+ResultCallback<DriveApi.DriveContentsResult> contentsCallback = new
+ResultCallback<DriveApi.DriveContentsResult>() {
+    @Override
+    public void onResult(DriveApi.DriveContentsResult result) {
+        if (!result.getStatus().isSuccess()) {
+            //Não foi possível conectar ao drive
+            return;
+        }
+        final DriveContents driveContents=result.getDriveContents();
+
+        //Executar a acção em um Thread separado do Main Thread
+        new Thread() {
+            @Override
+            public void run()
+            {
+                OutputStream outputStream = driveContents.getOutputStream();
+                Writer writer = new OutputStreamWriter(outputStream);
+                try
+                {
+                    writer.write("Olá! https://medium.com/@rosariopfernandes");
+                    writer.flush();
+                    writer.close();
+                }
+                catch(IOException e)
+                {
+                    Log.e("Couldn’t Export",e.getMessage());
+                }
+
+                MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+                    .setTitle("Novo ficheiro") //Nome do ficheiro
+                    .setViewed(false)
+                    .setMimeType("text/plain")
+                    .build();
+
+                //chamada do método createFile
+                Drive.DriveApi.getRootFolder(mGoogleApiClient)
+                    .createFile(mGoogleApiClient, metadataChangeSet, driveContents)
+                    .setResultCallback(fileCallback);
+            }
+        }.start();
+    }
+};
+
+final ResultCallback<DriveFolder.DriveFileResult> fileCallback = new
+ResultCallback<DriveFolder.DriveFileResult>() {
+    @Override
+    public void onResult(DriveFolder.DriveFileResult result) {
+        if (!result.getStatus().isSuccess())
+        {
+            //nao foi possivel criar ficheiro
+            return;
+        }
+        //ficheiro criado com sucesso
+    }
+};
+```
+Além de criar ficheiros, a API conta com mais funcionalidades bastante interessantes como procurar, apagar e transferir ficheiros e pastas, usar notificações para ter o controle de um ficheiro/pasta, entres outras.
+
+Espero que este post tenha sido productivo para você. Qualquer dúvida ou sugestão, deixe nos comentários.
+
+Até ao próximo post.
+
+Rosário Pereira Fernandes

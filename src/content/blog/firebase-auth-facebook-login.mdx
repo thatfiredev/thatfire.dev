@@ -1,0 +1,157 @@
+---
+title: 'Firebase Auth — Facebook Login'
+description: ''
+pubDate: '2016-09-04T21:57:40.391Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*tSMAAL1HT7Jxe2l_XJJTIg.png'
+---
+
+* * *
+
+### Firebase Auth — Facebook Login
+
+Muitas aplicações precisam de conhecer a identidade dos seus usuários para oferecer uma experiência personalizada e para manter os seus dados seguros.
+
+Se você está utilizando firebase como backend da sua aplicação, você fez a melhor escolha. Se você não conhece o firebase, pode ler esta série de artigos do [Dario Mungoi](https://medium.com/u/9d9c86920a50):
+
+*   [Primeira Impressão do “novo” Firebase](https://medium.com/google-developer-experts/primeira-impress%C3%A3o-do-novo-firebase-afaeaeaa1395#.43xsasung)
+*   [Realtime Databases — parte 1](https://medium.com/@mungoidario/realtime-databases-part-1-9a8f1ed171b2)
+*   [Realtime Databases — parte 2](https://medium.com/@mungoidario/realtime-databases-parte-2-ef3095ef0743)
+*   [Firebase Auth com Google Sign-in](https://medium.com/@mungoidario/firebase-auth-com-google-signin-ff89643322ab)
+*   [Mantendo os dados seguros no Firebase com Security Rules](https://medium.com/@mungoidario/mantendo-os-dados-seguros-no-firebase-com-security-rules-ce248d9be1c5)
+*   [Realtime Databases parte 3 — índices e queries](https://medium.com/android-dev-moz/realtime-databases-part-3-%C3%ADndices-e-queries-d3cdbc84dbfd?source=user_profile---------9-)
+*   [Firebase Notifications — parte 1](https://medium.com/android-dev-moz/firebase-notifications-part-1-a6de2f579940)
+
+#### Autenticação no Firebase
+
+Firebase oferece várias opções de autenticação. Você pode permitir que os seus usuários sejam autenticados com provedores como: [Google](https://www.google.com), [Facebook](https://facebook.com), [Twitter](https://twitter.com) ou [GitHub](https://github.com). Ou você pode até criar o seu próprio sistema de autenticação.
+
+Quando um usuário é autenticado na sua aplicação, 3 coisas acontecem:
+
+\- Informações sobre o usuário são enviadas para a aplicação para oferecer uma experiência personalizada
+
+\- É gerado um ID para cada um dos usuários, independetemente do seu provedor
+
+\- Firebase gere a sessão do usuário para que ele continue autenticado mesmo quando a aplicação ou browser é reiniciado.
+
+Neste artigo, explico como implementar o Facebook Login usando firebase no Android. Vou ensinar como criar uma aplicação no facebook e como permitir que os usuários façam login no Android. Assumo que você já criou o seu projecto na consola do firebase.
+
+#### 1\. Criar uma app no facebook
+
+Para criar uma app no facebook, você tem de ter conta de desenvolvedor no facebook. Para isso, [clique aqui](https://developers.facebook.com/docs/apps/register) e siga os passos necessários.
+
+#### 2\. Activar o Facebook Login na consola do firebase
+
+Vá para a secção _Auth (Autenticação),_ na aba métodos de login clique em provedores de login e active o provedor Facebook.
+
+#### 3\. Adicionar Firebase Authentication à nossa App
+
+Vamos criar uma aplicação android que permite aos usuários autenticarem-se e verem as suas informações.
+
+Para começar, vamos adicionar o firebase à nossa aplicação Android. Para fazer isso, temos de adicionar ao gradle:
+
+```groovy
+//para usar o firebase auth
+compile 'com.google.firebase:firebase-auth:9.2.0'
+compile 'com.google.firebase:firebase-core:9.2.0'
+
+//para usar o facebook sdk
+compile 'com.facebook.android:facebook-android-sdk:4.13.2'
+```
+
+Na nossa Activity declaramos algumas variáveis:
+
+```java
+private CallbackManager mCallBackManager;
+private Button btnFacebook;
+private FirebaseAuth mAuth;
+private FirebaseAuth.AuthStateListener mAuthListener;
+```
+
+No método onCreate temos de inicializar o Facebook SDK e instanciar as variáveis que declaramos:
+
+```java
+FacebookSdk.sdkInitialize(getApplicationContext()); //inicializar o Facebook SDK
+
+mAuth = FirebaseAuth.getInstance(); //pegar a instancia do Firebase Auth
+
+mAuthListener = new FirebaseAuth.AuthStateListener() {
+    @Override
+    public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+        FirebaseUser user= firebaseAuth.getCurrentUser();
+        if(user!=null)
+        {
+            String username = user.getDisplayName();
+            Toast.makeText(this, "Bem-vindo "+username, Toast.LENGHT_LONG).show();
+        }
+    }
+};
+```
+
+```java
+btnFacebook = (Button) findViewById(R.id.btnFacebook); //localizar o botão de login declarado no layout da activity
+
+mCallBackManager = CallbackManager.Factory.create();
+LoginManager.getInstance().registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        AuthCredential credential = FacebookAuthProvider
+                .getCredential(loginResult.getAccessToken().getToken());
+        signInCredential(credential);
+    }
+
+    @Override
+    public void onCancel() {
+        // O user cancelou o login enquanto carregava
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        //Ocorreu um erro ao tentar fazer logi
+    }
+});
+```
+
+```java
+btnFacebook.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        LoginManager.getInstance().logInWithReadPermissions(this,
+                Arrays.asList("public_profile", "email"));
+    }
+});
+```
+
+Repare que no onClickListener do botão de login fazemos login com permissões para ler os dados públicos do perfil e o email do usuário. Mas existem mais permissões além destas. Você pode ver a lista completa [aqui](https://developers.facebook.com/docs/facebook-login/permissions).
+
+Não posso me esquecer de deixar o método **_signInCredential_**:
+
+```java
+private void signInCredential(AuthCredential credential)
+{
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful())
+                    {
+                        FirebaseUser usuario = mAuth.getCurrentUser();
+                        // todos os dados do usuário ficam guardados na variavel usuario.
+                    }
+                    else
+                    {
+                        //O login falhou
+                    }
+                }
+            });
+}
+```
+
+No método onActivityResult da nossa Activity:
+
+```java
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallBackManager.onActivityResult(requestCode, resultCode, data);
+}
+```
+
+Pronto. Autenticar usuários com Facebook no Firebase é tao simples quanto isto. Se você estiver a desenvolver uma aplicação utilizando firebase, eu ficaria feliz em vê-la ([rosariofernandes51@gmail.com](mailto:rosariofernandes51@gmail.com)). :)

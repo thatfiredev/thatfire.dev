@@ -1,0 +1,75 @@
+---
+title: 'Machine Learning — api.ai + Facebook Messenger'
+description: ''
+pubDate: '2017-03-02T18:32:00.269Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*-stpnq_Kav33zXZ6cfJJKA.png'
+---
+
+* * *
+
+### Machine Learning — api.ai + Facebook Messenger
+
+> \-Estou a criar um assistente virtual para a minha loja de doces!
+
+> \-Sério? Posso ver?
+
+> \-Espera, tenho de entrar no website, aceder à consola e fazer o login para te mostrar.
+
+Já lá foram 2 artigos sobre a criação de assistentes virtuais com a plataforma api.ai e à esta altura, você deve estar ancioso para mostrar aos seus amigos, colegas e/ou familiares o fantástico “Robô” que está a construir. Mostrar a consola do api.ai não parece-me uma boa ideia. Que tal mostrar o nosso agente em uma plataforma que maior parte dos internautas já conhece e está familiarizado? Numa aplicação de conversas.
+
+Se você não leu nenhum dos 2 artigos de que falo, aí estão:
+
+[**Machine Learning — Entrando no mundo dos assistentes virtuais**  
+_Aprenda a criar o seu próprio assistente virtual em 4 passos simples._medium.com](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03 "https://medium.com/@rosariopfernandes/ml-b7eba66e0e03")[](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03)
+
+[**Machine Learning — Entities no api.ai**  
+_Depois da introdução à plataforma api.ai, está na hora de “mergulharmos” em alguns dos seus conceitos principais …_medium.com](https://medium.com/@rosariopfernandes/ml-entities-18639ec6c3d1 "https://medium.com/@rosariopfernandes/ml-entities-18639ec6c3d1")[](https://medium.com/@rosariopfernandes/ml-entities-18639ec6c3d1)
+
+Voltando ao assunto: sim, algumas aplicações de _chat_ como o Facebook Messenger, Kik, Slack e Telegram permitem a utilização de bots. Neste artigo, vamos integrar o nosso agente com o Facebook, por ser a rede social mais utilizada e popular.
+
+### Criar uma Facebook app e a sua página
+
+*   Vá para a [consola de desenvolvedores do Facebook](https://developers.facebook.com/) e no menu “_My Apps_” clique em “_Add a new App_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*VX10wx-vICyPeUpp2J4bNg.png)
+
+*   Escreva o nome da aplicação, introduza o seu email, escolha uma categoria e clique em “_Create App ID_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*NeOJ4u-dJcb8MrwcRmtnQg.png)
+
+*   Quando a app for criada, você será redirecionado para a aba “_Product Setup_”. Clique no botão “_Get Started_” da secção “_Messenger_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*wENVv1hfnpbLnGwD6FqCPQ.png)
+
+*   Vá para a secção “_Token generation_” e selecione a página do bot. Se você ainda não tem uma página para o bot, clique em “_Create a new page_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*FnajKsckKvgvZkdYz0eDXQ.png)
+
+*   Depois de você selecionar a página, será gerado um Token. Copie esse token.
+
+### Integrar o nosso agente com a Facebook app
+
+*   Na plataforma api.ai, vá para a aba “_Integrations_” e active “_Facebook Messenger_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*lN9XtgLNfUjEsp5OLD-Rog.png)
+
+*   Crie um “_Verify Token_” ao seu critério. Pode ser qualquer String. A seguir, cole o Token que copiamos do facebook anteriormente. Clique em “_start_” e copie o “_CallBack URL_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*t9B2-cxz2K14mkZdF5TMJA.png)
+
+*   Volte para consola do facebook e clique em “_setup webhooks_”;
+
+![](https://cdn-images-1.medium.com/max/800/1*pixEBZUL1Iq7jdYs-P8c2g.png)
+
+*   No formulário que aparece, cole o _Callback URL_ que copiamos no passo 2 e introduza o _Verify Token;_
+
+![](https://cdn-images-1.medium.com/max/800/1*dvTAo2dYsYZHX5kPVBn-SQ.png)
+
+*   Selecione os campos “_messages_” e “_messaging\_postbacks_” e finalmente clique em “_Verify and save_”.
+
+E Pronto. Agora você pode testar o seu agente no Facebook Messenger. Basta ir à página e clicar na opção de enviar uma mensagem. Experimente encomendar pastéis de nata. ;)
+
+No [próximo artigo](https://medium.com/@rosariopfernandes/ml-intents1-781a7c3010e) vemos como fazer o bot responder de outras formas (com imagens, por exemplo):
+
+[**Machine Learning — Intents no api.ai (parte 1)**  
+_Depois de integrarmos o nosso agente com o Facebook Messenger, vejamos outras formas de dar respostas aos utilizadores._medium.com](https://medium.com/@rosariopfernandes/ml-intents1-781a7c3010e "https://medium.com/@rosariopfernandes/ml-intents1-781a7c3010e")[](https://medium.com/@rosariopfernandes/ml-intents1-781a7c3010e)

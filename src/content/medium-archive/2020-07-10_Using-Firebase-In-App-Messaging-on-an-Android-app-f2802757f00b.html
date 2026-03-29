@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Using Firebase In-App-Messaging on an Android app</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Using Firebase In-App-Messaging on an Android app</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+The many was to trigger and customize messages
+</section>
+<section data-field="body" class="e-content">
+<section name="5e9a" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="da45" id="da45" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*9xRKS2ZMW9FgjoTrF0evKg.jpeg" data-width="1248" data-height="832" data-is-featured="true" src="https://cdn-images-1.medium.com/max/800/1*9xRKS2ZMW9FgjoTrF0evKg.jpeg"><figcaption class="imageCaption">Photo by <a href="https://unsplash.com/@thoughtcatalog?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" data-href="https://unsplash.com/@thoughtcatalog?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" class="markup--anchor markup--figure-anchor" rel="noopener" target="_blank">Thought Catalog</a> on <a href="https://unsplash.com/s/photos/writing?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" data-href="https://unsplash.com/s/photos/writing?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" class="markup--anchor markup--figure-anchor" rel="noopener" target="_blank">Unsplash</a></figcaption></figure><h3 name="7cbb" id="7cbb" class="graf graf--h3 graf-after--figure graf--title">Using Firebase In-App-Messaging on an Android app</h3><h4 name="ee3c" id="ee3c" class="graf graf--h4 graf-after--h3 graf--subtitle">The many ways to trigger and customize messages</h4><p name="70a1" id="70a1" class="graf graf--p graf-after--h4 graf--trailing">Released almost 2 years ago, In-App-Messaging is a Firebase product that developers can use to send targeted messages (in form of dialogs) to their users. Setting it up and sending a test message is pretty straight forward, but there’s more that can be done to improve the User Experience.<br>In this blog post, I’ll show some of the different ways to trigger and customize in-app messages.</p></div></div></section><section name="fd36" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><h3 name="ec98" id="ec98" class="graf graf--h3 graf--leading">Getting Started 👶</h3><p name="415a" id="415a" class="graf graf--p graf-after--h3">As mentioned above, sending a test message from <strong class="markup--strong markup--p-strong">Firebase In-App-Messaging </strong>(abbreviated as <strong class="markup--strong markup--p-strong">FIAM</strong> from this point on) is pretty simple and can be done in 4 steps:</p><ol class="postList"><li name="4341" id="4341" class="graf graf--li graf-after--p">Add the FIAM and Analytics dependencies to your <code class="markup--code markup--li-code">build.gradle(app)</code>:</li></ol><pre name="7a12" id="7a12" class="graf graf--pre graf-after--li">implementation <strong class="markup--strong markup--pre-strong">&quot;com.google.firebase:firebase-inappmessaging-ktx:$fiamVersion&quot;</strong><br>implementation <strong class="markup--strong markup--pre-strong">&quot;com.google.firebase:firebase-analytics-ktx:$analyticsVersion&quot;</strong></pre><p name="3103" id="3103" class="graf graf--p graf-after--pre">2. Run the app to find your Installation ID in the logcat:</p><pre name="d81b" id="d81b" class="graf graf--pre graf-after--p">I/FIAM.Headless: Starting InAppMessaging runtime with Installation ID <strong class="markup--strong markup--pre-strong">YOUR_INSTALLATION_ID</strong></pre><p name="24bb" id="24bb" class="graf graf--p graf-after--pre">3. Go to the In-App Messaging tab on the Firebase Console, click on “New Campaign” and enter a <strong class="markup--strong markup--p-strong">Title</strong> for that campaign.</p><p name="7895" id="7895" class="graf graf--p graf-after--p">4. Click “Test on your Device”, enter your <strong class="markup--strong markup--p-strong">Installation ID </strong>and click on “Test” to send the message.</p><p name="7218" id="7218" class="graf graf--p graf-after--p">Once you relaunch the app, you should now see your test message being displayed :)</p><p name="054a" id="054a" class="graf graf--p graf-after--p">Now if you wish to send the message to the users of your app, you can go ahead and finish composing that campaign, as explained in the <a href="https://firebase.google.com/docs/in-app-messaging/compose-campaign" data-href="https://firebase.google.com/docs/in-app-messaging/compose-campaign" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">Firebase Documentation</a>.</p><h3 name="f5ba" id="f5ba" class="graf graf--h3 graf-after--p">Seasonal Campaigns 🐰🎄</h3><p name="e5f0" id="e5f0" class="graf graf--p graf-after--h3">This is my favorite FIAM feature and perhaps the most used one. It allows you to schedule messages to be shown during a specified time range. So you can use it to inform your users about Easter discounts, Christmas sales or even that great deal that your company is offering during a pandemic. You can also specify how often the message is shown to the user.</p><p name="9468" id="9468" class="graf graf--p graf-after--p">The good part is that you don’t need to write any code to achieve that. You can do it all straight from the Firebase Console. When composing your campaign, you’ll come across <strong class="markup--strong markup--p-strong">Step 3</strong> — Scheduling your message. That’s where you can set a <strong class="markup--strong markup--p-strong">start date</strong> and an <strong class="markup--strong markup--p-strong">end date</strong>.</p><p name="d2f9" id="d2f9" class="graf graf--p graf-after--p">You’ll notice that the messages are triggered by <a href="https://firebase.google.com/docs/analytics/events?platform=android" data-href="https://firebase.google.com/docs/analytics/events?platform=android" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong">Analytics events</strong></a><strong class="markup--strong markup--p-strong"> </strong>(which is why we added analytics to the app). Two events that are logged automatically by Firebase Analytics are <code class="markup--code markup--p-code">on_foreground</code> and <code class="markup--code markup--p-code">app_launch</code>, so these will always be available for you to choose from when composing a campaign. If you’ve previously logged events to Firebase Analytics, those events will also be available to choose from. Otherwise, you can also create a new event right there.</p><h3 name="ec94" id="ec94" class="graf graf--h3 graf-after--p">Trigger messages with Analytics events 💬</h3><figure name="fb09" id="fb09" class="graf graf--figure graf-after--h3"><img class="graf-image" data-image-id="1*fv-UPN866tK90LudI2MzuA.png" data-width="297" data-height="159" src="https://cdn-images-1.medium.com/max/800/1*fv-UPN866tK90LudI2MzuA.png"></figure><p name="6a91" id="6a91" class="graf graf--p graf-after--figure">Let’s say we have an e-commerce app and we want to show users a dialog when they’re about to perform a checkout. When composing the campaign on the Firebase Console, we’ll set it to only be triggered on the <code class="markup--code markup--p-code">begin_checkout</code> event:</p><figure name="0208" id="0208" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*Plo9KRsHls6LrAWn4s7ZiA.png" data-width="247" data-height="46" src="https://cdn-images-1.medium.com/max/800/1*Plo9KRsHls6LrAWn4s7ZiA.png"></figure><p name="dae0" id="dae0" class="graf graf--p graf-after--figure">We could log the <code class="markup--code markup--p-code">begin_checkout</code> event to Firebase Analytics when the user clicks on the checkout button:</p><figure name="c849" id="c849" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/thatfiredev/901a2daf25a8b29510c2a0cf7a9d8947.js"></script></figure><p name="198e" id="198e" class="graf graf--p graf-after--figure">And our message should be displayed to the user. :)</p><p name="38cf" id="38cf" class="graf graf--p graf-after--p">Alternatively, you can trigger the event without actually logging the data to Firebase Analytics, by calling:</p><pre name="883e" id="883e" class="graf graf--pre graf-after--p"><code class="markup--code markup--pre-code">Firebase.inAppMessaging.triggerEvent(&quot;begin_checkout&quot;)</code></pre><h3 name="0a34" id="0a34" class="graf graf--h3 graf-after--pre">Customize the message behavior 🔧</h3><p name="7f07" id="7f07" class="graf graf--p graf-after--h3">Now if the user clicks on the “Get Code” button from our in-app-message, we might want to take an action, such as notifying our backend about the fact that we should now give that user a discount.</p><p name="8d62" id="8d62" class="graf graf--p graf-after--p">We can do that by adding the promo code as custom metadata on Step 5 when we’re composing the campaign on the Console:</p><figure name="7997" id="7997" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*5APPRmT3Gjlrl5JhB3QZ1Q.png" data-width="365" data-height="175" src="https://cdn-images-1.medium.com/max/800/1*5APPRmT3Gjlrl5JhB3QZ1Q.png"></figure><p name="2915" id="2915" class="graf graf--p graf-after--figure">And then we can obtain that promo code on the app by adding a click listener to our FIAM instance:</p><figure name="8b11" id="8b11" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/thatfiredev/2d7ab3374f02166ef5cd7ae6b9108f61.js"></script></figure><h3 name="4ee3" id="4ee3" class="graf graf--h3 graf-after--figure">Customize the way it looks 🎨</h3><p name="cc46" id="cc46" class="graf graf--p graf-after--h3">Maybe you have created a unique and kick-ass custom design for your app dialogs and would like to apply it to your In-App-Message.</p><p name="d208" id="d208" class="graf graf--p graf-after--p">You can do so by calling <code class="markup--code markup--p-code">setMessageDisplayComponent()</code> on the <code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">onResume()</strong></code> lifecycle event of your Activity and checking what type of message the app received and then get the metadata (title, caption, actions, etc) included so that you can use it on your custom dialog.</p><figure name="9739" id="9739" class="graf graf--figure graf--iframe graf-after--p graf--trailing"><script src="https://gist.github.com/thatfiredev/13e4b9978754448962ff857404393e13.js"></script></figure></div></div></section><section name="d264" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="b4ab" id="b4ab" class="graf graf--p graf--leading">And that’s all for now. If you would like to learn more about Firebase In-App-Messaging, you can check the <a href="https://firebase.google.com/docs/in-app-messaging" data-href="https://firebase.google.com/docs/in-app-messaging" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">Documentation</a>.</p><p name="6fa1" id="6fa1" class="graf graf--p graf-after--p graf--trailing">Thanks for reading. If you have thoughts on FIAM or Firebase in general, leave a comment bellow or reach out to <a href="https://twitter.com/_rpfernandes" data-href="https://twitter.com/_rpfernandes" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">me on Twitter </a>and I’ll be happy to have a chat about it. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/f2802757f00b"><time class="dt-published" datetime="2020-07-10T21:59:19.057Z">July 10, 2020</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/using-firebase-in-app-messaging-on-an-android-app-f2802757f00b" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

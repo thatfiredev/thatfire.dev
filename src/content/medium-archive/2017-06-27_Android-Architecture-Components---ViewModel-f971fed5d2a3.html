@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Android Architecture Components — ViewModel</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Android Architecture Components — ViewModel</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Conheça o “ViewModel” da biblioteca Android Architecture Components apresentada no Google I/O 2017
+</section>
+<section data-field="description" class="p-summary">
+Mais um artigo, mais um Architecture Componente.
+</section>
+<section data-field="body" class="e-content">
+<section name="f4f3" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="1060" id="1060" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*JbYNwMLPakuvlOWxAd1x8Q.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*JbYNwMLPakuvlOWxAd1x8Q.png"></figure><h3 name="e963" id="e963" class="graf graf--h3 graf-after--figure graf--title">Android Architecture Components — ViewModel</h3><p name="a82d" id="a82d" class="graf graf--p graf-after--h3"><strong class="markup--strong markup--p-strong">Este artigo é parte da série Android Architecture Components:</strong></p><ol class="postList"><li name="aebc" id="aebc" class="graf graf--li graf-after--p"><a href="https://medium.com/@rosariopfernandes/aac1-bc22abbabecc" data-href="https://medium.com/@rosariopfernandes/aac1-bc22abbabecc" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Olá Mundo</a></li><li name="8859" id="8859" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac2-a7c59e1a3cf7" data-href="https://medium.com/@rosariopfernandes/aac2-a7c59e1a3cf7" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Lifecycle</a></li><li name="56e8" id="56e8" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac3-1df6cd39b4e0" data-href="https://medium.com/@rosariopfernandes/aac3-1df6cd39b4e0" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — LifecycleOwner</a></li><li name="d28f" id="d28f" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac4-f971fed5d2a3" data-href="https://medium.com/@rosariopfernandes/aac4-f971fed5d2a3" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — ViewModel</a></li><li name="1031" id="1031" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" data-href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — LiveData</a></li><li name="0d37" id="0d37" class="graf graf--li graf-after--li graf--trailing"><a href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" data-href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Room</a></li></ol></div></div></section><section name="c697" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="5a4d" id="5a4d" class="graf graf--p graf--leading">Mais um artigo, mais um Architecture Component. Desta vez, vamos conhecer o <a href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" data-href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">ViewModel</a>.</p><p name="705d" id="705d" class="graf graf--p graf-after--p">Como já foi dito no <a href="https://medium.com/android-dev-moz/aac1-bc22abbabecc" data-href="https://medium.com/android-dev-moz/aac1-bc22abbabecc" class="markup--anchor markup--p-anchor" target="_blank">primeiro artigo</a>, <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModel.html" data-href="https://developer.android.com/reference/android/arch/lifecycle/ViewModel.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">ViewModel</a> é uma classe capaz de “sobreviver” à alterações de estado do ciclo de vida da activity/fragment. Isto significa que mesmo que o utilizador gire o telemóvel (de <em class="markup--em markup--p-em">portrait</em> para <em class="markup--em markup--p-em">landscape </em>ou vice-versa), o ViewModel mantém o seu estado e os seus dados.</p><p name="8066" id="8066" class="graf graf--p graf-after--p">Se você já utilizou a metodologia <a href="http://www.devmedia.com.br/entendendo-o-pattern-model-view-viewmodel-mvvm/18411" data-href="http://www.devmedia.com.br/entendendo-o-pattern-model-view-viewmodel-mvvm/18411" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">MVVM (Model-View-ViewModel)</a> provavelmente já conhece este conceito. Se não, eu explico: O ViewModel armazena os dados que têm de ser mostrados numa (mais que uma por vezes) determinada view (Activity/Fragment).</p><p name="7a1a" id="7a1a" class="graf graf--p graf-after--p">Para exemplificar este e os próximos Architecture Components, vamos criar uma app simples capaz de <a href="https://pt.wikipedia.org/wiki/Gerenciamento_de_tempo" data-href="https://pt.wikipedia.org/wiki/Gerenciamento_de_tempo" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">gerir as tarefas que temos por fazer</a> (TODO List).</p><p name="b9c8" id="b9c8" class="graf graf--p graf-after--p">Comecemos por criar a classe Tarefa:</p><figure name="0d12" id="0d12" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/d6f88c50f1c8afc0829b9946ecb1b726.js"></script></figure><p name="bb75" id="bb75" class="graf graf--p graf-after--figure">E então criamos um ViewModel para as Tarefas:</p><figure name="0fe5" id="0fe5" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/f98e315c16f2b495caa9fb4329e1fcc0.js"></script></figure><p name="2444" id="2444" class="graf graf--p graf-after--figure">Acredito que a única novidade aqui é a classe <a href="https://developer.android.com/reference/android/arch/lifecycle/LiveData.html" data-href="https://developer.android.com/reference/android/arch/lifecycle/LiveData.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">LiveData</a>, que é o tema do nosso próximo artigo. Por enquanto só precisamos saber que ele será o responsável por passar os nossos dados à Activity.</p><p name="f75d" id="f75d" class="graf graf--p graf-after--p">Note que a responsabilidade do ViewModel é apenas de armazenar os dados da View e não deve de modo nenhum acessar a hierarquia da View ou qualquer referência para a Activity/Fragment. Se você precisar de passar algo como o <em class="markup--em markup--p-em">Context</em> (a biblioteca Room, por exemplo, precisa do context) da aplicação, pode utilizar a classe <a href="https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel.html" data-href="https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">AndroidViewModel</a> que possui a classe Application no seu constructor.</p><h3 name="8561" id="8561" class="graf graf--h3 graf-after--p">Mostrar os dados na Activity</h3><p name="e4ec" id="e4ec" class="graf graf--p graf-after--h3">Agora que temos o nosso ViewModel, temos de saber como utilizá-lo na nossa Activity. E para fazer isso, utilizamos a classe <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModelProviders.html" data-href="https://developer.android.com/reference/android/arch/lifecycle/ViewModelProviders.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">ViewModelProviders</a>:</p><figure name="f9ba" id="f9ba" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/2e5fccde7f329b3da6a5b8de6a4e8927.js"></script></figure><p name="1da9" id="1da9" class="graf graf--p graf-after--figure">Esta classe utiliza 2 métodos que precisamos de conhecer:</p><ul class="postList"><li name="fb80" id="fb80" class="graf graf--li graf-after--p">of() — indica a activity ou Fragment em que o ViewModel será utilizado;</li><li name="dc14" id="dc14" class="graf graf--li graf-after--li">get() — indica o ViewModel que será utilizado.</li></ul><p name="7871" id="7871" class="graf graf--p graf-after--li">E pronto. Assim, teremos os nossos dados apresentados na Activity e capazes de sobreviver à alterações do ciclo de vida. No <a href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" data-href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" class="markup--anchor markup--p-anchor" target="_blank">próximo artigo</a> ficaremos a saber o que é o LiveData e qual a sua importância.</p><div name="766b" id="766b" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" data-href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc"><strong class="markup--strong markup--mixtapeEmbed-strong">Android Architecture Components — LiveData</strong><br><em class="markup--em markup--mixtapeEmbed-em">Conheça o “LiveData” da biblioteca Android Architecture Components apresentada no Google I/O 2017</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="0730251d9f2a78176a12d0d25b5b1203" data-thumbnail-img-id="1*DTvjN0-i-n6_6Iez5XEY9w.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*DTvjN0-i-n6_6Iez5XEY9w.png);"></a></div></div></div></section><section name="9f57" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="9a9f" id="9a9f" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener nofollow noopener nofollow noopener noopener noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. 🙂</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/f971fed5d2a3"><time class="dt-published" datetime="2017-06-27T17:01:01.829Z">June 27, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/aac4-f971fed5d2a3" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

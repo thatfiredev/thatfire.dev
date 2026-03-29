@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>O job dos Jobs — JobServices</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">O job dos Jobs — JobServices</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Veja como utilizar os JobServices para substituir os Background Services
+</section>
+<section data-field="description" class="p-summary">
+Quem leu o primeiro artigo desta série já conhece os Jobs do Android. Se você não conhece, por favor leia o primeiro artigo antes de continuar. Pois bem, agora que estamos familiarizados com os Jobs…
+</section>
+<section data-field="body" class="e-content">
+<section name="54d5" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="21e2" id="21e2" class="graf graf--figure graf--startsWithDoubleQuote graf--leading"><img class="graf-image" data-image-id="1*hSsWSlm1-R6TDrVwEmDmaQ.png" data-width="800" data-height="240" src="https://cdn-images-1.medium.com/max/800/1*hSsWSlm1-R6TDrVwEmDmaQ.png"><figcaption class="imageCaption">“Bob Servicios?”</figcaption></figure><h3 name="5ba2" id="5ba2" class="graf graf--h3 graf-after--figure graf--title">O job dos Jobs — JobServices</h3><h4 name="ee3e" id="ee3e" class="graf graf--h4 graf-after--h3 graf--subtitle">Veja como utilizar os JobServices para substituir os Background Services</h4><p name="6166" id="6166" class="graf graf--p graf-after--h4"><strong class="markup--strong markup--p-strong">Este artigo é parte da série “O job dos Jobs”:</strong></p><ol class="postList"><li name="aebc" id="aebc" class="graf graf--li graf-after--p"><a href="https://medium.com/@rosariopfernandes/job1-6506d5c4a7ae" data-href="https://medium.com/@rosariopfernandes/job1-6506d5c4a7ae" class="markup--anchor markup--li-anchor" target="_blank">Qual é o job dos Jobs?</a></li><li name="8859" id="8859" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/job2-fbf022368795" data-href="https://medium.com/@rosariopfernandes/job2-fbf022368795" class="markup--anchor markup--li-anchor" target="_blank">O job dos Jobs — JobServices</a></li><li name="56e8" id="56e8" class="graf graf--li graf-after--li graf--trailing"><a href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" data-href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" class="markup--anchor markup--li-anchor" target="_blank">O job dos Jobs — Firebase JobDispatcher</a></li></ol></div></div></section><section name="8dcb" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="59a9" id="59a9" class="graf graf--p graf--leading">Quem leu o primeiro artigo desta série já conhece os Jobs do Android. Se você não conhece, por favor leia <a href="https://medium.com/android-dev-moz/job1-6506d5c4a7ae" data-href="https://medium.com/android-dev-moz/job1-6506d5c4a7ae" class="markup--anchor markup--p-anchor" target="_blank">o primeiro artigo</a> antes de continuar.</p><p name="b922" id="b922" class="graf graf--p graf-after--p">Pois bem, agora que estamos familiarizados com os Jobs, vamos então ver como criá-los. Para criar Jobs, tanto no JobScheduler como no Firebase JobDispatcher, é necessário começar por criar um JobService. Por isso, dedico este artigo somente ao JobService.</p><p name="318f" id="318f" class="graf graf--p graf-after--p">Como o próprio nome diz, o JobService é basicamente um tipo de Service, e para criá-lo só temos de criar uma classe que estende da classe JobService e implementar 3 métodos:</p><ol class="postList"><li name="d73a" id="d73a" class="graf graf--li graf-after--p"><strong class="markup--strong markup--li-strong">onStartJob()</strong> — este método é chamado quando está na hora do seu Job ser executado. Se o nosso job for uma tarefa simples, colocamos neste método e retornamos false. Mas se o nosso job for mais complexo e necessitar de realizar funções como aceder à internet, por exemplo, devemos executar a tarefa numa outra thread (através de AsyncTasks por exemplo) e retornar true para indicar ao Android que ainda há algum trabalho a ser executado;<br>Como você já deve ter notado, o boolean que é retornado deste método serve para responder à pergunta: “Ainda há algo a ser executado?”.</li><li name="17dd" id="17dd" class="graf graf--li graf-after--li"><strong class="markup--strong markup--li-strong">onStopJob()</strong> — tal como o nome indica, este método é chamado quando o nosso job é cancelado antes de terminar. O boolean retornado irá responder a pergunta “Tentar novamente?”, indicando se o job foi executado correctamente (retorne <em class="markup--em markup--li-em">false</em>) ou não (retorne <em class="markup--em markup--li-em">true</em>). Usamos este método para fazer verificações de segurança ou para desfazer alterações caso seja necessário.</li><li name="39ea" id="39ea" class="graf graf--li graf-after--li"><strong class="markup--strong markup--li-strong">jobFinished()</strong> — diferentemente dos métodos acima, o sistema não irá executar este método automaticamente — nós é que devemos o chamar. Chamamos este método depois de terminarmos o nosso job e passamos um boolean a indicar se o job foi executado com (retorne false) ou sem sucesso (retorne true). Se nos esquecermos, a app irá continuar a consumir bateria em segundo plano.</li></ol><p name="4d38" id="4d38" class="graf graf--p graf-after--li">Então a estrutura básica de um JobService seria mais ou menos assim:</p><figure name="472d" id="472d" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/eb0dc103a673903769cae000e5a38294.js"></script></figure><p name="52f5" id="52f5" class="graf graf--p graf-after--figure">Mas vamos ver um exemplo mais concreto de um Job que executa alguns processos em segundo plano e de seguida gera uma notificação:</p><figure name="a85a" id="a85a" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/04cd67cf9526b4349d873644abd96b9b.js"></script></figure><p name="a85e" id="a85e" class="graf graf--p graf-after--figure">Para quem tinha um Service na sua aplicação, já deve ter notado que todo o código que antes ficava no <em class="markup--em markup--p-em">onStart()</em> do Service (ou <em class="markup--em markup--p-em">onHandleIntent()</em> do IntentService) agora fica dentro do método<em class="markup--em markup--p-em"> doInBackground</em> de um AsyncTask.</p><p name="50e7" id="50e7" class="graf graf--p graf-after--p">Note que eu só criei um AsyncTask simples para servir de exemplo. Você pode criar o AsyncTask como você quiser, ou usar uma outra biblioteca que execute o seu código fora da Main Thread.</p><p name="bb8b" id="bb8b" class="graf graf--p graf-after--p">E claro, como qualquer outro Service do Android, temos de adicionar o nosso JobService ao AndroidManifest.xml:</p><pre name="2840" id="2840" class="graf graf--pre graf-after--p">&lt;<strong class="markup--strong markup--pre-strong">service</strong><br> android:<strong class="markup--strong markup--pre-strong">name</strong>=”<em class="markup--em markup--pre-em">.NotificationJobService</em>”<br> android:<strong class="markup--strong markup--pre-strong">permission</strong>=”<em class="markup--em markup--pre-em">android.permission.BIND_JOB_SERVICE</em>”&gt;<br> &lt;/<strong class="markup--strong markup--pre-strong">service</strong>&gt;</pre><p name="ebdd" id="ebdd" class="graf graf--p graf-after--pre">Mas atenção que esta declaração <strong class="markup--strong markup--p-strong">serve apenas para o </strong><a href="https://developer.android.com/reference/android/app/job/JobScheduler.html" data-href="https://developer.android.com/reference/android/app/job/JobScheduler.html" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank"><strong class="markup--strong markup--p-strong">JobScheduler</strong></a>. No <a href="https://github.com/firebase/firebase-jobdispatcher-android" data-href="https://github.com/firebase/firebase-jobdispatcher-android" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">Firebase JobDispatcher</a>, temos de adicionar um intent filter e já não precisamos da permission:</p><pre name="db62" id="db62" class="graf graf--pre graf-after--p">&lt;<strong class="markup--strong markup--pre-strong">service</strong><br> android:<strong class="markup--strong markup--pre-strong">name</strong>=”<em class="markup--em markup--pre-em">.NotificationJobService</em>”<br> android:exported=”<em class="markup--em markup--pre-em">false</em>”&gt;<br> &lt;<strong class="markup--strong markup--pre-strong">intent-filter</strong>&gt;<br> &lt;<strong class="markup--strong markup--pre-strong">action </strong>android:name=”<em class="markup--em markup--pre-em">com.firebase.jobdispatcher.ACTION_EXECUTE</em>”/&gt;<br> &lt;/<strong class="markup--strong markup--pre-strong">intent-filter</strong>&gt;<br> &lt;/<strong class="markup--strong markup--pre-strong">service</strong>&gt;</pre><p name="432d" id="432d" class="graf graf--p graf-after--pre">É exactamente sobre o Firebase JobDispatcher que falo no <a href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" data-href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" class="markup--anchor markup--p-anchor" target="_blank">artigo seguinte</a>:</p><div name="0f6b" id="0f6b" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" data-href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/job3-5d00e5f10773"><strong class="markup--strong markup--mixtapeEmbed-strong">O job dos Jobs - Firebase JobDispatcher - Rosário Pereira Fernandes - Medium</strong><br><em class="markup--em markup--mixtapeEmbed-em">Como agendar Jobs para dispositivos pré-lollipop. &quot;O job dos Jobs - Firebase JobDispatcher&quot; is published by Rosário…</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/job3-5d00e5f10773" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="86a01dbe1b0e8991ce6a70883cde9201" data-thumbnail-img-id="0*cB9csHH_5PLXa5Ca." style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/0*cB9csHH_5PLXa5Ca.);"></a></div></div></div></section><section name="6561" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="fc1b" id="fc1b" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener nofollow noopener nofollow noopener nofollow noopener nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. 🙂</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/fbf022368795"><time class="dt-published" datetime="2018-01-10T17:21:02.216Z">January 10, 2018</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/job2-fbf022368795" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Machine Learning — Intents no api.ai  (parte 1)</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Machine Learning — Intents no api.ai  (parte 1)</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Depois de integrarmos o nosso agente com o Facebook Messenger, vejamos outras formas de dar respostas aos utilizadores.
+</section>
+<section data-field="description" class="p-summary">
+Depois de integrarmos o nosso agente com o Facebook Messenger no artigo anterior, está na hora de vermos outras formas de dar respostas aos utilizadores.
+</section>
+<section data-field="body" class="e-content">
+<section name="4335" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="f84d" id="f84d" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*P9fogFeO3KumEO2CzGH9ow.png" data-width="800" data-height="240" src="https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png"></figure><h3 name="f259" id="f259" class="graf graf--h3 graf-after--figure graf--title">Machine Learning — Intents no api.ai (parte 1 — Responses)</h3><p name="d2e8" id="d2e8" class="graf graf--p graf-after--h3">Depois de integrarmos o nosso agente com o Facebook Messenger no <a href="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae" data-href="https://medium.com/@rosariopfernandes/ml-facebook-bdaf0a3641ae" class="markup--anchor markup--p-anchor" target="_blank">artigo anterior</a>, está na hora de vermos outras formas de dar respostas aos utilizadores. E para fazer isso, utilizamos os Intents.</p><p name="0e0b" id="0e0b" class="graf graf--p graf-after--p">Acredito que o conceito de Intents não é novo pois foi introduzido no primeiro artigo, onde criamos um Intent para testar o nosso agente. Se você não leu esse artigo, aí vai:</p><div name="39ea" id="39ea" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" data-href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — Entrando no mundo dos assistentes virtuais</strong><br><em class="markup--em markup--mixtapeEmbed-em">Aprenda a criar o seu próprio assistente virtual em 4 passos simples.</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-b7eba66e0e03" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="18a4317383478ee1af9e35781f52c393" data-thumbnail-img-id="1*LOyHOG13p2sMwEfCZVDKPw.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*LOyHOG13p2sMwEfCZVDKPw.png);"></a></div></div></div></section><section name="869f" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="8e0c" id="8e0c" class="graf graf--p graf--leading">Vamos então ao assunto — comecemos por analisar cada um dos campos necessários para criar um Intent no api.ai.</p><p name="bef4" id="bef4" class="graf graf--p graf-after--p">Lembre-se que quando criamos o nosso primeiro Intent, preenchemos 3 campos: <em class="markup--em markup--p-em">nome do Intent</em>,<em class="markup--em markup--p-em"> User says </em>e<em class="markup--em markup--p-em"> Response. </em>Os dois primeiros são bem simples e já foram explicados nos artigos anteriores, por isso, neste artigo vamos aprender mais sobre o último.</p><h3 name="89a7" id="89a7" class="graf graf--h3 graf-after--p">Response</h3><p name="e487" id="e487" class="graf graf--p graf-after--h3">Como você provavelmente já sabe, o campo response permite definirmos a resposta que o nosso agente dará quando o Intent for chamado. Esta resposta não precisa de ser apenas uma; o api.ai permite definir até 10 respostas sequenciais.</p><p name="329b" id="329b" class="graf graf--p graf-after--p">Até agora só conhecemos a resposta em texto, mas o nosso bot também pode responder de outras formas:</p><h4 name="a70e" id="a70e" class="graf graf--h4 graf-after--p">Imagem</h4><p name="0cce" id="0cce" class="graf graf--p graf-after--h4">Se você estiver a desenvolver um bot capaz de funcionar em redes sociais (Facebook Messenger, Kik, Slack ou Telegram), é provável que você queira que o seu bot seja capaz de enviar imagens aos utilizadores. E é exactamente para isso que existe a <em class="markup--em markup--p-em">Image Response.</em></p><p name="db00" id="db00" class="graf graf--p graf-after--p">Para adicionar uma Image Response, basta:</p><ol class="postList"><li name="42ed" id="42ed" class="graf graf--li graf-after--p">Fazer upload da imagem para algum serviço de hospedagem de imagens (se você não conhece nenhum, experiment o <a href="http://imgur.com" data-href="http://imgur.com" class="markup--anchor markup--li-anchor" rel="noopener" target="_blank">imgur</a> ou <a href="http://imgbb.com" data-href="http://imgbb.com" class="markup--anchor markup--li-anchor" rel="noopener" target="_blank">imgbb</a>) para que a imagem esteja disponível através de um url.</li><li name="d831" id="d831" class="graf graf--li graf-after--li">Clicar em <em class="markup--em markup--li-em">Add Message Content</em>;</li><li name="98ae" id="98ae" class="graf graf--li graf-after--li">Escolher <em class="markup--em markup--li-em">Image</em>;</li><li name="58ba" id="58ba" class="graf graf--li graf-after--li">Você verá um novo campo chamado <em class="markup--em markup--li-em">Image</em>. Coloque o URL da imagem que você fez upload.</li></ol><figure name="47ee" id="47ee" class="graf graf--figure graf-after--li"><img class="graf-image" data-image-id="1*5jwd1J8WD2fJgCk7Pkf7fQ.png" data-width="309" data-height="109" src="https://cdn-images-1.medium.com/max/800/1*5jwd1J8WD2fJgCk7Pkf7fQ.png"><figcaption class="imageCaption">Coloque aqui o url da imagem</figcaption></figure><p name="da60" id="da60" class="graf graf--p graf-after--figure">Note que as redes sociais têm certas limitações para imagens:</p><ul class="postList"><li name="5077" id="5077" class="graf graf--li graf-after--p">Facebook Messenger: só suporta jpg, png e gif (incluindo os animados);</li><li name="5521" id="5521" class="graf graf--li graf-after--li">Kik: só jpg e a imagem não deve exceder 1Mb;</li><li name="c2c9" id="c2c9" class="graf graf--li graf-after--li">Slack: só suporta jpg, png, bmp e gif;</li><li name="542d" id="542d" class="graf graf--li graf-after--li">Telegram: basta não exceder 5Mb.</li></ul><h4 name="f1ed" id="f1ed" class="graf graf--h4 graf-after--li">Resposta rápida</h4><p name="1b60" id="1b60" class="graf graf--p graf-after--h4">As respostas rápidas (quick replies) oferecem-nos a possibilidade de “prevermos” a resposta do utilizador. Damos algumas opções/sugestões (no máximo 10) ao utilizador de como responder. Quando ele clica numa dessas opções, o texto dessa opção é enviado ao agente como se fosse uma requisição do utilizador.</p><p name="ec95" id="ec95" class="graf graf--p graf-after--p">Nas redes sociais, estas opções são mostradas como botões para facilitar a interação entre o utilizador e o agente.</p><figure name="6316" id="6316" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*Z6KOEqfY_JV7Jrl5H5ewWw.png" data-width="2400" data-height="1334" src="https://cdn-images-1.medium.com/max/800/1*Z6KOEqfY_JV7Jrl5H5ewWw.png"><figcaption class="imageCaption">Exemplos das respostas rápidas no Facebook Messenger</figcaption></figure><p name="cc0c" id="cc0c" class="graf graf--p graf-after--figure">Note que pelo facto de serem apresentados em botões, cada opção da resposta rápida não pode ter mais de 20 caracerteres.</p><h4 name="869c" id="869c" class="graf graf--h4 graf-after--p">Card</h4><p name="3511" id="3511" class="graf graf--p graf-after--h4">Com as cartas (cards), podemos permitir que o bot dê uma resposta mais completa em relação às responses anteriores.</p><p name="40c5" id="40c5" class="graf graf--p graf-after--p">As cartas possuem 4 elementos:</p><ul class="postList"><li name="419a" id="419a" class="graf graf--li graf-after--p">Imagem;</li><li name="8cfd" id="8cfd" class="graf graf--li graf-after--li">Título;</li><li name="a0b5" id="a0b5" class="graf graf--li graf-after--li">Subtítulo;</li><li name="d53d" id="d53d" class="graf graf--li graf-after--li">Botões interactivos.</li></ul><figure name="ba3c" id="ba3c" class="graf graf--figure graf-after--li"><img class="graf-image" data-image-id="1*0I-dV4wy23qb1kv815TTaA.png" data-width="640" data-height="1136" src="https://cdn-images-1.medium.com/max/800/1*0I-dV4wy23qb1kv815TTaA.png"><figcaption class="imageCaption">Exemplo de uma carta no Facebook Messenger</figcaption></figure><p name="8589" id="8589" class="graf graf--p graf-after--figure">E por agora é tudo. Espero que os novos tipos de respostas apresentados aqui ajudem a melhorar a experiência do utilizador do seu bot.</p><p name="88d0" id="88d0" class="graf graf--p graf-after--p">Saiba como integrar o agente numa aplicação Android, no <a href="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6" data-href="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6" class="markup--anchor markup--p-anchor" target="_blank">artigo a seguir</a>:</p><div name="a069" id="a069" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6" data-href="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6"><strong class="markup--strong markup--mixtapeEmbed-strong">Machine Learning — api.ai + Android</strong><br>medium.com</a><a href="https://medium.com/@rosariopfernandes/ml-android-94d77658f6c6" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="2c32a603b621c0e147f4edb3b3523938" data-thumbnail-img-id="1*zlRUcY7jmlrgx91DblgyuQ.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*zlRUcY7jmlrgx91DblgyuQ.png);"></a></div></div></div></section><section name="e032" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="9c1b" id="9c1b" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. :)</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/781a7c3010e"><time class="dt-published" datetime="2017-03-09T18:32:00.982Z">March 9, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/ml-intents1-781a7c3010e" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

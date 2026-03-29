@@ -1,0 +1,75 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Android Architecture Components — LiveData</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Android Architecture Components — LiveData</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Conheça o “LiveData” da biblioteca Android Architecture Components apresentada no Google I/O 2017
+</section>
+<section data-field="description" class="p-summary">
+LiveData é uma classe capaz de conter dados que passamos à ela, para serem observados. Esta classe é tão simples, que pode parecer exagero dedicar um artigo inteiro só para falar sobre ela.
+</section>
+<section data-field="body" class="e-content">
+<section name="01bd" class="section section--body section--first"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="2104" id="2104" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*DTvjN0-i-n6_6Iez5XEY9w.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*DTvjN0-i-n6_6Iez5XEY9w.png"></figure><h3 name="0b7e" id="0b7e" class="graf graf--h3 graf-after--figure graf--title">Android Architecture Components — LiveData</h3><p name="a82d" id="a82d" class="graf graf--p graf-after--h3"><strong class="markup--strong markup--p-strong">Este artigo é parte da série Android Architecture Components:</strong></p><ol class="postList"><li name="aebc" id="aebc" class="graf graf--li graf-after--p"><a href="https://medium.com/@rosariopfernandes/aac1-bc22abbabecc" data-href="https://medium.com/@rosariopfernandes/aac1-bc22abbabecc" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Olá Mundo</a></li><li name="8859" id="8859" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac2-a7c59e1a3cf7" data-href="https://medium.com/@rosariopfernandes/aac2-a7c59e1a3cf7" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Lifecycle</a></li><li name="56e8" id="56e8" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac3-1df6cd39b4e0" data-href="https://medium.com/@rosariopfernandes/aac3-1df6cd39b4e0" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — LifecycleOwner</a></li><li name="d28f" id="d28f" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac4-f971fed5d2a3" data-href="https://medium.com/@rosariopfernandes/aac4-f971fed5d2a3" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — ViewModel</a></li><li name="1031" id="1031" class="graf graf--li graf-after--li"><a href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" data-href="https://medium.com/@rosariopfernandes/aac5-9c56e6b4cffc" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — LiveData</a></li><li name="0d37" id="0d37" class="graf graf--li graf-after--li graf--trailing"><a href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" data-href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" class="markup--anchor markup--li-anchor" target="_blank">Android Architecture Components — Room</a></li></ol></div></div></section><section name="c6e9" class="section section--body"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="f4b3" id="f4b3" class="graf graf--p graf--leading">Hora de cumprir mais uma promessa: Explicar a classe LiveData. Então vamos a isso.</p><p name="432d" id="432d" class="graf graf--p graf-after--p">LiveData é uma classe capaz de conter dados que passamos à ela, para serem observados. Esta classe é tão simples, que pode parecer exagero dedicar um artigo inteiro só para falar sobre ela. Ela só tem uma função que é notificar o LifecycleOwner sobre alterações que ocorrem nos dados, mas existem alguns pormenores que eu gostaria de abordar também neste artigo.</p><p name="fb8f" id="fb8f" class="graf graf--p graf-after--p">Se olharmos para o código que temos no nosso ViewModel:</p><pre name="ede5" id="ede5" class="graf graf--pre graf-after--p"><strong class="markup--strong markup--pre-strong">private LiveData</strong>&lt; <strong class="markup--strong markup--pre-strong">ArrayList</strong>&lt;<strong class="markup--strong markup--pre-strong">Tarefa</strong>&gt; &gt; tarefas;</pre><p name="92e8" id="92e8" class="graf graf--p graf-after--pre">Notamos que apenas criamos a variável LiveData e em momento nenhum eu mostrei como inicializar esta variável. Bom, para fazermos isso, temos 2 opções:</p><ol class="postList"><li name="5970" id="5970" class="graf graf--li graf-after--p">Utilizar uma biblioteca capaz de inicializar o LiveData (Como a biblioteca Room, sobre a qual iremos abordar no próximo artigo);</li><li name="1894" id="1894" class="graf graf--li graf-after--li">Substituir a classe LiveData por MutableLiveData. A MutableLiveData é uma classe que herda de LiveData, a única diferença é que ela possui o método setValue() que permite entregarmos os dados que pretendemos que o LiveData armazene.</li></ol><h3 name="1fe3" id="1fe3" class="graf graf--h3 graf-after--li">Transformations</h3><p name="cf74" id="cf74" class="graf graf--p graf-after--h3">Por vezes, podemos querer fazer alterações ao valor do LiveData antes de passá-lo para os observers, ou querer retornar um LiveData diferente baseado no valor de um outro LiveData.</p><p name="fb5f" id="fb5f" class="graf graf--p graf-after--p">Para isso, podemos utilizar a classe Transformations que possui 2 métodos auxiliares:</p><h4 name="4237" id="4237" class="graf graf--h4 graf-after--p">Transformations.map()</h4><p name="3c41" id="3c41" class="graf graf--p graf-after--h4">O método <em class="markup--em markup--p-em">map()</em> permite que apliquemos uma função no nosso LiveData.Por exemplo:</p><figure name="eaea" id="eaea" class="graf graf--figure graf--iframe graf-after--p"><script src="https://gist.github.com/rosariopfernandes/eaa39ed03ddb6b4d254e174663b2bc6f.js"></script></figure><h3 name="5fb0" id="5fb0" class="graf graf--h3 graf-after--figure">Porquê utilizar o LiveData e o ViewModel?</h3><p name="10f6" id="10f6" class="graf graf--p graf-after--h3">A principal vantagem de se utilizar o LiveData e o ViewModel é que não haverá “vazamento de memória” (Memory leaks) quando houver alguma alteração no ciclo de vida do LifecycleOwner.</p><p name="98fd" id="98fd" class="graf graf--p graf-after--p">Com o ViewModel, podemos dividir as responsabilidades dos componentes da nossa aplicação. Agora que temos um ViewModel, a nossa activity já não está encarregue de fazer requisições para obter os dados a serem mostrados pois agora o ViewModel é que tem essa responsabilidade.</p><p name="9f3e" id="9f3e" class="graf graf--p graf-after--p">Sendo assim, muito código que antes era utilizado para fazer requisições e persistir dados e que ficava a ocupar várias linhas da nossa classe Activity agora fica no ViewModel. E assim temos classes mais curtas, simples e fáceis de rever.</p><p name="cec5" id="cec5" class="graf graf--p graf-after--p">E se você costuma criar testes para as suas aplicações, já deve ter notado também que fica mais fácil de testar pois todas a parte Android (Activities e Fragments) está separada dos nossos dados.</p><p name="e55b" id="e55b" class="graf graf--p graf-after--p">E por hoje é tudo. LiveData foi a última classe dos Architecture Components. No <a href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" data-href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" class="markup--anchor markup--p-anchor" target="_blank">próximo artigo</a> veremos uma outra biblioteca que faz parte dos Components: Room.</p><div name="bee9" id="bee9" class="graf graf--mixtapeEmbed graf-after--p graf--trailing"><a href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" data-href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" class="markup--anchor markup--mixtapeEmbed-anchor" title="https://medium.com/@rosariopfernandes/aac6-b46de8513df8"><strong class="markup--strong markup--mixtapeEmbed-strong">Android Architecture Components — Room</strong><br><em class="markup--em markup--mixtapeEmbed-em">Conheça o “Room” da biblioteca Android Architecture Components apresentada no Google I/O 2017</em>medium.com</a><a href="https://medium.com/@rosariopfernandes/aac6-b46de8513df8" class="js-mixtapeImage mixtapeImage u-ignoreBlock" data-media-id="c10050afc40f7ba3d3dce9b05e892954" data-thumbnail-img-id="1*QgCFnJ7zOy-Wp6HG_F63Hw.png" style="background-image: url(https://cdn-images-1.medium.com/fit/c/160/160/1*QgCFnJ7zOy-Wp6HG_F63Hw.png);"></a></div></div></div></section><section name="f50a" class="section section--body section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><p name="51f4" id="51f4" class="graf graf--p graf--leading graf--trailing">Se você tem alguma dúvida ou sugestão, não hesite em me contactar pelo email <a href="mailto:rosariofernandes51@gmail.com" data-href="mailto:rosariofernandes51@gmail.com" class="markup--anchor markup--p-anchor" target="_blank">rosariofernandes51@gmail.com</a> ou pelo <a href="https://telegram.me/rosariopfernandes" data-href="https://telegram.me/rosariopfernandes" class="markup--anchor markup--p-anchor" rel="nofollow noopener nofollow noopener nofollow noopener noopener noopener noopener noopener noopener noopener" target="_blank">Telegram</a>. Ficarei feliz por conversar com você. 🙂</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/9c56e6b4cffc"><time class="dt-published" datetime="2017-06-30T17:01:01.511Z">June 30, 2017</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/aac5-9c56e6b4cffc" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

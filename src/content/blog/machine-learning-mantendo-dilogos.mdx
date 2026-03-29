@@ -1,0 +1,93 @@
+---
+title: 'Machine Learning — Mantendo diálogos'
+description: ''
+pubDate: '2017-04-06T20:45:22.242Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png'
+---
+
+* * *
+
+### Machine Learning — Mantendo diálogos
+
+Para quem acompanhou o [último artigo](https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22) da [série Machine Learning,](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03) trago este artigo que vai cumprir a promessa que fiz: Mostrar como criar diálogos que variam de acordo com as escolhas do utilizador.
+
+Vamos começar por falar de diálogos. Quando se trata de interações por voz, existem 2 tipos de diálogos:
+
+### 1\. Diálogo Linear
+
+O bot usa o diálogo linear para obter informações necessárias para concluir uma acção. Para criar um diálogo linear, utilizamos um conceito já conhecido: [Parâmetros obrigatórios](https://medium.com/android-dev-moz/ml-actions-6cdf32bea767#56ab).
+
+Por exemplo, vamos supor que temos um agente de uma loja que vende salgados por encomenda. Para fazer uma encomenda, o nosso utilizador pode falar de várias formas:
+
+> “Preciso de rissois”
+
+> “Quero rissois com piri-piri”
+
+> “Encomenda 1 dúzia de chamussas sem piri piri para amanhã”
+
+E para fazer a encomenda, precisamos de 3 parametros obrigatórios:
+
+*   Nome do salgado
+*   Quantidade
+*   Com ou sem piri piri
+
+![](https://cdn-images-1.medium.com/max/800/1*TRYFKZ7cZZETFv29iLjuZA.png)
+
+Salgado, number e piri-piri são obrigatórios
+
+Quando definimos parâmetros como obrigatórios, temos a possibilidade de adicionar “perguntas” (_prompts_). O bot utiliza estas perguntas como forma de obter os parametros que o utilizador não especificou na requisição:
+
+![](https://cdn-images-1.medium.com/max/800/1*nAHCOiIm4FBIDwPMGIo1vQ.png)
+
+Prompts do parametro number
+
+O agente fará estas perguntas até preencher todos os paramêtros obrigatórios. Por exemplo:
+
+> Utilizador — Quero rissois
+
+> Bot — Quantas dúzias quer?
+
+> Utilizador — Duas
+
+> Bot — Com ou sem piri piri?
+
+> Utilizador — Sem Piri Piri
+
+> Bot — Encomenda registada.
+
+### 2\. Diálogo Não Linear
+
+O diálogo não linear é aquele mencionado no começo do artigo: os diálogos que dependem da resposta dos utilizadores.
+
+Vamos supor que temos um inquérito para avaliar a satisfação dos participantes de um evento. E este inquérito começa com 2 questões:
+
+*   Como avalia o programa do evento?
+*   Como avalia o local de realização do evento?
+
+E para cada uma destas questões temos 3 opções:
+
+*   Mau
+*   Razoável
+*   Bom
+
+Para construir este tipo de diálogo, utilizamos outro conceito já conhecido: [Contexts](https://medium.com/@rosariopfernandes/ml-context-fb96d2c77c22). Começamos por criar um Intent que dá início à conversa. Este Intent terá “avaliar-evento” como Output Context e os Intents seguintes terão isto como Input Context.
+
+![](https://cdn-images-1.medium.com/max/800/1*Se3KFqs1QbAutMMKAHTRYg.png)
+
+Sem seguida criamos para cada uma das possibilidades com o Input Context “avaliar-evento”:
+
+![](https://cdn-images-1.medium.com/max/800/1*jk3erGafLVObvx_X-5mXUQ.png)
+
+![](https://cdn-images-1.medium.com/max/800/1*UjGDzRhjODIYywZ6mNeL1A.png)
+
+Note que **todos** estes Intents devem conter: o parametro com o seu valor, a segunda questão como Response e o novo Context (context da segunda questão).
+
+![](https://cdn-images-1.medium.com/max/800/1*3Fur-yCQqwRMeMihBHVYXQ.png)
+
+E então criamos mais 3 Intents para as respostas da segunda questão, com o novo Context como Input Context.
+
+![](https://cdn-images-1.medium.com/max/800/1*LyA-iI99dRL6t3lvUbBIlw.png)
+
+E pronto. Se você quiser continuar a criar mais questões, basta colocar um 3º Context e criar os Intents que vão continuar o diálogo.
+
+No próximo artigo teremos mais um (talvez o último da série) conceito básico do Intent: Eventos.

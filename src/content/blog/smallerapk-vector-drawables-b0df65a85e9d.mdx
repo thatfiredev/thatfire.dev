@@ -1,0 +1,48 @@
+---
+title: '#SmallerAPK — Vector Drawables'
+description: ''
+pubDate: '2016-05-20T16:01:41.503Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*52ChfRyQa3nzE7zMOxbHtw.png'
+---
+
+Se você desenvolve aplicações android, provavelmente conhece o conceito de [drawables](https://developer.android.com/reference/android/graphics/drawable/Drawable.html). E se segue as boas práticas da plataforma, de certeza que já teve de redimensionar uma imagem para se adaptar à resoluções de dispositivos diferentes. Isto é, criar uma imagem com um certo tamanho para dispositivos _hdpi_, uma outra para _mdpi_ e outras para _xhdpi, xxhdpi_ e por aí em diante.
+
+Mas, e se fosse possível usar apenas um drawable capaz de se redimensionar de acordo com o tamanho da tela do dispositivo do usuário?
+
+Foi assim que os engenheiros do robô verde pensaram quando nos trouxeram os **Vector Drawables** no android Lollipop (5.0). Apesar de ter sido lançado junto da API 21, pouco tempo depois, eles colocaram os vector drawables na [support library](https://developer.android.com/topic/libraries/support-library/index.html) (apartir da versão 23.2), permitindo assim que qualquer telemóvel com android superior a Éclair 2.1 (API 7) possa utilizar esta funcionalidade.
+
+Um Vector Drawable é um ficheiro xml, onde definimos o _path_ (exactamente como define-se na criação de ficheiros [SVG](https://www.w3.org/TR/SVG11/paths.html#PathData)) que é onde fornecemos as coordenadas dos pontos que devem ser desenhados. Aqui está um exemplo de um vector drawable:
+
+#### ic\_add.xml
+
+```xml
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="24dp"
+  android:height="24dp"
+  android:viewportWidth="24.0"
+  android:viewportHeight="24.0">
+  <path
+    android:fillColor="#FF000000"
+    android:pathData="M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+</vector>
+```
+
+O código acima irá criar um drawable com a figura de um ‘_mais_’ ( + ) na cor preta. Para usarmos este vector drawable em um dos nossos widgets, basta definí-lo normalmente como definimos os outros drawables:
+
+```xml
+...
+`android:src="@drawable/ic_add"`
+...
+```
+
+Fazendo uma comparação rápida, se usássemos um ficheiro png para cada dispositivo (mdpi, hdpi, xhdpi, xxhdpi e xxhdpi) estaríamos a colocar mais 551bytes na nossa app. Enquanto que o ficheiro xml aumenta apenas 325bytes. Uma diferença de 41%, que pode não parecer muito, mas é se você tiver uma app com muitos drawables.
+
+![](https://cdn-images-1.medium.com/max/800/1*Gx5rscMDLOHjGlWtxy-VPQ.png)
+
+A única desvantagem de usar vector drawables é a dificuldade de criar paths (para quem não tem experiência com svg), mas para facilitar, as últimas versões do [Google Material Icons](https://github.com/google/material-design-icons) já possuem os seus ícones em formato xml. Eles ficam no directório [any-dpi](https://github.com/google/material-design-icons/tree/master/action/drawable-anydpi-v21). Assim, só teremos de usar o formato _png_ para imagens mais complexas.
+
+Espero ter deixado o básico dos Vector Drawables. Se você quiser saber mais, pode consultar [a documentação](https://developer.android.com/reference/android/graphics/drawable/VectorDrawable.html).
+
+Até a próxima!
+
+Rosário Pereira Fernandes

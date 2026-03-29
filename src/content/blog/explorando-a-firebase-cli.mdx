@@ -1,0 +1,30 @@
+---
+title: 'Explorando a Firebase CLI'
+description: ''
+pubDate: '2018-01-24T17:31:02.970Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*U1ShecPuD2KWxJDefvBd_A.png'
+---
+
+* * *
+
+### Explorando a Firebase CLI
+
+#### As funcionalidades que você (provavelmente) não conhecia
+
+De certeza que todo desenvolvedor que já trabalhou com o Firebase Hosting e/ou Firebase Cloud Functions conhece a Firebase Command Line Interface (linha de comandos). Mas para quem não conhece, eu explico:
+
+[Firebase CLI](https://github.com/firebase/firebase-tools) é um conjunto de ferramentas (na linha de comandos) que permite gerir o seu projecto Firebase, especialmente para publicar os nossos arquivos no Firebase Hosting e/ou funções no Cloud Functions.
+
+Quem já conhece a CLI, provavelmente conheceu da mesma forma que eu: Precisava utilizar o [Firebase Hosting](https://firebase.google.com/docs/hosting/quickstart) ou precisava criar [Cloud Functions](https://firebase.google.com/docs/functions/get-started) (ou porque leu o [meu artigo sobre Cloud Functions](https://medium.com/@rosariopfernandes/fcf-comecar-32c984dbc12) 😉).
+
+Ao usar estas 2 ferramentas, passamos a conhecer alguns dos comandos da CLI:
+
+`firebase login`— Este comando nos leva ao browser para que possamos autenticar a CLI com a nossa conta do Firebase. E depois de autorizarmos o acesso utilizamos o `firebase init` que inicializa o projecto no directório em que estamos. Este comando depois dá-nos as opções de escolher quais as funcionalidades da Firebase CLI que pretendemos utilizar nesse directório:
+
+![](https://cdn-images-1.medium.com/max/800/1*-ru0N8oNDzUyblexBEa-8Q.png)
+
+Repare que todas as opções que temos aqui falam sobre fazer “deploy”. Isso mostra que você utilizará também o comando `firebase deploy` que permite enviar as alterações locais para o Firebase. Se você quiser enviar apenas as alterações do hosting pode utilizar a opção `--only hosting` que irá enviar apenas o hosting ou `--only functions` para enviar apenas as cloud functions.
+
+Um último comando famoso entre os utilizadores do Firebase Hosting é o `firebase serve` que inicia um servidor local.
+
+Mas estes são apenas alguns dos comandos mais simples. A Firebase CLI possui mais ferramentas além destas, e as que achei mais interessantes são as que interagem com a Realtime Database e as que interagem com o Firebase Auth. Por isso, vou falar sobre elas neste artigo.

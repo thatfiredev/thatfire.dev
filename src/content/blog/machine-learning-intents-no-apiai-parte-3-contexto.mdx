@@ -1,0 +1,86 @@
+---
+title: 'Machine Learning — Intents no api.ai (parte 3 — Contexto)'
+description: ''
+pubDate: '2017-03-30T19:11:54.813Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*P9fogFeO3KumEO2CzGH9ow.png'
+---
+
+* * *
+
+### Machine Learning — Intents no api.ai (parte 3 — Contexto)
+
+Já lá vão 6 artigos sobre Machine Learning e espero que você esteja a gostar de criar o seu próprio bot com o [api.ai](http://api.ai) :). Se você não viu nenhum destes artigos de que falo, comece a ler a série desde o príncipio:
+
+[**Machine Learning — Entrando no mundo dos assistentes virtuais**  
+_Aprenda a criar o seu próprio assistente virtual em 4 passos simples._medium.com](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03 "https://medium.com/@rosariopfernandes/ml-b7eba66e0e03")[](https://medium.com/@rosariopfernandes/ml-b7eba66e0e03)
+
+Agora que já [sabemos utilizar Acções e Parametros](https://medium.com/android-dev-moz/ml-actions-6cdf32bea767) para definir como o bot deve responder à certas instruções dos utilizadores, vamos ver mais um dos conceitos básicos do api.ai: o Context.
+
+Como o próprio nome diz, Context é uma _string_ que define o contexto em que o Intent foi chamado. É como se estivessemos a definir o tópico da nossa conversa.
+
+Por exemplo, se você estiver a desenvolver um bot capaz de interagir com alguns dos aparelhos electrónicos da sua casa, o utilizador pode dizer algo como: “Ligue o alarme” e depois dizer “Desligue”. O bot tem de reconhecer que o utilizador ainda está a referir-se ao alarme. E se mais tarde o utilizador disser “Ligue o televisor” seguido de “Desligue”, o bot tem de tomar uma acção diferente do alarme, porque o contexto é diferente.
+
+Você deve ter notado, ao criar um Intent, que existem 2 tipos de Context:
+
+![](https://cdn-images-1.medium.com/max/800/1*m_IX2jj6RgO6DDQEb1vFXw.png)
+
+Input e Output Context
+
+### Output Context
+
+Contextos são ligados à sessão do utilizador (um user ID que é partilhado entre a sua aplicação e o api.ai). Quando um intent é chamado, este intent pode definir o contexto a ser utilizado pela expressão que o utilizador usou. Mas você também pode definir esse contexto antes de enviar a requisição ao api.ai (veremos mais tarde).
+
+No exemplo da casa, quando o utilizador diz “Ligue o alarme”, o Intent teria de ter um Output Context — como “_alarme_”, por exemplo. Podem existir vários Intents que respondem à “Desligue”, mas **só** o Intent que tiver “alarme” como Input Context é que será chamado e os outros não.
+
+![](https://cdn-images-1.medium.com/max/800/1*Vf_1j41vvNwqs1Fwq1kekw.png)
+
+Exemplo do Output Context
+
+![](https://cdn-images-1.medium.com/max/800/1*AxNV2DdffgMonZLCvEY9ig.png)
+
+Exemplo do Input Context
+
+#### Duração do context
+
+Por padrão, contexts expiram depois de 5 requisições ou quando passam 10 minutos depois do Intent ser chamado. Mas você pode também alterar o número de requisições (chamado de _lifespan_):
+
+![](https://cdn-images-1.medium.com/max/800/1*Lwa7FOlBZOJJkAPJwDITRw.png)
+
+O contexto vai expirar depois de 3 requisições
+
+Ou então remover o contexto:
+
+![](https://cdn-images-1.medium.com/max/800/1*9P40sUPQSzFTQLYrOqosGA.png)
+
+O contexto vai expirar imediatamente, depois deste Intent ser chamado
+
+### Input Context
+
+Como já foi explicado parcialmente acima, Input Contexts ajudam a especificar quando é que um Intent deve ser chamado.
+
+Vamos olhar para mais um exemplo: Supondo que estamos a desenvolver um assistente capaz de reproduzir músicas. Pode acontecer o caso em que o utilizador está a escutar e a gostar de uma música e depois quer ouvir mais músicas do mesmo artista. Para ele escutar as outras músicas do mesmo artista, provavelmente diria “Quero ouvir mais deste artista”.   
+Para o nosso bot responder à este pedido, teríamos de definir um Output Context no Intent que começou a reproduzir a música e guardar um o artista como parâmetro.  
+Mas e se o utilizador disser isso depois de 10 minutos? O Intent já terá expirado e o nosso agente não saberá de que artista se trata.
+
+Para o agente voltar a perguntar o nome do agente, criamos 2 Intents:
+
+*   Sem Contexto
+
+![](https://cdn-images-1.medium.com/max/800/1*AWTxsFTBd3NxmkV7ktAY7Q.png)
+
+Neste Intent, é obrigatório que o utilizador defina o nome do artista porque não tem contexto.
+
+*   Com contexto
+
+![](https://cdn-images-1.medium.com/max/800/1*pItznpyCNY-W50RDZXqb7Q.png)
+
+Neste Intent, o parametro artista provavelmente já existe porque foi definido no contexto do Intent anterior
+
+Repare que o nosso segundo Intent (com contexto) tem um Input Context. Isto significa que só será chamado após um Intent com o Output Context “reproduzir”. Vamos então criar este Intent:
+
+![](https://cdn-images-1.medium.com/max/800/1*5eLWN0Tde5qDaZ-svZ0BKQ.png)
+
+E pronto. Criamos assim um pequeno diálogo entre o utilizador e o agente. Para o [próximo artigo](https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894) fica a promessa de mostrar-vos como usar o Context para criar diálogos maiores que variam de acordo com as respostas do utilizador. ;)
+
+[**Machine Learning — Mantendo diálogos**  
+_Aprenda a criar diálogos que dependem da resposta do utilizador._medium.com](https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894 "https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894")[](https://medium.com/@rosariopfernandes/ml-dialogs-be37972ed894)

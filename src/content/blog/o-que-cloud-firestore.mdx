@@ -1,0 +1,89 @@
+---
+title: 'O que é Cloud Firestore?'
+description: ''
+pubDate: '2017-10-04T06:01:02.215Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*EtvPAj7PBPX8-QJ0IiTryA.png'
+---
+
+* * *
+
+### O que é Cloud Firestore?
+
+#### Conheça o novo serviço de armazenamento de dados do Firebase
+
+Tinha acabo de voltar da faculdade quando conectei-me à internet e recebi a notificação do Youtube: “_Firebase just published: Introducing Firestore_”. Fiquei curioso e fui ver o que é o tal de Firestore.
+
+O video explica que o Firestore é um serviço que armazena dados NoSQL na Cloud em formato JSON, mas com uma organização diferente: Coleções e Documentos.
+
+Então aí vieram-me as questões:
+
+1.  Porque um novo serviço de armazenamento de dados NoSQL, se o Firebase já tem a [Realtime Database](https://medium.com/@mungoidario/realtime-databases-part-1-9a8f1ed171b2)?
+2.  Será que finalmente temos um serviço que permita procura por texto numa base de dados NoSQL?
+
+Procurei então por respostas para estas perguntas e elas me levaram à mais perguntas, o que resultou em cerca de 1 hora a entender melhor o assunto: [Lendo a documentação](https://firebase.google.com/docs/firestore/), vendo os [novos vídeos](https://www.youtube.com/watch?v=kDZYIhNkQoM) no [canal do Firebase](https://www.youtube.com/user/Firebase) e até dando alguns tweets para os engenheiros do Firebase. \[No momento em que eu escrevia este artigo, eles publicaram [um artigo para responder à questão 1](https://firebase.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html)\]
+
+> [](https://twitter.com/_rpfernandes/status/915273600063729670)
+
+Thank you Lauren Long for you reply
+
+Então decidi por isto em “pratos limpos” para você, que provavelmente tem as mesmas questões.
+
+### Como funciona?
+
+Como já tinha dito antes: o Firestore armazena dados NoSQL com a sintaxe JSON. Mas o Firestore tem uma estrutura diferente da Realtime Database: os dados são divididos em coleções(collections) e documentos(documents) ao invés de nós (nodes). Vamos então tentar entender estes 2 conceitos.
+
+#### Documentos
+
+Documento é como se fosse um objecto (sim, aquele a que estamos acostumados). Em cada objecto temos alguns valores com as suas respectivas chaves. Estes valores podem ser do tipo boolean, byte, int, float, String, arrays, datas e até null. \[[veja todos os tipos na documentação](https://firebase.google.com/docs/firestore/manage-data/data-types)\]
+
+![](https://cdn-images-1.medium.com/max/800/1*WlnFnJrkd9RLLf7vIUoELw.png)
+
+Exemplo de um documento
+
+#### Coleções
+
+As coleções nada mais são do que um conjunto destes documentos:
+
+![](https://cdn-images-1.medium.com/max/800/1*sW0OqSXeblSg1sN2zoAhxA.png)
+
+Exemplo de uma coleção de utilizadores
+
+Mas existem algumas regras aqui. As coleções não podem conter outras coleções e os documentos não podem conter outros documentos. Sendo assim, uma coleção só pode conter documentos e os documentos só podem conter sub-coleções, tal como demonstra o esquema abaixo:
+
+![](https://cdn-images-1.medium.com/max/800/1*a_9oi13tFJ07GKEX1cq02A.png)
+
+Estrutura do Firestore: Coleções (amarelo) e documentos (azul)
+
+Vejamos então um exemplo prático desta estrutura:
+
+![](https://cdn-images-1.medium.com/max/800/1*YPoqCxWoF8ycnKZMPK-V8w.png)
+
+A coleção utilizadores possui 3 utilizadores. Cada utilizador contem uma sub-coleção de frotas que lhe pertencem. Cada frota tem uma sub-coleção de carros existentes nessa frota.
+
+Para quem está habituado a utilizar a realtime database, tal como eu, deve ter ficado assustado com o número de sub-nós que são criados aqui. Mas não se preocupe porque é assim mesmo que esta estrutura funciona. Isto serve para facilitar na hora de executar queries e filtrar dados.
+
+### Firestore vs. Realtime Database
+
+Uma das vantagens do Firestore é que temos mais possibilidades na hora de realizar queries e filtragens de dados. Na Realtime Database éramos limitados à queries e filtros utilizando apenas um atributo e/ou uma condição:
+
+```javascript
+utilizadoresRef.orderByChild("cidade").equalTo("Maputo");
+```
+
+Aqui podemos filtrar com base em mais de um atributo e/ou condição:
+
+```javascript
+utilizadoresRef.whereEqualTo("cidade", "Maputo").whereLessThan("idade", 19);
+```
+
+_Além destas filtragens, eu gostaria também de fazer uma procura por texto na base de dados. Mas segundo_ [_a documentação_](https://firebase.google.com/docs/firestore/solutions/search)_, isso só é possível utilizando o_ [_Cloud Functions_](https://medium.com/@rosariopfernandes/firebase-cloud-functions-f6ed3787fa8d) _+ serviços terceiros como_ [_Algolia_](http://algolia.com) _e_ [_ElasticSearch_](http://elastic.co) _(tal como na Realtime Database)._
+
+Creio que as queries com mais de um atributo sejam a principal diferença do Firestore em relação à Realtime Database. Mas existem outras:
+
+*   Ao ler um documento no Firestore, só os dados desse documento são transferidos para o cliente; todas as sub-coleções são ignoradas. (resultando numa query de boa performance). Enquanto que na Realtime Database, ao ler um nó transferimos todos os sub-nós para o cliente e dependendo número de sub-nós desse nó poderíamos vir a ter problemas de performance.
+*   Além de ter suporte para dados offline no Android e iOS, o Firestore suporta também o armazenamento offline para Web.
+*   O modelo de preço é diferente: Realtime Database cobra por **banda utilizada** e pelo **tamanho dos dados** armazenados, enquanto que o Firestore cobra pelas **operações**(leitura, escrita e eliminação) que são realizadas nas base de dados (independentemente do seu sucesso), a **banda utilizada** e o **tamanho dos dados** armazenados.
+
+O surgimento do Firestore não significa que a Realtime Database deixará de existir. Você pode utilizar os 2 em simultâneo ou escolher qual deles melhor responde à sua necessidade.
+
+E é isto que eu tinha para este artigo. Os detalhes de como utilizar o Firestore na sua aplicação podem ser encontrados [na documentação](https://firebase.google.com/docs/firestore/quickstart).

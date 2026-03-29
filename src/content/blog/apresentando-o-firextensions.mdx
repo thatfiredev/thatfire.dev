@@ -1,0 +1,58 @@
+---
+title: 'Apresentando o fireXtensions'
+description: ''
+pubDate: '2018-09-05T16:56:02.074Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*sZ9hPBXaot4xmaZr1NYYTg.png'
+---
+
+* * *
+
+
+### Apresentando o fireXtensions
+
+#### Mudando a forma como você utiliza o Firebase no Android
+
+**ATUALIZAÇÃO 29/09/2019: O fireXtensions foi descontinuado a favor das** [**bibliotecas KTX oficiais do Firebase**](https://firebaseopensource.com/projects/firebase/firebase-android-sdk/#kotlin_extensions)**. Obrigado a todos que contribuiram, apoiaram ou utilizaram o fireXtensions.**
+
+18 de Maio de 2017 foi o dia em que a Google anunciou, durante o Google I/O, que [Kotlin](https://developer.android.com/kotlin/) passa a ser (oficialmente) uma linguagem para desenvolvimento de aplicações Android. Isso porque:
+
+> Kotlin is expressive, concise, and powerful.  
+> (Kotlin é expressivo, conciso e poderoso)
+
+Essa foi uma das melhores novidades do I/O, pois esta linguagem traz várias funcionalidades que facilitam a vida dos desenvolvedores e de certa forma melhora a produtividade deles. Se você não conhece as funcionalidades da linguagem, recomendo que leia esta série de artigos do [Paulo Enoque](https://medium.com/u/bda34d240011):
+
+1.  [Introdução a Kotlin](https://medium.com/kotlin-para-android/introdu%C3%A7%C3%A3o-a-kotlin-51a4355f3bc8)
+2.  [Sintaxe básica do Kotlin](https://medium.com/kotlin-para-android/sintaxe-b%C3%A1sica-do-kotlin-7548a441f5e5)
+3.  [Detalhes avançados sobre Kotlin](https://medium.com/kotlin-para-android/detalhes-avan%C3%A7ados-sobre-kotlin-c0a9b0059880)
+4.  [Kotlin Android Extensions](https://medium.com/kotlin-para-android/kotlin-android-extensions-8abdc33f21ef)
+
+### Kotlin Extensions
+
+Uma funcionalidade que, em particular, chamou a minha atenção foi [Kotlin Extensions](https://kotlinlang.org/docs/reference/extensions.html). Esta funcionalidade permite que você adicione novos métodos à classes que não são suas, sem ter de herdar (o famoso `extends` do java) dessa classe. Por exemplo: eu posso criar um método que verifica se uma `String` contém ponto de exclamação(`!`), algo como:
+
+```kotlin
+fun contemPontoExclamacao(umaString: String): Boolean {
+    return umaString.contains('!')
+}
+```
+
+Mas para usar o método, eu tenho de chamar da seguinte forma: `contemPontoExclamacao("Olá Mundo!")`. Isso parece ok, mas imagine se eu tiver de chamar o método em várias classes — teria de declarar o método em todas elas ou declará-lo em uma só classe e definí-lo como estático. Ou até criar uma classe `MinhaString` que herda da classe `String` e implementa o método `contemPontoExclamacao()`. Depois teria de mudar o tipo de dado de todas as Strings do meu programa para que passasse a ser do tipo`MinhaString`.
+
+Utilizando Kotlin Extensions, eu posso fazer com que este método faça parte da classe String:
+
+```kotlin
+fun **String**.contemPontoExclamacao(): Boolean{
+    return contains('!')
+}
+```
+
+E então posso chamá-lo em qualquer classe, sempre da mesma forma:
+
+```kotlin
+"Olá Mundo!".contemPontoExclamacao()
+// ou:
+val frase = "Olá Mundo"
+frase.contemPontoExclamacao()
+```
+
+Como você pode ver, Kotlin simplifica o código que temos de escrever. Muitos desenvolvedores (a google inclusive) aproveitaram disso para desenvolver bibliotecas que tornam o desenvolvimento Android mais simples. Falo de bibliotecas como [Android KTX](https://developer.android.com/kotlin/ktx), [Anko](https://github.com/Kotlin/anko), [Nahu](https://github.com/PauloEnoque/Nahu), entre outras.

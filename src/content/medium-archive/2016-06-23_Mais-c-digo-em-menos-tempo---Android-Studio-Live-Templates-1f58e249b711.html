@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Mais código em menos tempo — Android Studio Live Templates</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Mais código em menos tempo — Android Studio Live Templates</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+Muitas pessoas que desenvolvem para Android (tanto iniciantes como experientes) reclamam que algumas funcionalidades do Android requerem…
+</section>
+<section data-field="body" class="e-content">
+<section name="4f68" class="section section--body section--first section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><figure name="8c72" id="8c72" class="graf graf--figure graf--leading"><img class="graf-image" data-image-id="1*-QnSL_ysDFkWqPEU4eYhIQ.png" data-width="1043" data-height="313" src="https://cdn-images-1.medium.com/max/800/1*-QnSL_ysDFkWqPEU4eYhIQ.png"></figure><h3 name="7821" id="7821" class="graf graf--h3 graf-after--figure graf--title">Mais código em menos tempo — Android Studio Live Templates</h3><p name="13a3" id="13a3" class="graf graf--p graf-after--h3">Muitas pessoas que desenvolvem para Android (tanto iniciantes como experientes) reclamam que algumas funcionalidades do Android requerem muito código, e esse código é difícil de recordar, por isso eles têm de voltar a abrir um projecto anterior, copiar o código, colar no novo projecto e fazer alterações necessárias para adaptar-se ao novo projecto.</p><h4 name="daad" id="daad" class="graf graf--h4 graf-after--p">E se eu dissesse que é possível fazer isso sem ter de voltar à um projecto anterior?</h4><p name="863f" id="863f" class="graf graf--p graf-after--h4">Sim, isso é possível graças aos Android Studio Live Templates. Se você já tem experiência com IntelliJ, provavelmente já conhece esta funcionalidade. Live Templates são “<em class="markup--em markup--p-em">shortcuts</em>” que permitem completar o código, deixando espaços para que você faça alterações adaptando o código ao contexto em que está a ser usado.</p><p name="ccdd" id="ccdd" class="graf graf--p graf-after--p">Você provavelmente já se deparou com situações em que escreveu o código:</p><pre name="ff6f" id="ff6f" class="graf graf--pre graf-after--p"><strong class="markup--strong markup--pre-strong">Toast</strong>.<em class="markup--em markup--pre-em">makeText</em>(<strong class="markup--strong markup--pre-strong">MainActivity</strong>.this, &quot;Isto não funciona&quot;, <strong class="markup--strong markup--pre-strong">Toast</strong>.<strong class="markup--strong markup--pre-strong"><em class="markup--em markup--pre-em">LENGTH_SHORT</em></strong>);</pre><p name="8351" id="8351" class="graf graf--p graf-after--pre">Pois, este erro é bastante comum, mas os Live Templates ajudam a evitar isto. Você pode simplesmente escrever <em class="markup--em markup--p-em">Toast</em> e clicar<strong class="markup--strong markup--p-strong"> </strong><em class="markup--em markup--p-em">TAB:</em></p><figure name="725b" id="725b" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*yIxcJ5wlckPM7hyof0ZBhQ.png" data-width="846" data-height="272" src="https://cdn-images-1.medium.com/max/800/1*yIxcJ5wlckPM7hyof0ZBhQ.png"></figure><p name="c439" id="c439" class="graf graf--p graf-after--figure">Como você pode ver, isto irá adicionar o código e depois você poderá alterar os parametros necessários, alternando entre eles com a tecla <em class="markup--em markup--p-em">TAB</em>.</p><h4 name="ec3e" id="ec3e" class="graf graf--h4 graf-after--p">O que mais eu posso fazer?</h4><p name="bec5" id="bec5" class="graf graf--p graf-after--h4">Bem, IntelliJ já inclui vários templates pré-configurados e o Android Studio adicionou ainda mais. Deixo aqui a lista de templates que eu uso mais:</p><figure name="4a1e" id="4a1e" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*aOuek32FCr5NlhbktgtUHA.png" data-width="683" data-height="205" src="https://cdn-images-1.medium.com/max/800/1*aOuek32FCr5NlhbktgtUHA.png"></figure><p name="d41d" id="d41d" class="graf graf--p graf-after--figure">Mas se o código que você mais usa não estiver aí, você pode criar o seu próprio template.</p><h4 name="1f4d" id="1f4d" class="graf graf--h4 graf-after--p">Crie o seu próprio live template</h4><p name="88e9" id="88e9" class="graf graf--p graf-after--h4">É muito simples criar um live template. Clique em <strong class="markup--strong markup--p-strong">File &gt; Settings &gt; Editor &gt; Live Templates</strong>. Abra o grupo <em class="markup--em markup--p-em">Android, </em>clique no botão “mais” (+) para adicionar um novo live template e preencha os campos:</p><figure name="793d" id="793d" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*MLbfXY8L_Ya3qaQNbD9T9w.png" data-width="1088" data-height="684" src="https://cdn-images-1.medium.com/max/800/1*MLbfXY8L_Ya3qaQNbD9T9w.png"></figure><p name="a282" id="a282" class="graf graf--p graf-after--figure"><strong class="markup--strong markup--p-strong">Abbreviation — </strong>uma abreviação para o código que você irá escrever;</p><p name="809f" id="809f" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">Description — </strong>um texto curto para lhe ajudar a lembrar o que o template faz;</p><p name="2dee" id="2dee" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">Template text </strong>— o código que deverá ser escrito.</p><p name="551b" id="551b" class="graf graf--p graf-after--p">Por exemplo, muitas pessoas reclamam que o código para editar <em class="markup--em markup--p-em">SharedPreferences</em> é muito longo, então podemos criar um live template para colar este código:</p><figure name="074a" id="074a" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*YzRp0Jaq5B9cOUILDoQP4Q.png" data-width="1086" data-height="626" src="https://cdn-images-1.medium.com/max/800/1*YzRp0Jaq5B9cOUILDoQP4Q.png"></figure><p name="f4fe" id="f4fe" class="graf graf--p graf-after--figure">Reparem que quando chamamos a classe <em class="markup--em markup--p-em">SharedPreferences</em> temos de incluir também o nome do package (android.content.SharedPreferences). Note que os lugares onde o código que irá precisar de adaptações são cercados pelo símbolo $ para indicar que são variáveis.</p><p name="85b9" id="85b9" class="graf graf--p graf-after--p">Na parte inferior da janela, você irá ver o erro: “<em class="markup--em markup--p-em">No applicable contexts yet</em>”. Isto porque ainda não especificamos onde o código irá ser usado. Clique em <em class="markup--em markup--p-em">Define</em>, abra o grupo <em class="markup--em markup--p-em">Java</em> e escolha <em class="markup--em markup--p-em">Statement</em>.</p><figure name="744e" id="744e" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*dTShFMjS2Th635E5JyqASw.png" data-width="1088" data-height="626" src="https://cdn-images-1.medium.com/max/800/1*dTShFMjS2Th635E5JyqASw.png"></figure><p name="3ea1" id="3ea1" class="graf graf--p graf-after--figure">E pronto, já temos um live template criado. Para usá-lo, basta ir ao código, escrever a abreviatura que escolhemos (<em class="markup--em markup--p-em">spString</em>), clicar em <em class="markup--em markup--p-em">TAB</em> e o nosso código será colado.</p><figure name="7dc2" id="7dc2" class="graf graf--figure graf-after--p"><img class="graf-image" data-image-id="1*TzNMymflPM0vxqmo82Pu3w.png" data-width="846" data-height="120" src="https://cdn-images-1.medium.com/max/800/1*TzNMymflPM0vxqmo82Pu3w.png"></figure><p name="cd7a" id="cd7a" class="graf graf--p graf-after--figure">Espero que esta dica o ajude a ser mais productivo.</p><p name="1777" id="1777" class="graf graf--p graf-after--p">Até a próxima,</p><p name="c224" id="c224" class="graf graf--p graf-after--p graf--trailing">Rosário Pereira Fernandes</p></div></div></section>
+</section>
+<footer><p>By <a href="https://medium.com/@thatfire.dev" class="p-author h-card">Rosário Pereira Fernandes</a> on <a href="https://medium.com/p/1f58e249b711"><time class="dt-published" datetime="2016-06-23T18:18:15.617Z">June 23, 2016</time></a>.</p><p><a href="https://medium.com/@thatfire.dev/mais-c%C3%B3digo-em-menos-tempo-android-studio-live-templates-1f58e249b711" class="p-canonical">Canonical link</a></p><p>Exported from <a href="https://medium.com">Medium</a> on November 24, 2025.</p></footer></article></body></html>

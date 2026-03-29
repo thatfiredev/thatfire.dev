@@ -1,0 +1,154 @@
+---
+title: '#SmallerAPK — 5 dicas para reduzir o tamanho do apk'
+description: ''
+pubDate: '2016-05-05T20:48:41.839Z'
+heroImage: 'https://cdn-images-1.medium.com/max/800/1*cfBe20A3a8gya3ClslUvkw.png'
+---
+
+Olá pessoal, estive a ler uma série de artigos do [Wojtek Kalicinski](https://medium.com/@wkalicinski), desenvolvedor Android, que falava sobre a redução do tamanho do APK. Com as dicas que ele deixou, consegui reduzir consideravelmente o tamanho da minha aplicação, e por isso, decidi escrever este artigo para vos incentivar a procurar sempre reduzir o tamanho do apk.
+
+### Porque reduzir o espaço do apk?
+
+Quando desenvolvemos uma aplicação móvel, temos de ter em conta que existem vários tipos de dispositivos móveis, mas nem todos têm as mesmas capacidades. Alguns dispositivos podem não dispor de memória suficiente para permitir que usuários instalem a aplicação.
+
+Outro factor a ser considerado é que em alguns países há difícil acesso à Internet e em alguns os usuários pagam for cada megabyte gasto em download e não é fácil de encontrar hotspots grátis.
+
+Por isso, devemos procurar sempre reduzir o tamanho do apk. Aqui estão 5 dicas para fazer isso.
+
+### 1\. Redução do código Dex (Minify)
+
+O Android Studio conta com um reductor de código que remove classes e não utilizadas, e renomea algumas variáveis para que tenham nomes mais curtos resultando em um apk menor. Para utilizar esta funcionalidade, basta definir _minifyEnabled true_, alterando a seguinte parte do ficheiro _build.gradle_ do seu projecto:
+
+```groovy
+android {
+    …
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+```
+
+**Atenção!** Infelizmente, em alguns casos, depois de activar o minify, a sua aplicação pode não compilar ou parar durante a execução lançando a _ClassNotFoundException_ por conta de classes que foram removidas pelo reductor de código. Para dar a volta por cima, você tem que criar um ficheiro chamado _proguard-rules.pro_ na sua pasta _app/_ e colocar lá as regras necessárias para que o reductor não remova certas classes e/ou variáveis.
+
+Um caso bastante comum é quando definimos uma classe como atributo String num layout XML, como num _RecyclerView_ por exemplo:
+
+```xml
+<android.support.v7.widget.RecyclerView
+  app:layoutManager=”android.support.v7.widget.GridLayoutManager”
+  ...
+/>
+```
+
+Neste caso, o reductor não saberá que a classe _GridLayoutManager_ foi utilizada, por isso será removida. Para corrigir isto, você tem que colocar a seguinte linha no seu ficheiro _proguard-rules.pro_:
+
+```proguard
+-keep public class android.support.v7.widget.GridLayoutManager {
+    public protected *;
+}
+```
+
+É **importante** que você **teste a sua aplicação** **ao mínimo detalhe**. O facto da aplicação abrir sem nenhum problema não é uma indicação de que o reductor não removeu nenhuma classe necessária. Você deve testar todas as telas e todas as possibilidades de uso da sua aplicação.
+
+### 2\. Não importar todos os Google Play Services
+
+Algumas vezes, precisamos de usar bibliotecas do Google Play Services na nossa aplicação. De certeza que não serão usadas todas as API’s, por isso evite importar todo o pacote quando vai usar apenas algumas API’s como Ads, Analytics, Maps, etc. Existe uma [tabela](https://developers.google.com/android/guides/setup) que especifica como colocar cada dependência que necessitar do Google Play Services. Por exemplo, se você quiser utilizar apenas a API do Google Drive, não precisa de importar toda a Play Services, apenas a Drive API, e para isso, no ficheiro _build.gradle_ do projecto, substitua a linha:
+
+```groovy
+compile 'com.google.android.gms:play-services:8.4.0'
+```
+
+por:
+
+```groovy
+compile 'com.google.android.gms:play-services-drive:8.4.0'
+```
+
+### 3\. Remoção de recursos não usados
+
+Além de remover código não usado, é possível remover também recursos (layouts, drawables, entre outros ficheiros xml) que não estejam a ser usados pela aplicação. Para fazer isso, basta colocar esta linha no _build.gradle_ do seu projecto:
+
+```groovy
+android {
+    ...
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+```
+
+Assim como o reductor de código, o reductor de recursos também pode remover recursos que você irá precisar. Para manter estes recursos, você pode usar o atributo `tools:keep` em qualquer tag `<resources>` da sua aplicação. Por exemplo[\[RPF1\]](#_msocom_1) :
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+  tools:keep="@layout/l\_used\*\_c,@layout/l\_used\_a,@layout/l\_used\_b\*"
+/>
+```
+
+### 4\. Remoção de configurações não usadas
+
+Várias bibliotecas contam com recursos _String_ traduzidos em vários idiomas, como por exemplo a Support Library e Google Play Services. Você pode até ter traduções em que começou a trabalhar para a sua aplicação, mas esta ainda não está pronta para ir para esses mercados. Você pode usar a opção _resConfigs_ para restringir as configurações que devem ser incluídas no ficheiro APK final.
+
+Por exemplo:
+
+```groovy
+android {
+    defaultConfig {
+        ...
+        resConfigs "en", "pt"
+    }
+}
+```
+
+Este código irá remover qualquer recurso que não estiver relacionado com estes 2 idiomas.
+
+### 5\. Remoção de “buracos” na alocação de recursos
+
+Este problema não é muito comum em pequenas aplicações, mas ajuda muito na redução do apk de aplicações grandes que tenham centenas ou milhares de strings, styles, etc.
+
+Todas as strings que definimos ficam guardadas num ficheiro _resources.arsc_ dentro da apk criada, e cada string ocupa 4 bytes.
+
+Imaginemos que temos 5 strings no nosso ficheiro _values/strings.xml_.
+
+Supondo que vamos adicionar uma funcionalidade que estará presente apenas em dispositivos com API 21 ou superior e esta funcionalidade precisa de mostrar uma mensagem diferente do que a normal, então criamos o ficheiro _values-v21/strings.xml_ e obtemos o seguinte:
+
+```
+strings.xml:            -v21/strings.xml:
+
+string/app\_name   0x00000001              NO\_ENTRY
+
+string/hello      0x00000002              NO\_ENTRY
+
+string/exit       0x00000003              NO\_ENTRY
+
+string/settings   0x00000004              NO\_ENTRY
+
+string/feature    0x00000005              0x00000006
+
+                  ==========              ==========
+
+Tamanho:          20 bytes                **20 bytes**!
+```
+
+Está claramente visível que ambos arquivos ocupam 20 bytes mesmo que um deles tenha 4 “buracos” (memória reservada não utilizada).
+
+Imagine uma aplicação que conta com 3500 strings, em que apenas uma foi traduzida em 50 idiomas. Isto resultará em:
+
+4 bytes \* 3500 buracos \* 50 idiomas = 700kilobytes
+
+700 kilobytes que podem ser salvos só por remover uma string.
+
+Uma solução para esta situação seria ter 6 strings no ficheiro _values/strings.xml_ e programar qual string deve ser usada dependendo da versão do Android.
+
+Experimente estas dicas e diga, nos comentários, quanto espaço consegui reduzir na sua aplicação.
+
+Até a próxima!
+
+Rosário Pereira Fernandes
