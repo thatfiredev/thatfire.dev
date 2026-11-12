@@ -2,35 +2,24 @@
 title: 'Trying out the Gemini Decisions API on Android'
 description: 'The Gemini Decisions API has just launched and I decided to take it for a spin'
 pubDate: 'Nov 12 2026'
-heroImage: '/covers/gemini-decisions-1-api.jpg'
+heroImage: '/covers/gemini-decisions-1-api.png'
 translationKey: 'trying-gemini-decisions-api'
 ---
 
-The Gemini Decisions API was [released yesterday](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/)
-and I decided to try it out on Android and explore some of the use cases. 
-In this blog I'll share some of the experiments that I ran.
+The Gemini Decisions API was [released yesterday](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/) and I decided to try it out on Android and explore some of the use cases. In this blog I'll share some of the experiments that I ran.
 
-Differently from Generative models, the [Gemini Decisions API](https://aistudio.google.com/docs/decisions-api)
-evaluates typed questions and returns probabilities.
-It generates zero text tokens, which means that its responses are fast, easy to parse and your
-output token usage is **always 0** because it doesn't generate text tokens (which also means you
-will not be paying for its output).
+Differently from Generative models, the [Gemini Decisions API](https://aistudio.google.com/docs/decisions-api) evaluates **typed questions** and returns probabilities. It generates zero text tokens, which means that its responses are fast, and easy to parse. Because it doesn't generate text tokens, your output token usage is **always 0** (which also means you will not be paying for its output).
 
 There are three types of questions that you can send to the Gemini Decisions API:
 - **Noul** - Yes/No questions to check whether a statement is true or false.
 - **Choice** - Provide the model with a list of options and let it choose the most suitable option.
 - **Score** - Give the model a rubric for it to rate your input against.
 
-In this blog post, I'll break down each of them with examples. But first, let's do some set up.
+Before we dive in and break down each of them with examples, let's do some set up.
 
-## Setting it up for Android (or any mobile app really)
+## Setting it up for Android (or any mobile app, really)
 
-At the time of writing, this new API is not yet available on [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) - if it was,
-it would allow me to call the Decision model securely from the client-side (like an Android app)
-without spinning up my own backend.  But because it isn't, I had to set up a tiny backend for this:
-a [callable Cloud function](https://firebase.google.com/docs/functions/callable). The flow is:
-my Android app calls the Cloud function, and the Cloud function will then call the Decisions API,
-and return its response to the Android app.
+At the time of writing, this new API is not yet available on [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) - if it was, it would allow me to call the Decision model securely from the client-side (like an Android app) without spinning up my own backend.  But because it isn't, I had to set up a tiny backend for this: a [callable Cloud function](https://firebase.google.com/docs/functions/callable). The flow is: my Android app calls the Cloud function, and the Cloud function will then call the Decisions API, and return its response to the Android app.
 
 The Cloud function is responsible for:
 - Enforcing [App Check](https://firebase.google.com/docs/app-check/cloud-functions) to make sure the request is coming from my legitimate Android app.
@@ -67,27 +56,51 @@ In order to set up the Cloud function, I had to:
 3. Configure my Gemini API key using: `firebase functions:secrets:set GEMINI_API_KEY`
 4. Deploy the function: `firebase deploy`
 
-Now that the function is up and running, let's walk through all the question types.
-
 ### Setting up App Check to secure this implementation
 
+Because `createDecision` uses my `GEMINI_API_KEY` under the hood, leaving the endpoint open would allow anyone with the URL to call it directly and burn through my quota. Notice `enforceAppCheck: true` in the `onCall` options above—with that single flag, Cloud functions automatically rejects any request that doesn't carry a valid [Firebase App Check](https://firebase.google.com/docs/app-check/cloud-functions) token.
 
+On the Android side, since I'm testing locally rather than distributing through Google Play, I used the [App Check debug provider](https://firebase.google.com/docs/app-check/android/debug-provider) (for a production release, swap this out for the [Play Integrity provider](https://firebase.google.com/docs/app-check/android/play-integrity-provider)):
+
+1. Add the debug provider dependency to `app/build.gradle.kts` (using the [Firebase BoM](https://firebase.google.com/docs/android/learn-more#bom)):
+
+```kotlin
+implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+implementation("com.google.firebase:firebase-appcheck-debug")
+implementation("com.google.firebase:firebase-functions")
+```
+
+2. Initialize App Check inside a custom `Application` class (registered via `android:name=".DecisionsApplication"` in `AndroidManifest.xml`) before making any `Firebase.functions` calls:
+
+```kotlin
+class DecisionsApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )
+    }
+}
+```
+
+3. Launch the app once and grab the generated debug secret from Logcat:
+
+```
+D DebugAppCheckProvider: Enter this debug secret into the allow list in the Firebase Console for your project: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+```
+
+4. In the Firebase Console, go to **App Check > Apps**, open **Manage debug tokens** on the Android app by clicking on the three-dot menu, and add that secret. From then on, `Firebase.functions` automatically attaches a valid App Check token to every `createDecision` call!
+
+Now that the function is up and running, let's walk through all the question types.
 
 ## Noul - yes or no?
 
-As I mentioned earlier, this type of question allows you to ask the model a "yes or no" question.
+This type of question allows you to ask the model a "yes or no" question - and because the Decisions API is multimodal, you can send more than text to the model: you can also pass images, audio, video, and PDFs! :)
 
-And because the Decisions API is multimodal, you can send more than text to the model: you can also
-pass images, audio, video, and PDFs! :)
+To show it in action, I created a simple demo where the user is scanning a receipt. To be considered a valid receipt, all of these need to be visible in the image: store name, prices for each item, and total.
 
-To show it in action, I created a simple demo where the user is scanning a receipt. To be
-considered a valid receipt, all of these need to be visible in the image: store name,
-prices for each item, and total.
-
-To scan the receipt, I'm using the [CameraX library](https://developer.android.com/media/camera/camerax)
-with a custom [ImageAnalysis.Analyzer](https://developer.android.com/media/camera/camerax/analyze)
-that samples camera frames locally every 600ms and sends the latest frame to the Cloud function
-roughly every 1.5 seconds.
+To scan the receipt, I'm using the [CameraX library](https://developer.android.com/media/camera/camerax) with a custom [ImageAnalysis.Analyzer](https://developer.android.com/media/camera/camerax/analyze) that samples camera frames locally every 600ms and sends the latest frame to the Cloud function roughly every 1.5 seconds.
 
 Here's what the code to send the frame looks like:
 
@@ -99,10 +112,13 @@ val request = DecisionRequest(
     ),
     questions = mapOf(
         "is_valid_receipt" to Question.Noul(
-            instructions = "Does this receipt clearly show the store name, an itemized breakdown with prices, and the total amount?",
+            instructions = "Does this receipt clearly show the store name," +
+                " an itemized breakdown with prices, and the total amount?",
             criteria = NoulCriteria(
-                trueDescription = "Store name, item breakdown with prices, and total amount are all present and legible.",
-                falseDescription = "One or more of store name, itemized prices, or total are missing or unreadable.",
+                trueDescription = "Store name, item breakdown with prices," +
+                    " and total amount are all present and legible.",
+                falseDescription = "One or more of store name, itemized prices," +
+                    " or total are missing or unreadable.",
             ),
         ),
     ),
@@ -128,7 +144,7 @@ By using a choice question we could, for example, automatically select the most 
 where the user can file a support case based on the text they provide.
 
 This demo shows a hypothetical app where developers can file a support case to Firebase. As the user
-types, the model automatically picks the most suitable Support category from this list of categories:
+types, the model automatically picks the most suitable support category from this list of categories:
 - Bug
 - Feature Request
 - Billing
@@ -143,7 +159,8 @@ val request = DecisionRequest(
     input = issueText,
     questions = mapOf(
         "support_category" to Question.Choice(
-            instructions = "Choose the single best Firebase support category for this customer support issue.",
+            instructions = "Choose the single best Firebase support category for" +
+                " this customer support issue.",
             criteria = mapOf(
                 "bug" to "Crashes, exceptions, errors, broken SDK behavior, or regressions in Firebase.",
                 "feature_request" to "Requests for new Firebase capabilities, APIs, or console enhancements.",
@@ -188,7 +205,8 @@ val request = DecisionRequest(
     input = reviewText,
     questions = mapOf(
         "restaurant_rating" to Question.Score(
-            instructions = "Score the sentiment of this restaurant review from lowest (1 star) to highest (5 stars).",
+            instructions = "Score the sentiment of this restaurant review from" +
+                " lowest (1 star) to highest (5 stars).",
             criteria = listOf(
                 "1 star: Very negative experience; severe complaints about food quality, hygiene, or rude staff.",
                 "2 stars: Below expectations; noticeable issues such as cold food, slow service, or poor value.",
@@ -277,7 +295,14 @@ val difficulty = (answers?.get("difficulty") as? Answer.Score)?.score
   Your browser does not support the video tag.
 </video>
 
----
+## Conclusion
 
-And that's all for today, if you'd like to give it a try, check out the [documentation](https://aistudio.google.com/docs/decisions-api)
-or try the [playground in Google AI Studio](https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true).
+A lot of features we build into mobile apps don't actually need open-ended text generation - they just need a fast, reliable answer to a structured question: *Is this image clear enough? Which category should be pre-selected? How many stars does this review sound like?*
+
+Until now, building these experiences with an LLM usually meant asking a generative model for structured JSON output and paying the latency and cost of generated tokens. With the Gemini Decisions API, you get calibrated probabilities across `noul`, `choice`, and `score` questions with **zero output tokens**, predictable responses, and the ability to evaluate multiple questions against the same input in one round-trip.
+
+Even though calling it from Android currently requires a tiny Cloud Function proxy secured with App Check, the setup only takes a few lines of code, and hopefully we'll see direct client support in Firebase AI Logic in the future!
+
+Oh, and if you’d prefer to run inference on-device, the [Mediapipe Decision Maker](https://developers.google.com/edge/mediapipe/solutions/decision/decision_maker) library has you covered. :)
+
+And that's all for today, if you'd like to try out the Gemini Decisions API yourself, check out the [documentation](https://aistudio.google.com/docs/decisions-api) or try the [playground in Google AI Studio](https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true).
