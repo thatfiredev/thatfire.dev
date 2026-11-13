@@ -22,15 +22,15 @@ const twitterText =
 <footer>
 	&copy; {today.getFullYear()} Rosário P. Fernandes. {rightsText}
 	<div class="language-switcher">
-		[
+		[{" "}
 		<a href={translations?.en || "/"} class={lang === "en" ? "active" : ""}
 			>🇬🇧 EN</a
-		>
-		|
+		>{" "}
+		|{" "}
 		<a
 			href={translations?.pt || "/pt/"}
 			class={lang === "pt" ? "active" : ""}>🇲🇿 PT</a
-		>
+		>{" "}
 		]
 	</div>
 	<div class="social-links">
